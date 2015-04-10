@@ -12,6 +12,7 @@ public class mapGen : MonoBehaviour {
 	public GameObject nodeDungeon;
 
 	private int randomNode;
+	private Vector3 randomDirect;
 
 	public int numOfNodes;
 
@@ -39,12 +40,13 @@ public class mapGen : MonoBehaviour {
 		for(int i = 0; i < nodeSelect.Length; i++){
 
 			randomNode = Random.Range(1,nodes.Length);
+			randomDirect = new Vector3(1, Random.Range (-1,1), 0);
 
 			if(i == 0){
 				nodeSelect[i] = nodes[0];
 			}
 
-			else if(i % 5 == 0){
+			else if(i % Random.Range (5, 10) == 0){
 				nodeSelect[i] = nodes[0];
 			}
 
@@ -52,9 +54,9 @@ public class mapGen : MonoBehaviour {
 				nodeSelect[i] = nodes[randomNode];
 			}
 
-			Instantiate(nodeSelect[i], transform.position + (Vector3.right * i * 2), Quaternion.identity);
-
-			lineRenderer.SetPosition(i, transform.position + (Vector3.right * i * 2));
+			Instantiate(nodeSelect[i], transform.position + (randomDirect + new Vector3(i*2,0,0)), Quaternion.identity);
+		
+			lineRenderer.SetPosition(i, transform.position + (randomDirect + new Vector3(i*2,0,0)));
 
 		}
 	}

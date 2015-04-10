@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{D4AD9174-B7F4-B60E-0F17-DA9C92EF7FD3}</ProjectGuid>
+	<ProjectGuid>{F649F1AF-4693-673C-9339-7028CC39F18F}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -47,9 +47,9 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\branchMapGen.cs" />
+     <Compile Include="Assets\Scripts\buttonFunctions.cs" />
      <Compile Include="Assets\Scripts\centerCam.cs" />
      <Compile Include="Assets\Scripts\mapGen.cs" />
-     <Compile Include="Assets\buttonFunctions.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
