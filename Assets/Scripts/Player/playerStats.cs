@@ -1,15 +1,22 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class playerStats : MonoBehaviour {
 
-	// Use this for initialization
+	public float totalSteps;
+	public float stepRate;
+	
+	public int totalSteps_int;
+	public Text totalSteps_text;
+
 	void Start () {
-	
+		
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
-	
+		totalSteps_int = (int)totalSteps;
+		totalSteps += stepRate * Time.deltaTime;
+		totalSteps_text.text = "Total Steps: " + totalSteps_int.ToString();
 	}
 }
