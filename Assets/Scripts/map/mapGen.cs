@@ -23,7 +23,7 @@ public class mapGen : MonoBehaviour {
 		//Camera.main.orthographicSize = numOfNodes;
 		
 		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
-		lineRenderer.material = new Material(Shader.Find("Particles/Additive"));
+		//lineRenderer.material = new Material(Shader.Find("Materials/Line"));
 		lineRenderer.SetVertexCount(numOfNodes);
 		lineRenderer.SetWidth(0.2f, 0.2f);
 

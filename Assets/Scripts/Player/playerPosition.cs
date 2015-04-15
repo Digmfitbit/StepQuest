@@ -17,22 +17,24 @@ public class playerPosition : MonoBehaviour {
 
 	void Update () {
 		nodes = GameObject.FindGameObjectsWithTag("Node");
-		nextNode = nodes[currentID + 1];
-		totalSteps = GetComponent<playerStats>().totalSteps;
+		if(nodes.Length > 0){
+			nextNode = nodes[currentID + 1];
+			totalSteps = GetComponent<playerStats>().totalSteps;
 
-		transform.position = nodes[currentID].transform.position;
+			transform.position = nodes[currentID].transform.position;
 
-		if(Input.GetMouseButtonDown(0) && currentID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
-			GetComponent<playerStats>().totalSteps -= nextNode.GetComponent<branchMapGen>().stepCost;
-			nextNode.GetComponent<branchMapGen>().stepCost = 0;
-			currentID ++;
+			if(Input.GetMouseButtonDown(0) && currentID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
+				GetComponent<playerStats>().totalSteps -= nextNode.GetComponent<branchMapGen>().stepCost;
+				nextNode.GetComponent<branchMapGen>().stepCost = 0;
+				currentID ++;
+			}
+			else if(Input.GetMouseButtonDown (1) && currentID > 0
+		       	 //&& totalSteps > nodes[currentID - 1].GetComponent<branchMapGen>().stepCost
+		       	 ){
+				//GetComponent<playerStats>().totalSteps -= nodes[currentID - 1].GetComponent<branchMapGen>().stepCost;
+				currentID --;
+			}
+			nextStepCost.text = "Next Step Cost: " + nextNode.GetComponent<branchMapGen>().stepCost.ToString ();
 		}
-		else if(Input.GetMouseButtonDown (1) && currentID > 0
-		        //&& totalSteps > nodes[currentID - 1].GetComponent<branchMapGen>().stepCost
-		        ){
-			//GetComponent<playerStats>().totalSteps -= nodes[currentID - 1].GetComponent<branchMapGen>().stepCost;
-			currentID --;
-		}
-		nextStepCost.text = "Next Step Cost: " + nextNode.GetComponent<branchMapGen>().stepCost.ToString ();
 	}
 }
