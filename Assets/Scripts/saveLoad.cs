@@ -5,5 +5,5 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 public static class saveLoad{
-
+	//Will contain save and load code.
 }

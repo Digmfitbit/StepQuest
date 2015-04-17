@@ -15,6 +15,7 @@ public class playerStats : MonoBehaviour {
 	}
 
 	void Update () {
+		//This code is only for testing. This will eventually be pulled from the FitBit.
 		totalSteps_int = (int)totalSteps;
 		totalSteps += stepRate * Time.deltaTime;
 		totalSteps_text.text = "Total Steps: " + totalSteps_int.ToString();

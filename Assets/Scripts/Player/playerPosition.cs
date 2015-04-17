@@ -19,25 +19,33 @@ public class playerPosition : MonoBehaviour {
 		nodes = GameObject.FindGameObjectsWithTag("Node");
 
 		if(nodes.Length > 0){
+
+			//Only set next node to this if you are not on the last node.
 			if(currentID < nodes.Length - 1){
 				nextNode = nodes[currentID + 1];
 			}
 
+			//Set total steps to component from players stats, will be pulled from FitBit.
 			totalSteps = GetComponent<playerStats>().totalSteps;
+
+			//Set the player position to the current node.
 			transform.position = nodes[currentID].transform.position;
 
+			//Left click and make sure the player has enough steps.
 			if(Input.GetMouseButtonDown(0) && currentID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
 				GetComponent<playerStats>().totalSteps -= nextNode.GetComponent<branchMapGen>().stepCost;
 				Debug.Log ("Subtract " + nextNode.GetComponent<branchMapGen>().stepCost.ToString() + " steps");
 				nextNode.GetComponent<branchMapGen>().stepCost = 0;
 				currentID ++;
 			}
-			else if(Input.GetMouseButtonDown (1) && currentID > 0
-		       	 //&& totalSteps > nodes[currentID - 1].GetComponent<branchMapGen>().stepCost
-		       	 ){
-				//GetComponent<playerStats>().totalSteps -= nodes[currentID - 1].GetComponent<branchMapGen>().stepCost;
+
+			//Right click.
+			else if(Input.GetMouseButtonDown (1) && currentID > 0){
+				//Move to the previous node, free of charge.
 				currentID --;
 			}
+
+			//Draw the next cost on screen.
 			nextStepCost.text = "Next Step Cost: " + nextNode.GetComponent<branchMapGen>().stepCost.ToString ();
 		}
 	}
