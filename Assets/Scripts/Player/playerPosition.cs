@@ -17,14 +17,18 @@ public class playerPosition : MonoBehaviour {
 
 	void Update () {
 		nodes = GameObject.FindGameObjectsWithTag("Node");
-		if(nodes.Length > 0){
-			nextNode = nodes[currentID + 1];
-			totalSteps = GetComponent<playerStats>().totalSteps;
 
+		if(nodes.Length > 0){
+			if(currentID < nodes.Length - 1){
+				nextNode = nodes[currentID + 1];
+			}
+
+			totalSteps = GetComponent<playerStats>().totalSteps;
 			transform.position = nodes[currentID].transform.position;
 
 			if(Input.GetMouseButtonDown(0) && currentID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
 				GetComponent<playerStats>().totalSteps -= nextNode.GetComponent<branchMapGen>().stepCost;
+				Debug.Log ("Subtract " + nextNode.GetComponent<branchMapGen>().stepCost.ToString() + " steps");
 				nextNode.GetComponent<branchMapGen>().stepCost = 0;
 				currentID ++;
 			}

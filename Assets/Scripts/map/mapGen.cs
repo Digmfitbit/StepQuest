@@ -13,6 +13,7 @@ public class mapGen : MonoBehaviour {
 
 	private int randomNodeType;
 	private Vector3 randomDirect;
+	private Vector3 newPos;
 
 	public int numOfNodes;
 
@@ -47,7 +48,7 @@ public class mapGen : MonoBehaviour {
 				nodeTypeSelect[i] = nodeType[0];
 			}
 
-			else if(i % Random.Range (5,6) == 0){
+			else if(i % Random.Range (5,7) == 0){
 				nodeTypeSelect[i] = nodeType[0];
 			}
 
@@ -61,9 +62,18 @@ public class mapGen : MonoBehaviour {
 
 			if(prevNodes.Length > 0){
 				//Instantiate(nodeTypeSelect[i], transform.position + (randomDirect + new Vector3(i*2,0,0)), Quaternion.identity);
-				randomDirect = new Vector3(Random.Range (-1, 2), Random.Range(-1, 2), 0) + prevNodes[prevNodes.Length-1].transform.position;
-				Instantiate(nodeTypeSelect[i], randomDirect, Quaternion.identity);
-				lineRenderer.SetPosition(i,  randomDirect );
+				int e = 0;
+
+				while(e < 1){
+					randomDirect = new Vector3(Random.Range (-1, 2), Random.Range(-1, 2), 0);
+					newPos = randomDirect + prevNodes[prevNodes.Length-1].transform.position;
+
+					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 100) == false && randomDirect != new Vector3(0,0,0)){
+						Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity);
+						lineRenderer.SetPosition(i,  newPos);
+						e = 1;
+					}
+				}
 			}
 			else{
 				//randomDirect = new Vector3(Random.Range (-1, 2), Random.Range (-2,3), 0);
