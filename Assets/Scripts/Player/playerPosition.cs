@@ -13,6 +13,7 @@ public class playerPosition : MonoBehaviour {
 
 	void Start () {
 		nodes = GameObject.FindGameObjectsWithTag("Node");
+		transform.position = nodes[0].transform.position;
 	}
 
 	void Update () {
@@ -29,7 +30,10 @@ public class playerPosition : MonoBehaviour {
 			totalSteps = GetComponent<playerStats>().totalSteps;
 
 			//Set the player position to the current node.
-			transform.position = nodes[currentID].transform.position;
+			transform.position = Vector3.MoveTowards(transform.position, nodes[currentID].transform.position, .5f);
+			Vector3 temp = transform.position;
+			temp.z = -1;
+			transform.position = temp;
 
 			//Left click and make sure the player has enough steps.
 			if(Input.GetMouseButtonDown(0) && currentID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
