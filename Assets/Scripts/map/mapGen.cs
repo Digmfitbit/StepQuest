@@ -21,7 +21,8 @@ public class mapGen : MonoBehaviour {
 
 	void Start(){
 		//Create a random number of nodes.
-		numOfNodes = Random.Range (8, 50);
+		//numOfNodes = Random.Range (8, 50);
+		numOfNodes = 1000;
 
 		//Create a line renderer to connect the nodes.
 		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
@@ -84,7 +85,7 @@ public class mapGen : MonoBehaviour {
 					newPos = randomDirect + prevNodes[prevNodes.Length-1].transform.position;
 
 					//Check to make sure that it will not collide with another node, if it does, reset the loop.
-					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 100) == false && randomDirect != new Vector3(0,0,0)){
+					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 60) == false && randomDirect != new Vector3(0,0,0)){
 						Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity);
 						lineRenderer.SetPosition(i,  newPos);
 						e = 1;
