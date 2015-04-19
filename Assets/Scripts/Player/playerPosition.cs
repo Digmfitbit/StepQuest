@@ -35,6 +35,11 @@ public class playerPosition : MonoBehaviour {
 			temp.z = -1;
 			transform.position = temp;
 
+			//Check if the node has an event
+			if(nodes[currentID].GetComponent<branchMapGen>().hasEvent == true){
+				Debug.Log ("This node has an event!");
+			}
+
 			//Left click and make sure the player has enough steps.
 			if(Input.GetMouseButtonDown(0) && currentID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
 				GetComponent<playerStats>().totalSteps -= nextNode.GetComponent<branchMapGen>().stepCost;
@@ -47,6 +52,22 @@ public class playerPosition : MonoBehaviour {
 			else if(Input.GetMouseButtonDown (1) && currentID > 0){
 				//Move to the previous node, free of charge.
 				currentID --;
+			}
+
+			else if(Input.GetKeyDown(KeyCode.Return)){
+				switch(nodes[currentID].GetComponent<branchMapGen>().id){
+				case 0:
+					Debug.Log ("This is a Town");
+					break;
+				case 1:
+					Debug.Log ("This is an Empty");
+					break;
+				case 2:
+					Debug.Log ("This is a Dungeon");
+					break;
+				default:
+					break;
+				}
 			}
 
 			//Draw the next cost on screen.
