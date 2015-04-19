@@ -17,7 +17,7 @@ public class branchMapGen : MonoBehaviour {
 
 		//Sets a unique ID for each individual node.
 		//prevNodes = GameObject.FindGameObjectsWithTag("Node");
-		//id = prevNodes.Length;
+		//id = prevNodes.Lengt
 
 		//Gives a change to generate an event on each node
 		if(Random.Range(0,100) < 4){
@@ -42,5 +42,13 @@ public class branchMapGen : MonoBehaviour {
 
 		//Assign a random value for the node cost.
 		stepCost = Random.Range (50,150);
+	}
+
+	public void Town(){
+		Debug.Log ("Enter the Town");
+	}
+
+	public void Dungeon(){
+		Debug.Log ("Enter the Dungeon");
 	}
 }

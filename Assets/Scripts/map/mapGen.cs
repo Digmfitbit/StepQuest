@@ -86,7 +86,7 @@ public class mapGen : MonoBehaviour {
 
 					//Check to make sure that it will not collide with another node, if it does, reset the loop.
 					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 60) == false && randomDirect != new Vector3(0,0,0)){
-						Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity);
+						(Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity) as GameObject).transform.parent = this.transform;
 						lineRenderer.SetPosition(i,  newPos);
 						e = 1;
 					}
@@ -94,7 +94,7 @@ public class mapGen : MonoBehaviour {
 			}
 			//For the first node only, spawn at (0,0,0).
 			else{
-				Instantiate (nodeTypeSelect[i], transform.position, Quaternion.identity);
+				(Instantiate (nodeTypeSelect[i], transform.position, Quaternion.identity) as GameObject).transform.parent = this.transform;
 				lineRenderer.SetPosition(i, transform.position);
 			}
 		}
