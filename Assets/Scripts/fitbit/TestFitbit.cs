@@ -8,6 +8,9 @@ using UnityEngine.UI;
 
 public class TestFitbit : MonoBehaviour {
 
+    private static string access_token = "";
+    private static string access_secret = "";
+
     private string CONSUMER_KEY = "e80b47146ecb43c2b91767db41509a07";
     private string CONSUMER_SECRET = "427258ee3dd04ee78f53376ee209d26a";
     private string RequestTokenURL = "https://api.fitbit.com/oauth/request_token";
@@ -25,23 +28,26 @@ public class TestFitbit : MonoBehaviour {
     //based off of: http://forum.unity3d.com/threads/how-do-i-request-an-oauth-token-in-fitbit-with-www.258034/
     void Start()
     {
-        //if not stored.
+
         manager = new OAuth.Manager();
         manager["consumer_key"] = CONSUMER_KEY;
         manager["consumer_secret"] = CONSUMER_SECRET;
-        manager.AcquireRequestToken(RequestTokenURL, "POST");
-        Debug.Log("token: "+manager["token"]);
+        //if stored.
+        if ((access_token = PlayerPrefs.GetString("token"))!= "")
+        {
+            access_secret = PlayerPrefs.GetString("token_secret");
 
-        var url = SERVICE_SPECIFIC_AUTHORIZE_URL_STUB + manager["token"];
-        Application.OpenURL(url);
+            manager["token"] = access_token;
+            manager["token_secret"] = access_secret;
+        }
+        else
+        { // Need to verify. Launch browser.
+            manager.AcquireRequestToken(RequestTokenURL, "POST");
+            Debug.Log("token: " + manager["token"]);
 
-        //else if stored
-        /*var oauth = new OAuth.Manager();
-        oauth["consumer_key"] = CONSUMER_KEY;
-        oauth["consumer_secret"] = CONSUMER_SECRET;
-        oauth["token"] = your_stored_access_token;
-        oauth["token_secret"] = your_stored_access_secret;*/
-        
+            var url = SERVICE_SPECIFIC_AUTHORIZE_URL_STUB + manager["token"];
+            Application.OpenURL(url);
+        }
     }
 
     public void enterPin() {
@@ -49,6 +55,8 @@ public class TestFitbit : MonoBehaviour {
         manager.AcquireAccessToken(AccessTokenURL,
                          "POST",
                          pin);
+        PlayerPrefs.SetString("token", manager["token"]);
+        PlayerPrefs.SetString("token_secret", manager["token_secret"]);
     }
 
     public void getStepsSinceLastCall()
@@ -72,17 +80,37 @@ public class TestFitbit : MonoBehaviour {
                                 response.StatusDescription);
             else
             {
-                List<string> lines = new List<string>();
+                string line = "";
                 using (StreamReader reader = new StreamReader(response.GetResponseStream()))
                 {
                     while (!reader.EndOfStream)
                     {
-                        string line = reader.ReadLine();
-                        Debug.Log(line);
-                        lines.Add(line);
+                        line = reader.ReadLine();
                     }
                 }
-                Debug.Log(lines);
+                
+                string[] list = line.Split(new char[] {'[','{','}'});
+                //ignore first and last
+                for (int i = 1; i < list.Length - 1; i++)
+                {
+                    if (!list[i].StartsWith("\"dateTime"))
+                    {
+                        continue;
+                    }
+                    string[] itemInfo = list[i].Split(new char[] {'\"'});
+                    string dateTime = itemInfo[3];
+                    string value = itemInfo[7];
+                    steps += Convert.ToInt32(value);
+                }
+                //Example response with whitespace for clarity
+                //{"activities-steps":[
+                //  {"dateTime":"2015-04-13","value":"0"},
+                //  {"dateTime":"2015-04-14","value":"0"},
+                //  ...,
+                //  {"dateTime":"2015-04-19","value":"0"}
+                //]}
+
+                Debug.Log("steps: " + steps);
             }
         }
 
