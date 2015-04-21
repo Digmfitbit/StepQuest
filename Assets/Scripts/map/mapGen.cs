@@ -61,7 +61,7 @@ public class mapGen : MonoBehaviour {
 			}
 
 			//Only create a town node every 5 or 6 nodes.
-			else if(i % Random.Range (5,7) == 0){
+			else if(i % 7 == 0){
 				nodeTypeSelect[i] = nodeType[0];
 			}
 
