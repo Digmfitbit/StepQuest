@@ -63,7 +63,7 @@ public class playerPosition : MonoBehaviour {
 				else if(Input.GetKeyDown(KeyCode.Return)){
 					switch(nodes[worldID].GetComponent<branchMapGen>().id){
 					case 0:
-						Debug.Log ("This is a Town");
+						Debug.Log ("This is the town of " + nodes[worldID].GetComponent<townGen>().townName.ToString ());
 						nodes[worldID].GetComponent<branchMapGen>().Town();
 						break;
 					case 1:

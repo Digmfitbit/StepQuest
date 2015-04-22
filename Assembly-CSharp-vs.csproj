@@ -54,8 +54,9 @@
      <Compile Include="Assets\Scripts\Player\playerStats.cs" />
      <Compile Include="Assets\Scripts\buttonFunctions.cs" />
      <Compile Include="Assets\Scripts\centerCam.cs" />
+     <Compile Include="Assets\Scripts\fitbit\FitBit.cs" />
+     <Compile Include="Assets\Scripts\fitbit\LoadGame.cs" />
      <Compile Include="Assets\Scripts\fitbit\OAuth.cs" />
-     <Compile Include="Assets\Scripts\fitbit\TestFitbit.cs" />
      <Compile Include="Assets\Scripts\map\branchMapGen.cs" />
      <Compile Include="Assets\Scripts\map\dungeonGen.cs" />
      <Compile Include="Assets\Scripts\map\mapGen.cs" />
