@@ -19,7 +19,6 @@ public class LoadGame : MonoBehaviour {
 
 
     // Use this for initialization
-    //based off of: http://forum.unity3d.com/threads/how-do-i-request-an-oauth-token-in-fitbit-with-www.258034/
     void Start()
     {
         string dateTimeString;
@@ -35,14 +34,22 @@ public class LoadGame : MonoBehaviour {
         FitBit fitBitManager = FitBit.getInstance();
     }
 
-    //TODO remove this. Only here for show for the button
+    public void enterPin()
+    {
+        FitBit.getInstance().enterPin();
+    }
+
+    //TODO remove these. Only here for show for the button
     public void getStepsSinceLastCall()
     {
         Debug.Log(FitBit.getInstance().getStepsSinceLastCall());
     }
 
-    public void enterPin()
+    public void getFriends()
     {
-        FitBit.getInstance().enterPin();
+        foreach (string str in FitBit.getInstance().getFriendIDs())
+        {
+            Debug.Log(str);
+        }
     }
 }

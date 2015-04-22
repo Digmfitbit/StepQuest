@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace Assets.Scripts.fitbit
     {
         private static string API_BASE = "https://api.fitbit.com";
         private string LAST_CALL_SINCE_URL = API_BASE + "/1/user/-/activities/steps/date/today/7d.json";
+        private string FRIENDS_URL = API_BASE + "/1/user/-/friends.json";
 
         private static FitBit instance;
         private static OAuth.Manager manager;
@@ -78,38 +80,63 @@ namespace Assets.Scripts.fitbit
         }
 
         /**
+         * Gets the string identifiers for the authenticated user's friends list
+         * */
+        public string[] getFriendIDs()
+        {
+            var authzHeader = manager.GenerateAuthzHeader(FRIENDS_URL, "GET");
+            var request = (HttpWebRequest)WebRequest.Create(FRIENDS_URL);
+            setUpHeaders(request, authzHeader);
+            
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                //TODO do better error catching
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    Debug.Log("There's been a problem trying to access fitbit:" +
+                                    Environment.NewLine +
+                                    response.StatusDescription);
+                }
+                else
+                {
+                    string line = getStringFromResponse(response);
+                    string friendsListString = line.Split(new char[] { '[',']' })[1];
+                    string[] listOfFriendIds = friendsListString.Split(new char[] { ',' });
+                    return listOfFriendIds;
+                }
+                // Example for someone with no friends:
+                //{
+                //"friends":  []
+                //}
+            }
+            return null;
+        }
+
+        /**
         * Gets the number of steps uploaded to fitbit since the last time this was called
         * 
         * */
         public int getStepsSinceLastCall()
         {
             int steps = 0;
-            
             var authzHeader = manager.GenerateAuthzHeader(LAST_CALL_SINCE_URL, "GET");
             var request = (HttpWebRequest)WebRequest.Create(LAST_CALL_SINCE_URL);
-            request.Method = "GET";
-            request.PreAuthenticate = true;
-            request.AllowWriteStreamBuffering = true;
-            request.Headers.Add("Authorization", authzHeader);
+            setUpHeaders(request, authzHeader);
 
             using (var response = (HttpWebResponse)request.GetResponse())
             {
                 if (response.StatusCode != HttpStatusCode.OK)
-                    Debug.Log("There's been a problem trying to tweet:" +
+                {
+                    Debug.Log("There's been a problem trying to access fitbit:" +
                                     Environment.NewLine +
                                     response.StatusDescription);
+                }
                 else
                 {
-                    string line = "";
-                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        while (!reader.EndOfStream)
-                        {
-                            line = reader.ReadLine();
-                        }
-                    }
+                    string line = getStringFromResponse(response);
+                    //TODO check time
                     PlayerPrefs.SetString(LAST_UPDATED_KEY, System.DateTime.Now.ToString());
-                    
+
                     string[] list = line.Split(new char[] { '[', '{', '}' });
                     //ignore first and last
                     //TODO ignore dateTimes since last updated
@@ -135,6 +162,26 @@ namespace Assets.Scripts.fitbit
             }
 
             return steps;
+        }
+
+        private void setUpHeaders(HttpWebRequest request, string authzHeader){
+            request.Method = "GET";
+            request.PreAuthenticate = true;
+            request.AllowWriteStreamBuffering = true;
+            request.Headers.Add("Authorization", authzHeader);
+        }
+
+        private string getStringFromResponse(HttpWebResponse response)
+        {
+            string line = "";
+            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            {
+                while (!reader.EndOfStream)
+                {
+                    line = reader.ReadLine();
+                }
+            }
+            return line;
         }
     }
 }
