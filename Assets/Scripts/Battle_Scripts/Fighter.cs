@@ -22,6 +22,7 @@ public class Fighter : MonoBehaviour {
 	protected BattleManager battelManagerScript;
 	protected SpriteRenderer spriteRenderer;
 	
+	public TextMesh healthText;
 
 	protected virtual void Awake () 
 	{
@@ -51,6 +52,8 @@ public class Fighter : MonoBehaviour {
 	protected virtual void hit(float _damageIn)
 	{
 		health -= _damageIn;
+
+		transform.FindChild ("HealthText").gameObject.SendMessage("setText", health.ToString());
 	}
 
 	protected virtual void die()
