@@ -77,19 +77,19 @@ public class dungeonGen : MonoBehaviour {
 				//Creating an integer to use in a while loop.
 				int e = 0;
 				
-				//while(e < 1){
+				while(e < 1){
 					//Select a random direction for the next node.
 					randomDirect = new Vector3(Random.Range (-1, 2), Random.Range(-1, 2), 0);
 					//Set the next nodes position to the random direction.
 					newPos = randomDirect + prevNodes[prevNodes.Length-1].transform.position;
 					
 					//Check to make sure that it will not collide with another node, if it does, reset the loop.
-					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 60) == false && randomDirect != new Vector3(0,0,0)){
+					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 1) == false && randomDirect != new Vector3(0,0,0)){
 						(Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity) as GameObject).transform.parent = this.transform;
 						lineRenderer.SetPosition(i,  newPos);
 						e = 1;
 					}
-				//}
+				}
 			}
 			//For the first node only, spawn at (0,0,0).
 			else{
