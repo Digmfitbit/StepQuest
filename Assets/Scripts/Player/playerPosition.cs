@@ -22,9 +22,6 @@ public class playerPosition : MonoBehaviour {
 	void Update () {
 		nodes = GameObject.FindGameObjectsWithTag("Node");
 
-		//Set total steps to component from players stats, will be pulled from FitBit.
-		totalSteps = GetComponent<playerStats>().totalSteps;
-
 		switch(inDungeon){
 		//The character is on the world map.
 		case false:
@@ -34,6 +31,9 @@ public class playerPosition : MonoBehaviour {
 				if(worldID < nodes.Length - 1){
 					nextNode = nodes[worldID + 1];
 				}
+
+				//Set total steps to component from players stats, will be pulled from FitBit.
+				totalSteps = GetComponent<playerStats>().totalSteps;
 					
 				//Set the player position to the current node.
 				transform.position = Vector3.MoveTowards(transform.position, nodes[worldID].transform.position, .5f);
@@ -67,12 +67,12 @@ public class playerPosition : MonoBehaviour {
 						nodes[worldID].GetComponent<branchMapGen>().Town();
 						break;
 					case 1:
-						Debug.Log ("This is nothing here!");
+						Debug.Log ("This is an Empty");
 						break;
 					case 2:
 						Debug.Log ("This is a Dungeon");
-						nodes[worldID].GetComponent<branchMapGen>().dunGen = true;
-						//inDungeon = true;
+						nodes[worldID].GetComponent<branchMapGen>().Dungeon();
+						inDungeon = true;
 						break;
 					default:
 						break;

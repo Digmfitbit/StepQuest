@@ -1,14 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : Fighter 
-{
-
-	private void Start()
-	{
-		health = 100f;
-		damage = 10f;
-	}
+public class Player : Fighter {
 
 
 

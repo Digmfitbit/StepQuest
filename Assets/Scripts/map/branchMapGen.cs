@@ -8,8 +8,6 @@ public class branchMapGen : MonoBehaviour {
 	public bool isUnlocked;
 	public bool hasEvent = false;
 
-	public bool dunGen = false;
-
 	private GameObject[] prevNodes;
 	private GUIText stepCost_text;
 
@@ -44,14 +42,6 @@ public class branchMapGen : MonoBehaviour {
 
 		//Assign a random value for the node cost.
 		stepCost = Random.Range (50,150);
-	}
-
-	void Update(){
-		if(dunGen == true){
-			(Instantiate(Resources.Load("Prefabs/DungeonPrefabs/node_d_Empty") as GameObject, transform.position, Quaternion.identity) as GameObject).transform.parent = this.transform;
-			Debug.Log("Created Dungeon");
-			dunGen = false;
-		}
 	}
 
 	public void Town(){

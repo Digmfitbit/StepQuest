@@ -3,68 +3,51 @@ using System.Collections;
 
 public class Fighter : MonoBehaviour {
 
-	protected float strength;
-	protected float strengthMax;
-	protected float stamina;
-	protected float staminaMax;
-	public float health;
-	protected float healthMax;
-	protected float recovery;
-	protected float recoveryMax;
-	protected float damage = 10f;
-	protected float damageMax;
+	protected float strength, strengthMax;
+	protected float stamina, staminaMax;
+	protected float health, healthMax;
+	protected float recovery,recoveryMax;
+	protected float damage, damageMax;
 
 	protected string fighterName;
 
-	protected bool selected;
-
-	protected GameObject battelManager;
-	protected BattleManager battelManagerScript;
-	protected SpriteRenderer spriteRenderer;
-	
-	public TextMesh healthText;
-
-	protected virtual void Awake () 
+	protected bool selected = false;
+	public bool Selected
 	{
-		battelManager = GameObject.Find ("BattleManager");
-		battelManagerScript = battelManager.GetComponent<BattleManager>();
+		get{
+			return selected;
+		}
+		set{
+			selected = value;
+		}
+	}
 
-		selected = false;
 
-		spriteRenderer = gameObject.GetComponent<SpriteRenderer> ();
-		spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);		//start sprite with half the opacity for testing
-
-		health = 100f;
+	
+	protected virtual void Start () 
+	{
+	
 	}
 	
 	protected virtual void Update ()
 	{
-		ShowSelection ();
-		if (health <= 0)
-			die ();
+//		checkSelection ();
+
+	
 	}
 
-	public virtual void attack(GameObject _enemy)
+	protected virtual void attack(float damageOut)
 	{
-		_enemy.SendMessage ("hit",damage);
+
 	}
 
-	protected virtual void hit(float _damageIn)
+	protected virtual void hit(float damageIn)
 	{
-		health -= _damageIn;
 
-		transform.FindChild ("HealthText").gameObject.SendMessage("setText", health.ToString());
-	}
-
-	protected virtual void die()
-	{
-		SetSelected (false);
-		Destroy (gameObject);
 	}
 
 	protected virtual void winFight()
 	{
-
 	}
 
 	protected virtual void loseFight()
@@ -75,21 +58,7 @@ public class Fighter : MonoBehaviour {
 
 	protected virtual void OnMouseDown()
 	{
-		//Tell the GameManager that sombody click on you, snitch!
-		battelManagerScript.setSelection (gameObject);
+		Debug.Log ("I'm inside of OnMouseDown and my Name is: "+ gameObject.name);
 	}
 
-	protected virtual void SetSelected(bool _selected)
-	{
-		selected = _selected;
-	}
-
-	protected virtual void ShowSelection()
-	{
-		if (selected) {	
-			spriteRenderer.material.color = new Color (1f, 1f, 1f, 1f);
-		}else {
-			spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);
-		}
-	}
 }

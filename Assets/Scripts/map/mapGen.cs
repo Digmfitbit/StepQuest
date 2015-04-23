@@ -22,10 +22,10 @@ public class mapGen : MonoBehaviour {
 	void Start(){
 		//Create a random number of nodes.
 		//numOfNodes = Random.Range (8, 50);
-		numOfNodes = 50;
+		numOfNodes = 1000;
 
 		//Create a line renderer to connect the nodes.
-		LineRenderer lineRenderer = gameObject.GetComponent<LineRenderer>();
+		LineRenderer lineRenderer = gameObject.AddComponent<LineRenderer>();
 
 		//Initial settings for the line renderer.
 		lineRenderer.SetVertexCount(numOfNodes);
@@ -72,7 +72,7 @@ public class mapGen : MonoBehaviour {
 
 			//Checks all previous nodes.
 			prevNodes = GameObject.FindGameObjectsWithTag("Node");
-			//Debug.Log (prevNodes.Length);
+			Debug.Log (prevNodes.Length);
 
 			if(prevNodes.Length > 0){
 				//Creating an integer to use in a while loop.
