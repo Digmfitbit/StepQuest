@@ -6,7 +6,6 @@ using System.Text;
 using System.Net;
 using UnityEngine.UI;
 using UnityEngine;
-//using Assets.Scripts;
 
 using System.IO;
 
@@ -83,14 +82,12 @@ namespace Assets.Scripts.fitbit
         /**
          * Gets the string identifiers for the authenticated user's friends list
          * */
-        public List<string> getFriendIDs()
+        public string[] getFriendIDs()
         {
             var authzHeader = manager.GenerateAuthzHeader(FRIENDS_URL, "GET");
             var request = (HttpWebRequest)WebRequest.Create(FRIENDS_URL);
             setUpHeaders(request, authzHeader);
-
-            List<string> toReturn = new List<string>();
-
+            
             using (var response = (HttpWebResponse)request.GetResponse())
             {
                 //TODO do better error catching
@@ -103,28 +100,16 @@ namespace Assets.Scripts.fitbit
                 else
                 {
                     string line = getStringFromResponse(response);
-                    JSONObject list = new JSONObject(line);
-                    list.GetField("friends", delegate(JSONObject hits)
-                    {
-                        foreach (JSONObject user in hits.list)
-                        {
-                            user.GetField("user", delegate(JSONObject info)
-                            {
-                                //TODO extract more info here if we want
-                                info.GetField("encodedId", delegate(JSONObject encodedId)
-                                {
-                                    toReturn.Add(encodedId.ToString());
-                                });
-                            });
-                        }
-                    });
+                    string friendsListString = line.Split(new char[] { '[',']' })[1];
+                    string[] listOfFriendIds = friendsListString.Split(new char[] { ',' });
+                    return listOfFriendIds;
                 }
                 // Example for someone with no friends:
                 //{
                 //"friends":  []
                 //}
             }
-            return toReturn;
+            return null;
         }
 
         /**
