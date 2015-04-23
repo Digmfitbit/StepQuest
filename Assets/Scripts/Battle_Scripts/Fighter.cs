@@ -11,29 +11,27 @@ public class Fighter : MonoBehaviour {
 
 	protected string fighterName;
 
-	protected bool selected = false;
-	public bool Selected
-	{
-		get{
-			return selected;
-		}
-		set{
-			selected = value;
-		}
-	}
+	protected bool selected;
 
+	protected GameObject battelManager;
+	protected BattleManager battelManagerScript;
+	protected SpriteRenderer spriteRenderer;
 
 	
 	protected virtual void Start () 
 	{
-	
+		battelManager = GameObject.Find ("BattleManager");
+		battelManagerScript = battelManager.GetComponent<BattleManager>();
+
+		selected = false;
+
+		spriteRenderer = gameObject.GetComponent<SpriteRenderer> ();
+		spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);		//start sprite with half the opacity for testing
 	}
 	
 	protected virtual void Update ()
 	{
-//		checkSelection ();
-
-	
+		ShowSelection ();
 	}
 
 	protected virtual void attack(float damageOut)
@@ -48,6 +46,7 @@ public class Fighter : MonoBehaviour {
 
 	protected virtual void winFight()
 	{
+
 	}
 
 	protected virtual void loseFight()
@@ -58,7 +57,21 @@ public class Fighter : MonoBehaviour {
 
 	protected virtual void OnMouseDown()
 	{
-		Debug.Log ("I'm inside of OnMouseDown and my Name is: "+ gameObject.name);
+		//Tell the GameManager that sombody click on you, snitch!
+		battelManagerScript.setSelection (gameObject);
 	}
 
+	protected virtual void SetSelected(bool _selected)
+	{
+		selected = _selected;
+	}
+
+	protected virtual void ShowSelection()
+	{
+		if (selected) {	
+			spriteRenderer.material.color = new Color (1f, 1f, 1f, 1f);
+		}else {
+			spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);
+		}
+	}
 }
