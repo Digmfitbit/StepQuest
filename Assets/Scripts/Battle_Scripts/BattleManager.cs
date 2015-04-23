@@ -17,67 +17,111 @@ public class BattleManager : MonoBehaviour {
 	private List<GameObject> allPlayers = new List<GameObject>();
 	private List<GameObject> allEnemys = new List<GameObject>();
 
+	private Player playerScript;
+	private Enemy enemyScript;
+
 	private bool fightMode = false;
+	private bool startFight = false;
 
 	private TextMesh fightText;
 
 	
-	void Start () 
+	void Awake () 
 	{
 		//Places the players and enemys on the field
 		setUpFight ();
 
 		fightText = GameObject.Find("tempReadyForFightText").GetComponent<TextMesh>();
-		fightText.color = new Color(1f,1f,1f,0f);
 	}
 	
 	void Update () 
 	{
+		if (startFight) 
+		{
+			startFight = false;
+			Fight();
+		}
+	}
 
+	private void Fight()
+	{
+		Debug.Log ("Fight between: " + selectedPlayer.name + " vs. " + selectedEnemy.name);
+		playerScript.attack (selectedEnemy);
+		enemyScript.attack (selectedPlayer);
+		Debug.Log ("PlayerHealth: " + playerScript.health + " EnemyHealth: " + enemyScript.health);
+
+		//set up next round
+		fightMode = false;
+		selectedEnemy.SendMessage ("SetSelected", false);
+		selectedEnemy = null;
+		enemySelected = false;
 	}
 
 	public void setSelection(GameObject _fighter)
 	{
-	
-		if (_fighter.tag == "Player") 
+		//selection is only possible in if we are not in fight mode. 
+		if (!fightMode) 
 		{
-			if (selectedPlayer != null) {
-				if (selectedPlayer == _fighter) {
-					selectedPlayer.SendMessage ("SetSelected", false);
-					selectedPlayer = null;
-					playerSelected = false;
-				} else {
-					//tell the player selected befor that he is no longer selected
-					selectedPlayer.SendMessage ("SetSelected", false);
+			if (_fighter.tag == "Player") {
+				if (selectedPlayer != null) {
+					if (selectedPlayer == _fighter) {
+						selectedPlayer.SendMessage ("SetSelected", false);
+						selectedPlayer = null;
+						playerSelected = false;
+					} else {
+						//tell the player selected befor that he is no longer selected
+						selectedPlayer.SendMessage ("SetSelected", false);
 
-					//set newly selected player to be the selected fighter
+						//set newly selected player to be the selected fighter
+						selectedPlayer = _fighter;
+						selectedPlayer.SendMessage ("SetSelected", true);
+					}
+				} else {
 					selectedPlayer = _fighter;
+					playerSelected = true;
 					selectedPlayer.SendMessage ("SetSelected", true);
 				}
 			} else {
-				selectedPlayer = _fighter;
-				playerSelected = true;
-				selectedPlayer.SendMessage ("SetSelected", true);
+				if (playerSelected && _fighter.tag == "Enemy") {
+					selectedEnemy = _fighter;
+					enemySelected = true;
+					selectedEnemy.SendMessage ("SetSelected", true);
+				} else {
+					Debug.Log ("Select Fighter First");
+				}
 			}
-		} else {
-			if(playerSelected && _fighter.tag == "Enemy")
-			{
-				selectedEnemy = _fighter;
-				enemySelected = true;
-				selectedEnemy.SendMessage("SetSelected", true);
-			}else{
-				Debug.Log("Select Fighter First");
-			}
-		}
+		
 
-		//After a player and enemy are selected the game goes into fight mode
-		if (playerSelected && enemySelected) 
-		{
-			fightMode = true;
-			fightText.color = new Color(1f,1f,1f,1f);		
+			//After player and enemy are selected the game goes into fight mode
+			if (playerSelected && enemySelected) {
+				fightMode = true;
+				startFight = true;
+				fightText.text = "Fight!";
+
+				playerScript = selectedPlayer.GetComponent<Player> ();
+				enemyScript = selectedEnemy.GetComponent<Enemy> ();
+			}
 		}
 	}
-	
+
+	private void someoneDied(GameObject _deadFighter)
+	{
+		if (_deadFighter.tag == "Enemy") {
+			enemySelected = false;
+			selectedEnemy = null;
+
+			fightMode = false;
+		} 
+		else if (_deadFighter.tag == "Player") 
+		{
+			enemySelected = false;
+			playerSelected = false;
+			selectedEnemy = null;
+			selectedPlayer = null;
+
+			fightMode = false;
+		}
+	}
 
 	private void setUpFight()
 	{
