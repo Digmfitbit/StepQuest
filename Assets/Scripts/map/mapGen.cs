@@ -19,7 +19,13 @@ public class mapGen : MonoBehaviour {
 
 	private GameObject[] prevNodes;
 
+	
+	public int seed;
+	private System.Random rand;
+	
 	void Start(){
+		rand = new System.Random(seed);
+
 		//Create a random number of nodes.
 		//numOfNodes = Random.Range (8, 50);
 		numOfNodes = 50;
@@ -53,7 +59,7 @@ public class mapGen : MonoBehaviour {
 		for(int i = 0; i < nodeTypeSelect.Length; i++){
 
 			//Choose random number for the node type.
-			randomNodeType = Random.Range(1, nodeType.Length);
+			randomNodeType = rand.Next(1, nodeType.Length);
 
 			//Create a town node as the beginning point.
 			if(i == 0){
@@ -80,7 +86,10 @@ public class mapGen : MonoBehaviour {
 
 				while(e < 1){
 					//Select a random direction for the next node.
-					randomDirect = new Vector3(Random.Range (-1, 2), Random.Range(-1, 2), 0);
+
+					//randomDirect = new Vector3(Random.Range (-1, 2), Random.Range(-1, 2), 0);
+
+					randomDirect = new Vector3(rand.Next(-1, 2), rand.Next(-1, 2), 0);
 					//Set the next nodes position to the random direction.
 					newPos = randomDirect + prevNodes[prevNodes.Length-1].transform.position;
 

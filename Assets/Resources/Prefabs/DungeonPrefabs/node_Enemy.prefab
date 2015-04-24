@@ -9,8 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 419556}
   - 65: {fileID: 6589686}
-  - 114: {fileID: 11418828}
   - 212: {fileID: 21265540}
+  - 114: {fileID: 11486288}
   m_Layer: 0
   m_Name: node_Enemy
   m_TagString: DungeonNode
@@ -40,9 +40,9 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: .5, y: .5, z: .5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &11418828
+--- !u!114 &11486288
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -54,6 +54,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
+  u_id: 0
   stepCost: 0
   isUnlocked: 0
   hasEvent: 0

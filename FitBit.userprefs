@@ -3,13 +3,13 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\map\dungeonGen.cs">
     <Files>
       <File FileName="Assets\Scripts\buttonFunctions.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\map\mapGen.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Player\playerStats.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\map\branchMapGen.cs" Line="62" Column="19" />
-      <File FileName="Assets\Scripts\map\dungeonGen.cs" Line="80" Column="7" />
-      <File FileName="Assets\Scripts\map\townGen.cs" Line="7" Column="25" />
+      <File FileName="Assets\Scripts\map\mapGen.cs" Line="27" Column="31" />
+      <File FileName="Assets\Scripts\Player\playerStats.cs" Line="35" Column="2" />
+      <File FileName="Assets\Scripts\map\branchMapGen.cs" Line="62" Column="6" />
+      <File FileName="Assets\Scripts\map\dungeonGen.cs" Line="26" Column="15" />
+      <File FileName="Assets\Scripts\map\townGen.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\centerCam.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Player\playerPosition.cs" Line="137" Column="29" />
+      <File FileName="Assets\Scripts\Player\playerPosition.cs" Line="111" Column="7" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
