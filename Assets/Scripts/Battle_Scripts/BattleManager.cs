@@ -104,7 +104,7 @@ public class BattleManager : MonoBehaviour {
 		}
 	}
 
-	private void someoneDied(GameObject _deadFighter)
+	public void someoneDied(GameObject _deadFighter)
 	{
 		if (_deadFighter.tag == "Enemy") {
 			enemySelected = false;

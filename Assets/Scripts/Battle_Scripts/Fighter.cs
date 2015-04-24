@@ -11,55 +11,67 @@ public class Fighter : MonoBehaviour {
 	protected float healthMax;
 	protected float recovery;
 	protected float recoveryMax;
-	protected float damage = 10f;
+	protected float damage;
 	protected float damageMax;
+	
+	protected bool selected = false;
+	protected bool alive = true;
 
-	protected string fighterName;
-
-	protected bool selected;
-
+	//Components
 	protected GameObject battelManager;
 	protected BattleManager battelManagerScript;
 	protected SpriteRenderer spriteRenderer;
-	
-	public TextMesh healthText;
+	public TextMesh textUnderFighter;
+	private Animator animationController;
 
 	protected virtual void Awake () 
 	{
+		//Get components
 		battelManager = GameObject.Find ("BattleManager");
 		battelManagerScript = battelManager.GetComponent<BattleManager>();
-
-		selected = false;
 
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer> ();
 		spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);		//start sprite with half the opacity for testing
 
-		health = 100f;
+		animationController = gameObject.GetComponent<Animator> ();
+
+		//initialize variables
+		damage = Random.Range (10, 20);
 	}
 	
 	protected virtual void Update ()
 	{
-		ShowSelection ();
-		if (health <= 0)
-			die ();
+		if (alive) 
+		{
+			ShowSelection ();
+			if (health <= 0)
+				dead ();
+
+		}
 	}
 
 	public virtual void attack(GameObject _enemy)
 	{
+		//call hit function on selected opponent
 		_enemy.SendMessage ("hit",damage);
 	}
 
 	protected virtual void hit(float _damageIn)
 	{
 		health -= _damageIn;
-
+		//display health under fighter
 		transform.FindChild ("HealthText").gameObject.SendMessage("setText", health.ToString());
 	}
 
-	protected virtual void die()
+	protected virtual void dead()
 	{
+		alive = false;
 		SetSelected (false);
-		Destroy (gameObject);
+
+		battelManagerScript.someoneDied (gameObject);
+		//trigger dead animation
+		animationController.SetBool ("isDead", true);
+		transform.FindChild ("HealthText").gameObject.SendMessage("setText", "I'm dead!");
 	}
 
 	protected virtual void winFight()
@@ -67,16 +79,13 @@ public class Fighter : MonoBehaviour {
 
 	}
 
-	protected virtual void loseFight()
-	{
-
-	}
-	
-
 	protected virtual void OnMouseDown()
 	{
-		//Tell the GameManager that sombody click on you, snitch!
-		battelManagerScript.setSelection (gameObject);
+		if(alive)
+		{
+			//Tell the GameManager that sombody click on you, snitch!
+			battelManagerScript.setSelection (gameObject);
+		}
 	}
 
 	protected virtual void SetSelected(bool _selected)
