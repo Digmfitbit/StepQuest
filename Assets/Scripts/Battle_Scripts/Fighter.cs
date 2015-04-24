@@ -17,6 +17,11 @@ public class Fighter : MonoBehaviour {
 	protected bool selected = false;
 	protected bool alive = true;
 
+	public GameObject HealthBar;
+	private GameObject healthBar;
+	public GameObject StaminaBar;
+	private GameObject staminaBar;
+
 	//Components
 	protected GameObject battelManager;
 	protected BattleManager battelManagerScript;
@@ -37,6 +42,16 @@ public class Fighter : MonoBehaviour {
 
 		//initialize variables
 		damage = Random.Range (10, 20);
+
+		//make health and stamina bar
+		healthBar = Instantiate(HealthBar ,transform.position + new Vector3(0f,-0.7f,0f) , Quaternion.identity) as GameObject;
+		healthBar.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
+		healthBar.transform.SetParent (transform);
+
+		staminaBar = Instantiate(StaminaBar ,transform.position + new Vector3(0f,-0.8f,0f) , Quaternion.identity) as GameObject;
+		staminaBar.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
+		staminaBar.transform.SetParent (transform);
+
 	}
 	
 	protected virtual void Update ()
@@ -61,6 +76,7 @@ public class Fighter : MonoBehaviour {
 		health -= _damageIn;
 		//display health under fighter
 		transform.FindChild ("HealthText").gameObject.SendMessage("setText", health.ToString());
+		healthBar.SendMessage ("UpdateStatusBar", health);
 	}
 
 	protected virtual void dead()
