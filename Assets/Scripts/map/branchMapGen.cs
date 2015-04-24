@@ -37,6 +37,15 @@ public class branchMapGen : MonoBehaviour {
 		case "node_Dungeon(Clone)":
 			id = 2;
 			break;
+		case "node_d_Empty(Clone)":
+			id = 3;
+			break;
+		case "node_Enemy(Clone)":
+			id = 4;
+			break;
+		case "node_Item(Clone)":
+			id = 5;
+			break;
 		default:
 			id = 1;
 			break;

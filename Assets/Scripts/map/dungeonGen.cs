@@ -13,6 +13,8 @@ public class dungeonGen : MonoBehaviour {
 	private int randomNodeType;
 	private Vector3 randomDirect;
 	private Vector3 newPos;
+
+	private Vector3[] randomDirects = new []{new Vector3(-1,0,0), new Vector3(1,0,0), new Vector3(0,-1,0), new Vector3(0,1,0), new Vector3(1,1,0), new Vector3(-1,-1,0)};
 	
 	public int numOfNodes;
 	
@@ -75,11 +77,14 @@ public class dungeonGen : MonoBehaviour {
 			
 			if(prevNodes.Length > 0){
 				//Creating an integer to use in a while loop.
-				int e = 0;
+				//int e = 0;
 				
-				while(e < 1){
+				//while(e < 1){
+				for(int e = 0; e < randomDirects.Length; e++){
 					//Select a random direction for the next node.
-					randomDirect = new Vector3(Random.Range (-1, 2), Random.Range(-1, 2), 0);
+					//randomDirect = new Vector3(Random.Range (-1, 2), Random.Range(-1, 2), 0);
+					randomDirect = randomDirects[e];
+
 					//Set the next nodes position to the random direction.
 					newPos = randomDirect + prevNodes[prevNodes.Length-1].transform.position;
 					
@@ -87,7 +92,8 @@ public class dungeonGen : MonoBehaviour {
 					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 1) == false && randomDirect != new Vector3(0,0,0)){
 						(Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity) as GameObject).transform.parent = this.transform;
 						lineRenderer.SetPosition(i,  newPos);
-						e = 1;
+						break;
+						//e = 1;
 					}
 				}
 			}

@@ -236,6 +236,8 @@ MonoBehaviour:
   inDungeon: 0
   nodes: []
   nextNode: {fileID: 0}
+  dungeonNodes: []
+  nextDungeonNode: {fileID: 0}
   nextStepCost: {fileID: 0}
 --- !u!212 &1573829061
 SpriteRenderer:

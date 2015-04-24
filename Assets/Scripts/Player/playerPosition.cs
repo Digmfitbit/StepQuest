@@ -11,6 +11,9 @@ public class playerPosition : MonoBehaviour {
 	public GameObject[] nodes;
 	public GameObject nextNode;
 
+	public GameObject[] dungeonNodes;
+	public GameObject nextDungeonNode;
+
 	private float totalSteps;
 	public Text nextStepCost;
 
@@ -20,14 +23,14 @@ public class playerPosition : MonoBehaviour {
 	}
 
 	void Update () {
-		nodes = GameObject.FindGameObjectsWithTag("Node");
-
 		//Set total steps to component from players stats, will be pulled from FitBit.
 		totalSteps = GetComponent<playerStats>().totalSteps;
 
 		switch(inDungeon){
 		//The character is on the world map.
 		case false:
+			nodes = GameObject.FindGameObjectsWithTag("Node");
+
 			if(nodes.Length > 0){
 
 				//Only set next node to this if you are not on the last node.
@@ -72,7 +75,7 @@ public class playerPosition : MonoBehaviour {
 					case 2:
 						Debug.Log ("This is a Dungeon");
 						nodes[worldID].GetComponent<branchMapGen>().dunGen = true;
-						//inDungeon = true;
+						inDungeon = true;
 						break;
 					default:
 						break;
@@ -85,6 +88,67 @@ public class playerPosition : MonoBehaviour {
 			break;
 		//The character is in a dungeon.
 		case true:
+			dungeonNodes = GameObject.FindGameObjectsWithTag ("DungeonNode");
+
+			if(dungeonNodes.Length > 0){
+				
+				//Only set next node to this if you are not on the last node.
+				if(dungeonID < dungeonNodes.Length - 1){
+					nextDungeonNode = dungeonNodes[dungeonID + 1];
+				}
+				
+				//Set the player position to the current node.
+				transform.position = Vector3.MoveTowards(transform.position, dungeonNodes[dungeonID].transform.position, .5f);
+				Vector3 temp = transform.position;
+				temp.z = -1;
+				transform.position = temp;
+				
+				//Check if the node has an event
+				if(dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasEvent == true){
+					Debug.Log ("This node has an event!");
+				}
+				
+				//Left click and make sure the player has enough steps.
+				if(Input.GetMouseButtonDown(0) && dungeonID < dungeonNodes.Length - 1 && totalSteps > nextDungeonNode.GetComponent<branchMapGen>().stepCost){
+					GetComponent<playerStats>().totalSteps -= nextDungeonNode.GetComponent<branchMapGen>().stepCost;
+					Debug.Log ("Subtract " + nextDungeonNode.GetComponent<branchMapGen>().stepCost.ToString() + " steps");
+					nextDungeonNode.GetComponent<branchMapGen>().stepCost = 0;
+					dungeonID ++;
+				}
+				
+				//Right click.
+				else if(Input.GetMouseButtonDown (1) && dungeonID > 0){
+					//Move to the previous node, free of charge.
+					dungeonID --;
+				}
+				
+				else if(Input.GetKeyDown(KeyCode.Return)){
+					switch(dungeonNodes[dungeonID].GetComponent<branchMapGen>().id){
+					case 5:
+						Debug.Log ("This is an item");
+						break;
+					case 4:
+						Debug.Log ("This is a battle");
+						break;
+					case 3:
+						Debug.Log ("This is the Exit");
+						//dungeonNodes[dungeonID].GetComponent<branchMapGen>().dunGen = false;
+						foreach(GameObject dungeonNode in dungeonNodes){
+							Destroy(dungeonNode);
+						}
+						dungeonID = 0;
+						inDungeon = false;
+						break;
+					default:
+						break;
+					}
+				}
+				
+				//Draw the next cost on screen.
+				nextStepCost.text = "Next Step Cost: " + nextDungeonNode.GetComponent<branchMapGen>().stepCost.ToString ();
+
+			}
+
 			break;
 		
 		default: 
