@@ -17,11 +17,14 @@ public class LoadGame : MonoBehaviour {
     private OAuth.Manager manager;
     private DateTime lastUpdated;
 
+    string gameScreen = "MapTest";
+    FitBit fitBitManager;
 
     // Use this for initialization
     void Start()
     {
         string dateTimeString;
+        Debug.Log("starting");
         if ((dateTimeString = PlayerPrefs.GetString("LastUpdated")) != "")
         {
             lastUpdated = Convert.ToDateTime(dateTimeString);
@@ -31,7 +34,33 @@ public class LoadGame : MonoBehaviour {
             lastUpdated = DateTime.MinValue;
         }
         // set up fitBit singleton
-        FitBit fitBitManager = FitBit.getInstance();
+        fitBitManager = FitBit.getInstance();
+        /*if (fitBitManager.isAuthenticated())
+        {
+            foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("pinUI"))
+            {
+                Destroy(gameObject);
+            }
+        }
+        else
+        {
+            //fitBitManager.getToken();
+        }*/
+    }
+
+    public void OnMouseDown()
+    {
+        Debug.Log("click start");
+        if (FitBit.getInstance().isAuthenticated())
+        {
+            Application.LoadLevel(gameScreen);
+        }
+        Debug.Log("asdasd: " + FitBit.getInstance().isAuthenticated());
+    }
+
+    void Update()
+    {
+        fitBitManager.Update();
     }
 
     public void enterPin()
