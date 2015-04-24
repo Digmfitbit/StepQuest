@@ -89,7 +89,7 @@ public class dungeonGen : MonoBehaviour {
 					newPos = randomDirect + prevNodes[prevNodes.Length-1].transform.position;
 					
 					//Check to make sure that it will not collide with another node, if it does, reset the loop.
-					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 1) == false && randomDirect != new Vector3(0,0,0)){
+					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 2) == false && randomDirect != new Vector3(0,0,0)){
 						(Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity) as GameObject).transform.parent = this.transform;
 						lineRenderer.SetPosition(i,  newPos);
 						break;
