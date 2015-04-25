@@ -118,7 +118,7 @@ MonoBehaviour:
   - {fileID: 158024, guid: 0280e3fb8b8f243ecb1a62c467afb7f8, type: 2}
   enemys:
   - {fileID: 154816, guid: 92a07b67c184d4f6a8199eba373a4594, type: 2}
-  numberOfPlayer: 4
+  numberOfPlayer: 3
   numberOfEnemy: 5
 --- !u!4 &28512931
 Transform:

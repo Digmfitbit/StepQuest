@@ -6,7 +6,8 @@ public class Enemy : Fighter
 
 	private void Start()
 	{
-		health = Random.Range (80,120);
+		health = 100f;
+		damage = 5f;
 
 	}
 

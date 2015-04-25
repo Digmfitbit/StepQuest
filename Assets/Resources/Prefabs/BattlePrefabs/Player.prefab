@@ -32,7 +32,7 @@ GameObject:
   - 114: {fileID: 11493336}
   - 95: {fileID: 9535334}
   m_Layer: 0
-  m_Name: Player_3
+  m_Name: Player_2
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -161,6 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
+  alive: 1
   HealthBar: {fileID: 139568, guid: a0af7a9fb4dd847f086b877b197c977a, type: 2}
   StaminaBar: {fileID: 130072, guid: d473663ab89ce428a94f48251b0e2122, type: 2}
   textUnderFighter: {fileID: 0}

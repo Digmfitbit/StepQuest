@@ -31,7 +31,6 @@ public class StatusBarScript : MonoBehaviour {
 
 	public void UpdateStatusBar(float _health)
 	{
-		Debug.Log ("I'm in UpdateStatusBar");
 		if (_health <= 0) {
 			segmentsToDisplay = 0;
 		} 

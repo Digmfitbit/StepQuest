@@ -15,7 +15,7 @@ public class Fighter : MonoBehaviour {
 	protected float damageMax;
 	
 	protected bool selected = false;
-	protected bool alive = true;
+	public bool alive = true;
 
 	public GameObject HealthBar;
 	private GameObject healthBar;
@@ -41,7 +41,8 @@ public class Fighter : MonoBehaviour {
 		animationController = gameObject.GetComponent<Animator> ();
 
 		//initialize variables
-		damage = Random.Range (10, 20);
+//		damage = Random.Range (10, 20);
+		damage = 20;
 
 		//make health and stamina bar
 		healthBar = Instantiate(HealthBar ,transform.position + new Vector3(0f,-0.7f,0f) , Quaternion.identity) as GameObject;
@@ -56,11 +57,12 @@ public class Fighter : MonoBehaviour {
 	
 	protected virtual void Update ()
 	{
-		if (alive) 
+
+		if (alive) //do this as long as fighter is alive
 		{
 			ShowSelection ();
-			if (health <= 0)
-				dead ();
+
+
 
 		}
 	}
@@ -68,29 +70,33 @@ public class Fighter : MonoBehaviour {
 	public virtual void attack(GameObject _enemy)
 	{
 		//call hit function on selected opponent
-		_enemy.SendMessage ("hit",damage);
+		_enemy.SendMessage ("Hit",damage);
 	}
 
-	protected virtual void hit(float _damageIn)
+	protected virtual void Hit(float _damageIn)
 	{
 		health -= _damageIn;
+
+		//if health is to low call dead function
+		if (health <= 0)
+			Dead ();
+
 		//display health under fighter
 		transform.FindChild ("HealthText").gameObject.SendMessage("setText", health.ToString());
 		healthBar.SendMessage ("UpdateStatusBar", health);
 	}
 
-	protected virtual void dead()
+	protected virtual void Dead()
 	{
 		alive = false;
-		SetSelected (false);
 
 		battelManagerScript.someoneDied (gameObject);
+
 		//trigger dead animation
 		animationController.SetBool ("isDead", true);
-		transform.FindChild ("HealthText").gameObject.SendMessage("setText", "I'm dead!");
 	}
 
-	protected virtual void winFight()
+	protected virtual void WinFight()
 	{
 
 	}
@@ -104,7 +110,7 @@ public class Fighter : MonoBehaviour {
 		}
 	}
 
-	protected virtual void SetSelected(bool _selected)
+	public virtual void SetSelected(bool _selected)
 	{
 		selected = _selected;
 	}

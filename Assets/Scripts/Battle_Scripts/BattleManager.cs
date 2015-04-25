@@ -41,19 +41,61 @@ public class BattleManager : MonoBehaviour {
 			startFight = false;
 			Fight();
 		}
+
+//		Debug.Log ("Enemys Alive: " + allEnemys.Count);
+//		Debug.Log ("Players Alive: " + allPlayers.Count);
 	}
 
 	private void Fight()
 	{
-		Debug.Log ("Fight between: " + selectedPlayer.name + " vs. " + selectedEnemy.name);
-		playerScript.attack (selectedEnemy);
-		enemyScript.attack (selectedPlayer);
-		Debug.Log ("PlayerHealth: " + playerScript.health + " EnemyHealth: " + enemyScript.health);
+		//Manual fight sequence
+//		Debug.Log ("Fight between: " + selectedPlayer.name + " vs. " + selectedEnemy.name);
+		if(playerSelected && fightMode)
+			playerScript.attack (selectedEnemy);
+
+		if(enemySelected && fightMode)
+			enemyScript.attack (selectedPlayer);
+//		Debug.Log ("PlayerHealth: " + playerScript.health + " EnemyHealth: " + enemyScript.health);
+
+
+		//Automated fight sequence
+		foreach(GameObject _player in allPlayers )
+		{
+			// all player except the selected fight
+			if(_player != selectedPlayer)
+			{
+				//pick a random alive enemy and attack them
+				if(allEnemys.Count > 0)
+				{
+					GameObject randomEnemy = allEnemys[Random.Range(0, allEnemys.Count)];
+					_player.SendMessage("attack",randomEnemy);
+				}
+			}
+		}
+
+		//Enemy fight back
+		//Get a random enemy and let them attack a random player
+		foreach (GameObject _enemy in allEnemys) 
+		{
+			if(_enemy != selectedEnemy)
+			{
+				if(allPlayers.Count > 0)
+				{
+					GameObject randomEnemyToFightBack = allEnemys[Random.Range(0, allEnemys.Count)];
+					GameObject randomPlayer = allPlayers[Random.Range(0, allPlayers.Count)];
+					randomEnemyToFightBack.SendMessage("attack",randomPlayer);
+				}
+			}
+		}
+
 
 		//set up next round
 		fightMode = false;
-		selectedEnemy.SendMessage ("SetSelected", false);
-		selectedEnemy = null;
+		if (selectedEnemy != null) 
+		{
+			selectedEnemy.SendMessage ("SetSelected", false);
+			selectedEnemy = null;
+		}
 		enemySelected = false;
 	}
 
@@ -107,24 +149,35 @@ public class BattleManager : MonoBehaviour {
 	public void someoneDied(GameObject _deadFighter)
 	{
 		if (_deadFighter.tag == "Enemy") {
-			enemySelected = false;
-			selectedEnemy = null;
+			_deadFighter.SendMessage ("SetSelected", false);
+			allEnemys.Remove(_deadFighter);
 
-			fightMode = false;
+			if(_deadFighter == selectedEnemy)
+			{
+				enemySelected = false;
+				selectedEnemy = null;
+				fightMode = false;
+			}
 		} 
 		else if (_deadFighter.tag == "Player") 
 		{
-			enemySelected = false;
-			playerSelected = false;
-			selectedEnemy = null;
-			selectedPlayer = null;
+			_deadFighter.SendMessage ("SetSelected", false);
+			allPlayers.Remove(_deadFighter);
 
-			fightMode = false;
+			if(_deadFighter == selectedPlayer)
+			{
+				enemySelected = false;
+				playerSelected = false;
+				selectedEnemy = null;
+				selectedPlayer = null;
+				fightMode = false;
+			}
 		}
 	}
 
 	private void setUpFight()
 	{
+		//Scle of the fighters
 		Vector3 scaleUp = new Vector3 (2, 2, 1);
 
 		for (int i = 0; i < numberOfPlayer; i++) 
