@@ -12,7 +12,7 @@ GameObject:
   - 212: {fileID: 21221980}
   - 114: {fileID: 11407492}
   m_Layer: 0
-  m_Name: node_Empty
+  m_Name: node_Dungeon_Empty
   m_TagString: DungeonNode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59,6 +59,7 @@ MonoBehaviour:
   isUnlocked: 0
   hasEvent: 0
   dunGen: 0
+  seed: 0
 --- !u!212 &21221980
 SpriteRenderer:
   m_ObjectHideFlags: 1

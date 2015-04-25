@@ -64,11 +64,11 @@
      <Compile Include="Assets\Scripts\fitbit\ResponseObjects\FriendModel.cs" />
      <Compile Include="Assets\Scripts\fitbit\ResponseObjects\TestJSONParser.cs" />
      <Compile Include="Assets\Scripts\map\branchMapGen.cs" />
-     <Compile Include="Assets\Scripts\map\dungeonBranchMapGen.cs" />
      <Compile Include="Assets\Scripts\map\dungeonGen.cs" />
      <Compile Include="Assets\Scripts\map\mapGen.cs" />
      <Compile Include="Assets\Scripts\map\townGen.cs" />
      <Compile Include="Assets\Scripts\saveLoad.cs" />
+     <Compile Include="Assets\itemGenerator.cs" />
      <None Include="Assets\JSON\readme.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

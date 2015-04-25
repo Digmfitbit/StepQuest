@@ -128,6 +128,7 @@ public class playerPosition : MonoBehaviour {
 					switch(dungeonNodes[dungeonID].GetComponent<branchMapGen>().id){
 					case 5:
 						Debug.Log ("This is an item");
+						Debug.Log ("You received a " + dungeonNodes[dungeonID].GetComponent<itemGenerator>().itemName);
 						break;
 					case 4:
 						Debug.Log ("This is a battle");

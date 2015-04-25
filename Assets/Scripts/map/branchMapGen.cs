@@ -14,18 +14,12 @@ public class branchMapGen : MonoBehaviour {
 	private GameObject[] prevNodes;
 	private GUIText stepCost_text;
 
+	public int seed;
+	private System.Random rand;
+
 	void Awake () {
 		//Check whether or not the node will be free.
 		isUnlocked = false;
-
-		//Sets a unique ID for each individual node.
-		prevNodes = GameObject.FindGameObjectsWithTag("Node");
-		u_id = prevNodes.Length;
-
-		//Gives a change to generate an event on each node
-		if(Random.Range(0,100) < 4){
-			hasEvent = true;
-		}
 
 		//Sets an ID based on the type of node
 		switch(gameObject.name){
@@ -47,13 +41,33 @@ public class branchMapGen : MonoBehaviour {
 		case "node_Item(Clone)":
 			id = 5;
 			break;
+		case "node_Dungeon_Empty(Clone)":
+			id = 6;
+			break;
 		default:
 			id = 1;
 			break;
 		}
 
+		//Sets a unique ID for each individual node.
+		if(id < 3){
+			prevNodes = GameObject.FindGameObjectsWithTag("Node");
+		}
+		else{
+			prevNodes = GameObject.FindGameObjectsWithTag("DungeonNode");
+		}
+		u_id = prevNodes.Length;
+
+		seed = u_id;
+		rand = new System.Random(seed);
+
+		//Gives a change to generate an event on each node
+		if(rand.Next(0,100) < 4){
+			hasEvent = true;
+		}
+
 		//Assign a random value for the node cost.
-		stepCost = Random.Range (50,150);
+		stepCost = rand.Next (50,150);
 	}
 
 	void Update(){
