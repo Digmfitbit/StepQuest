@@ -58,7 +58,7 @@ public class branchMapGen : MonoBehaviour {
 		}
 		u_id = prevNodes.Length;
 
-		seed = u_id;
+		seed = u_id + GameObject.FindWithTag("Player").GetComponent<playerPosition>().worldID;
 		rand = new System.Random(seed);
 
 		//Gives a change to generate an event on each node

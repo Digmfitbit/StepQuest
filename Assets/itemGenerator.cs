@@ -26,7 +26,7 @@ public class itemGenerator : MonoBehaviour {
 	private System.Random rand;
 
 	void Awake () {
-		seed = (int)gameObject.GetComponent<branchMapGen>().stepCost * GameObject.FindWithTag("Player").GetComponent<playerPosition>().worldID;
+		seed = (int)gameObject.GetComponent<branchMapGen>().stepCost + (int)gameObject.GetComponent<branchMapGen>().u_id + GameObject.Find ("mapGen").GetComponent<mapGen>().seed;
 		rand = new System.Random(seed);
 
 		itemType = itemTypes[rand.Next (0,itemTypes.Length)];
