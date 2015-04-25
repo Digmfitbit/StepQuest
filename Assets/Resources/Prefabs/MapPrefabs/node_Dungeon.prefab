@@ -54,6 +54,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
+  u_id: 0
   stepCost: 0
   isUnlocked: 0
   hasEvent: 0
@@ -82,7 +83,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e54f78f0a76756a4c93a1d13ad4d1453, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d57d7b1a04c65a6458e1475243d9edec, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:
