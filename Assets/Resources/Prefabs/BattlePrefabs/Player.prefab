@@ -32,7 +32,7 @@ GameObject:
   - 114: {fileID: 11493336}
   - 95: {fileID: 9535334}
   m_Layer: 0
-  m_Name: Player_2
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,7 +124,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 154170}
-  m_Text: 100
+  m_Text: 
   m_OffsetZ: 0
   m_CharacterSize: .189999998
   m_LineSpacing: 1

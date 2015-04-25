@@ -20,6 +20,7 @@ public class BattleManager : MonoBehaviour {
 	private Player playerScript;
 	private Enemy enemyScript;
 
+	private bool battleOver = false;
 	private bool fightMode = false;
 	private bool startFight = false;
 
@@ -36,12 +37,34 @@ public class BattleManager : MonoBehaviour {
 	
 	void Update () 
 	{
-		if (startFight) 
-		{
+		if (startFight) {
 			startFight = false;
-			Fight();
+			Fight ();
 		}
 
+		//Check if the battle is over. Battle is over when all enemys or player are dead.
+		if (!battleOver)
+		{
+			if (allEnemys.Count <= 0)
+			{
+				foreach (GameObject player in allPlayers) 
+				{
+					player.SendMessage("WinFight");
+				}
+				battleOver = true;
+				fightText.text = "You Win!";
+			}
+			
+			if (allPlayers.Count <= 0) 
+			{
+				foreach(GameObject enemy in allPlayers)
+				{
+					enemy.SendMessage("WinFight");
+				}
+				battleOver = true;
+				fightText.text = "You Suck!";
+			}
+		}
 //		Debug.Log ("Enemys Alive: " + allEnemys.Count);
 //		Debug.Log ("Players Alive: " + allPlayers.Count);
 	}
@@ -162,6 +185,7 @@ public class BattleManager : MonoBehaviour {
 		else if (_deadFighter.tag == "Player") 
 		{
 			_deadFighter.SendMessage ("SetSelected", false);
+			selectedEnemy.SendMessage("SetSelected", false);
 			allPlayers.Remove(_deadFighter);
 
 			if(_deadFighter == selectedPlayer)
@@ -185,7 +209,7 @@ public class BattleManager : MonoBehaviour {
 			GameObject toInstantiatePlayer = players [0];
 			toInstantiatePlayer.name = "Player_"+i;
 			toInstantiatePlayer.transform.localScale = scaleUp;
-			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (Random.Range (-1f, -5f), Random.Range (-3f, 3f)), Quaternion.identity) as GameObject;
+			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-1, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
 			allPlayers.Add(instancePlayer);
 		}
 
@@ -194,7 +218,7 @@ public class BattleManager : MonoBehaviour {
 			GameObject toInstantiateEnemy = enemys [0];
 			toInstantiateEnemy.name = "Enemy_"+i;
 			toInstantiateEnemy.transform.localScale = scaleUp;
-			GameObject instanceEnemy = Instantiate (toInstantiateEnemy, new Vector2 (Random.Range(1f,5f), Random.Range(-3f,3f)), Quaternion.identity) as GameObject;
+			GameObject instanceEnemy = Instantiate (toInstantiateEnemy, new Vector2 (i+1, Random.Range(-3f,3f)), Quaternion.identity) as GameObject;
 			allEnemys.Add(instanceEnemy);
 		}
 	

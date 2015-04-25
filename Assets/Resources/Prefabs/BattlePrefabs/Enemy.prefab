@@ -31,7 +31,7 @@ GameObject:
   - 61: {fileID: 6135798}
   - 95: {fileID: 9524744}
   m_Layer: 0
-  m_Name: Enemy_4
+  m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -123,7 +123,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 146554}
-  m_Text: 100
+  m_Text: 
   m_OffsetZ: 0
   m_CharacterSize: .189999998
   m_LineSpacing: 1

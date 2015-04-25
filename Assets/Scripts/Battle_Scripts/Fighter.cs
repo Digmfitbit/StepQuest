@@ -82,7 +82,7 @@ public class Fighter : MonoBehaviour {
 			Dead ();
 
 		//display health under fighter
-		transform.FindChild ("HealthText").gameObject.SendMessage("setText", health.ToString());
+//		transform.FindChild ("HealthText").gameObject.SendMessage("setText", health.ToString());
 		healthBar.SendMessage ("UpdateStatusBar", health);
 	}
 
@@ -96,7 +96,7 @@ public class Fighter : MonoBehaviour {
 		animationController.SetBool ("isDead", true);
 	}
 
-	protected virtual void WinFight()
+	public virtual void WinFight()
 	{
 
 	}
