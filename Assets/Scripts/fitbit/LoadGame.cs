@@ -24,7 +24,6 @@ public class LoadGame : MonoBehaviour {
     void Start()
     {
         string dateTimeString;
-        Debug.Log("starting");
         if ((dateTimeString = PlayerPrefs.GetString("LastUpdated")) != "")
         {
             lastUpdated = Convert.ToDateTime(dateTimeString);
@@ -35,27 +34,22 @@ public class LoadGame : MonoBehaviour {
         }
         // set up fitBit singleton
         fitBitManager = FitBit.getInstance();
-        /*if (fitBitManager.isAuthenticated())
+        if (fitBitManager.isAuthenticated())
         {
             foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("pinUI"))
             {
                 Destroy(gameObject);
             }
         }
-        else
-        {
-            //fitBitManager.getToken();
-        }*/
     }
 
     public void OnMouseDown()
     {
-        Debug.Log("click start");
+        Debug.Log("Clicked start");
         if (FitBit.getInstance().isAuthenticated())
         {
             Application.LoadLevel(gameScreen);
         }
-        Debug.Log("asdasd: " + FitBit.getInstance().isAuthenticated());
     }
 
     void Update()

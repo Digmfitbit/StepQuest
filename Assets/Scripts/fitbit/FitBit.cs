@@ -110,9 +110,7 @@ namespace Assets.Scripts.fitbit
 
         public static FitBit getInstance()
         {
-            Debug.Log("Calling for new instance");
             if(instance == null){
-                Debug.Log("creating new instance");
                 instance = new FitBit();
             }
             return instance;
