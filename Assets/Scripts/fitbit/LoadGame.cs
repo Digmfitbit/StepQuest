@@ -48,7 +48,8 @@ public class LoadGame : MonoBehaviour {
         Debug.Log("Clicked start");
         if (FitBit.getInstance().isAuthenticated())
         {
-            Application.LoadLevel(gameScreen);
+            FindObjectOfType<DragonScript>().ShootTarget();
+            //Application.LoadLevel(gameScreen);
         }
     }
 
