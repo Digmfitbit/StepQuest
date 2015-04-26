@@ -31,6 +31,7 @@ GameObject:
   - 61: {fileID: 6137256}
   - 114: {fileID: 11493336}
   - 95: {fileID: 9535334}
+  - 120: {fileID: 12061602}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -176,6 +177,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdbf098d1a42a4e9d8cb0dad217282ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!120 &12061602
+LineRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 158024}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    startWidth: 1
+    endWidth: 1
+    m_StartColor:
+      serializedVersion: 2
+      rgba: 4294967295
+    m_EndColor:
+      serializedVersion: 2
+      rgba: 4294967295
+  m_UseWorldSpace: 1
 --- !u!212 &21268090
 SpriteRenderer:
   m_ObjectHideFlags: 1

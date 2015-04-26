@@ -119,7 +119,7 @@ MonoBehaviour:
   enemys:
   - {fileID: 154816, guid: 92a07b67c184d4f6a8199eba373a4594, type: 2}
   numberOfPlayer: 3
-  numberOfEnemy: 5
+  numberOfEnemy: 7
 --- !u!4 &28512931
 Transform:
   m_ObjectHideFlags: 0

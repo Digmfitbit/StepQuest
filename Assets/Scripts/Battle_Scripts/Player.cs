@@ -8,6 +8,8 @@ public class Player : Fighter
 	{
 		health = 100f;
 		damage = 15f;
+
+		probabilityOfMissing = Random.Range (5f, 30f);
 	}
 
 

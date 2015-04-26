@@ -9,17 +9,16 @@ public class BattleManager : MonoBehaviour {
 
 	private GameObject selectedPlayer = null;
 	private GameObject selectedEnemy = null;
-	private bool playerSelected = false;
-	private bool enemySelected = false;
+	private Player playerScript;
+	private Enemy enemyScript;
 	public int numberOfPlayer = 1;
 	public int numberOfEnemy = 1;
 
 	private List<GameObject> allPlayers = new List<GameObject>();
 	private List<GameObject> allEnemys = new List<GameObject>();
-
-	private Player playerScript;
-	private Enemy enemyScript;
-
+	
+	private bool playerSelected = false;
+	private bool enemySelected = false;
 	private bool battleOver = false;
 	private bool fightMode = false;
 	private bool startFight = false;
@@ -37,14 +36,18 @@ public class BattleManager : MonoBehaviour {
 	
 	void Update () 
 	{
+		//if everthing is ready to fight start fight
 		if (startFight) {
 			startFight = false;
 			Fight ();
 		}
 
+		Debug.DrawLine (new Vector3(5,5,0), new Vector3(0,0,0), Color.red);
+
 		//Check if the battle is over. Battle is over when all enemys or player are dead.
 		if (!battleOver)
 		{
+			//check if enemies left, if not call win function at all left over players
 			if (allEnemys.Count <= 0)
 			{
 				foreach (GameObject player in allPlayers) 
@@ -54,7 +57,8 @@ public class BattleManager : MonoBehaviour {
 				battleOver = true;
 				fightText.text = "You Win!";
 			}
-			
+
+			//do the same for all players, if no player is left call win function on all enemys alive
 			if (allPlayers.Count <= 0) 
 			{
 				foreach(GameObject enemy in allPlayers)
@@ -65,8 +69,6 @@ public class BattleManager : MonoBehaviour {
 				fightText.text = "You Suck!";
 			}
 		}
-//		Debug.Log ("Enemys Alive: " + allEnemys.Count);
-//		Debug.Log ("Players Alive: " + allPlayers.Count);
 	}
 
 	private void Fight()
@@ -185,7 +187,6 @@ public class BattleManager : MonoBehaviour {
 		else if (_deadFighter.tag == "Player") 
 		{
 			_deadFighter.SendMessage ("SetSelected", false);
-			selectedEnemy.SendMessage("SetSelected", false);
 			allPlayers.Remove(_deadFighter);
 
 			if(_deadFighter == selectedPlayer)

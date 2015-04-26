@@ -13,6 +13,8 @@ public class Fighter : MonoBehaviour {
 	protected float recoveryMax;
 	protected float damage;
 	protected float damageMax;
+
+	protected float probabilityOfMissing = 20f;
 	
 	protected bool selected = false;
 	public bool alive = true;
@@ -28,6 +30,7 @@ public class Fighter : MonoBehaviour {
 	protected SpriteRenderer spriteRenderer;
 	public TextMesh textUnderFighter;
 	private Animator animationController;
+	private LineRenderer lineRenderer;
 
 	protected virtual void Awake () 
 	{
@@ -39,6 +42,9 @@ public class Fighter : MonoBehaviour {
 		spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);		//start sprite with half the opacity for testing
 
 		animationController = gameObject.GetComponent<Animator> ();
+
+		lineRenderer = gameObject.GetComponent<LineRenderer> ();
+		lineRenderer.SetWidth (0.2f, 0.05f);
 
 		//initialize variables
 //		damage = Random.Range (10, 20);
@@ -66,12 +72,28 @@ public class Fighter : MonoBehaviour {
 
 		}
 	}
-
+	
+	//attack function calls hit function at opponent
 	public virtual void attack(GameObject _enemy)
 	{
-		//call hit function on selected opponent
-		_enemy.SendMessage ("Hit",damage);
+		if (probabilityOfMissing < Random.Range (0, 100)) {								//how high is the propability of a failed attack
+			//call hit function on selected opponent
+			_enemy.SendMessage ("Hit", damage);
+			lineRenderer.SetPosition (0, transform.position);
+			lineRenderer.SetPosition (1, _enemy.transform.position);
+			lineRenderer.material.color = new Color(1f,0f,0f,1f);
+		} else 
+		{
+			Debug.Log ("Shit I missed!!!");
+			lineRenderer.material.color = new Color(0f,1f,0f,0f);
+		}
+
+
+//		yield return new WaitForSeconds(1.0f);
 	}
+
+
+
 
 	protected virtual void Hit(float _damageIn)
 	{
