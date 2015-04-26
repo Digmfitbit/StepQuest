@@ -9,10 +9,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 431222}
   - 65: {fileID: 6555550}
-  - 114: {fileID: 11407948}
   - 212: {fileID: 21221980}
   - 114: {fileID: 11468778}
   - 120: {fileID: 12021666}
+  - 114: {fileID: 11422148}
   m_Layer: 0
   m_Name: node_d_Empty
   m_TagString: DungeonNode
@@ -42,9 +42,9 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: .5, y: .5, z: .5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &11407948
+--- !u!114 &11422148
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -56,6 +56,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
+  u_id: 0
   stepCost: 0
   isUnlocked: 0
   hasEvent: 0
@@ -77,6 +78,7 @@ MonoBehaviour:
   nodeItem: {fileID: 140742, guid: 3ba3c94f51a38754087ce52d10c10fe4, type: 2}
   nodeEnemy: {fileID: 183922, guid: ce17af7c861e8e04a844a6ca308e00ab, type: 2}
   numOfNodes: 0
+  seed: 0
 --- !u!120 &12021666
 LineRenderer:
   m_ObjectHideFlags: 1

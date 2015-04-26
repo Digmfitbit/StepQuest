@@ -104,9 +104,11 @@ public class playerPosition : MonoBehaviour {
 				transform.position = temp;
 				
 				//Check if the node has an event
+				/*
 				if(dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasEvent == true){
 					Debug.Log ("This node has an event!");
 				}
+				*/
 				
 				//Left click and make sure the player has enough steps.
 				if(Input.GetMouseButtonDown(0) && dungeonID < dungeonNodes.Length - 1 && totalSteps > nextDungeonNode.GetComponent<branchMapGen>().stepCost){
@@ -129,6 +131,7 @@ public class playerPosition : MonoBehaviour {
 						break;
 					case 4:
 						Debug.Log ("This is a battle");
+						Application.LoadLevelAdditive("battleTest");
 						break;
 					case 3:
 						Debug.Log ("This is the Exit");

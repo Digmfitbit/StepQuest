@@ -14,15 +14,22 @@ public class dungeonGen : MonoBehaviour {
 	private Vector3 randomDirect;
 	private Vector3 newPos;
 
-	private Vector3[] randomDirects = new []{new Vector3(-1,0,0), new Vector3(1,0,0), new Vector3(0,-1,0), new Vector3(0,1,0), new Vector3(1,1,0), new Vector3(-1,-1,0)};
+	private Vector3[] randomDirects = new []{new Vector3(-1,0,0), new Vector3(1,0,0), new Vector3(0,-1,0), new Vector3(0,1,0), new Vector3(1,1,0), new Vector3(-1,-1,0), new Vector3(1, -1, 0), new Vector3(-1, 1, 0)};
 	
 	public int numOfNodes;
 	
 	private GameObject[] prevNodes;
+
+	public int seed;
+	private System.Random rand;
 	
 	void Awake(){
+		seed = GameObject.FindWithTag("Player").GetComponent<playerPosition>().worldID;
+
+		Debug.Log ("The seed is: " + seed.ToString ());
+		rand = new System.Random(seed);
 		//Create a number of nodes.
-		numOfNodes = Random.Range (8, 20);
+		numOfNodes = rand.Next (8,20);
 		//numOfNodes = 10;
 		
 		//Create a line renderer to connect the nodes.
@@ -54,7 +61,7 @@ public class dungeonGen : MonoBehaviour {
 		for(int i = 0; i < nodeTypeSelect.Length; i++){
 			
 			//Choose random number for the node type.
-			randomNodeType = Random.Range(1, nodeType.Length);
+			randomNodeType = rand.Next(1, nodeType.Length);
 			
 			//Create an exit node as the beginning point.
 			if(i == 0){
@@ -62,7 +69,7 @@ public class dungeonGen : MonoBehaviour {
 			}
 			
 			//Only create an item node every 5 or 6 nodes.
-			else if(i % 7 == 0){
+			else if(i % 7 == 0 || i == nodeTypeSelect.Length - 1){
 				nodeTypeSelect[i] = nodeType[0];
 			}
 			
@@ -73,27 +80,27 @@ public class dungeonGen : MonoBehaviour {
 			
 			//Checks all previous nodes.
 			prevNodes = GameObject.FindGameObjectsWithTag("DungeonNode");
-			Debug.Log (prevNodes.Length);
+			//Debug.Log (prevNodes.Length);
 			
 			if(prevNodes.Length > 0){
 				//Creating an integer to use in a while loop.
 				//int e = 0;
 				
 				//while(e < 1){
-				for(int e = 0; e < randomDirects.Length; e++){
+				for(int e = 0; e < 100; e++){
 					//Select a random direction for the next node.
-					//randomDirect = new Vector3(Random.Range (-1, 2), Random.Range(-1, 2), 0);
-					randomDirect = randomDirects[e];
+					//randomDirect = new Vector3(rand.Next (-1, 2), rand.Next(-1, 2), 0);
+					randomDirect = randomDirects[rand.Next (0,randomDirects.Length)];
 
 					//Set the next nodes position to the random direction.
 					newPos = randomDirect + prevNodes[prevNodes.Length-1].transform.position;
 					
 					//Check to make sure that it will not collide with another node, if it does, reset the loop.
-					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 2) == false && randomDirect != new Vector3(0,0,0)){
+					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 1.2f) == false && randomDirect != new Vector3(0,0,0)){
 						(Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity) as GameObject).transform.parent = this.transform;
 						lineRenderer.SetPosition(i,  newPos);
 						break;
-						//e = 1;
+						e = 1;
 					}
 				}
 			}

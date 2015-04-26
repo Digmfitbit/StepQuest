@@ -21,7 +21,7 @@ public class playerStats : MonoBehaviour {
 	public int playerStamina;
 
 	//How much health.
-	public int playerHealth;
+	public int playerEndurance;
 
 	//How fast you recover.
 	public int playerRecovery;
