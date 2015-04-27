@@ -39,6 +39,7 @@ public class playerStats : MonoBehaviour {
         playerEndurance = 5;
         playerRecovery = 5;
 
+        stepRate = 100;
 
 	}
 

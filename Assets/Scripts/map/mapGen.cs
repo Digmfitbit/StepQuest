@@ -25,7 +25,8 @@ public class mapGen : MonoBehaviour {
 
 	void Start(){
 		//Begin the map generator.
-		GenerateMap();
+		//GenerateMap();
+        OnLevelWasLoaded();
 	}
 
 	//Creates a map on a straight path with varied node types.
