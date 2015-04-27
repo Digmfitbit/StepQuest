@@ -79,13 +79,13 @@ public class Fighter : MonoBehaviour {
 		if (probabilityOfMissing < Random.Range (0, 100)) {								//how high is the propability of a failed attack
 			//call hit function on selected opponent
 			_enemy.SendMessage ("Hit", damage);
-			lineRenderer.SetPosition (0, transform.position);
-			lineRenderer.SetPosition (1, _enemy.transform.position);
-			lineRenderer.material.color = new Color(1f,0f,0f,1f);
+//			lineRenderer.SetPosition (0, transform.position);
+//			lineRenderer.SetPosition (1, _enemy.transform.position);
+//			lineRenderer.material.color = new Color(1f,0f,0f,1f);
 		} else 
 		{
 			Debug.Log ("Shit I missed!!!");
-			lineRenderer.material.color = new Color(0f,1f,0f,0f);
+//			lineRenderer.material.color = new Color(0f,1f,0f,0f);
 		}
 
 

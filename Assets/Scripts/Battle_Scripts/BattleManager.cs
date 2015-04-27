@@ -187,6 +187,7 @@ public class BattleManager : MonoBehaviour {
 		else if (_deadFighter.tag == "Player") 
 		{
 			_deadFighter.SendMessage ("SetSelected", false);
+			selectedEnemy.SendMessage("SetSelected", false);
 			allPlayers.Remove(_deadFighter);
 
 			if(_deadFighter == selectedPlayer)
@@ -204,6 +205,7 @@ public class BattleManager : MonoBehaviour {
 	{
 		//Scle of the fighters
 		Vector3 scaleUp = new Vector3 (2, 2, 1);
+		Transform fightSceneHolder = GameObject.Find("FightSceneHolder").transform;
 
 		for (int i = 0; i < numberOfPlayer; i++) 
 		{
@@ -212,6 +214,7 @@ public class BattleManager : MonoBehaviour {
 			toInstantiatePlayer.transform.localScale = scaleUp;
 			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-1, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
 			allPlayers.Add(instancePlayer);
+			instancePlayer.transform.parent = fightSceneHolder;
 		}
 
 		for(int i = 0; i < numberOfEnemy; i++)
@@ -221,6 +224,7 @@ public class BattleManager : MonoBehaviour {
 			toInstantiateEnemy.transform.localScale = scaleUp;
 			GameObject instanceEnemy = Instantiate (toInstantiateEnemy, new Vector2 (i+1, Random.Range(-3f,3f)), Quaternion.identity) as GameObject;
 			allEnemys.Add(instanceEnemy);
+			instanceEnemy.transform.parent = fightSceneHolder;
 		}
 	
 	}
