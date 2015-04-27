@@ -19,7 +19,9 @@ public class playerPosition : MonoBehaviour {
 
 	void Awake () {
 		nodes = GameObject.FindGameObjectsWithTag("Node");
-		transform.position = nodes[0].transform.position;
+		if(nodes.Length > 0){
+			transform.position = nodes[0].transform.position;
+		}
 	}
 
 	void Update () {
@@ -136,7 +138,11 @@ public class playerPosition : MonoBehaviour {
 						break;
 					case 4:
 						Debug.Log ("This is a battle");
+						foreach(GameObject allObjects in FindObjectsOfType(typeof(GameObject)) as GameObject[]){
+							allObjects.SetActive(false);
+						}
 						Application.LoadLevelAdditive("battleTest");
+						
 						break;
 					case 3:
 						Debug.Log ("This is the Exit");
