@@ -22,38 +22,39 @@ public class mapGen : MonoBehaviour {
 	
 	public int seed;
 	private System.Random rand;
-	
+
 	void Start(){
-		rand = new System.Random(seed);
-
-		//Create a random number of nodes.
-		//numOfNodes = Random.Range (8, 50);
-		numOfNodes = 50;
-
-		//Create a line renderer to connect the nodes.
-		LineRenderer lineRenderer = gameObject.GetComponent<LineRenderer>();
-
-		//Initial settings for the line renderer.
-		lineRenderer.SetVertexCount(numOfNodes);
-		lineRenderer.SetWidth(0.2f, 0.2f);
-
-		//Create an array for the types of nodes.
-		nodeType = new GameObject[3];
-		nodeType[0] = nodeTown;
-		nodeType[1] = nodeEmpty;
-		nodeType[2] = nodeDungeon;
-
-		//Create an array for the nodes.
-		nodeTypeSelect = new GameObject[numOfNodes];
-
 		//Begin the map generator.
 		GenerateMap();
 	}
 
 	//Creates a map on a straight path with varied node types.
 	void GenerateMap () {
+		rand = new System.Random(seed);
+		
+		//Create a random number of nodes.
+		numOfNodes = rand.Next (8, 100);
+		//numOfNodes = 50;
+		
+		//Create a line renderer to connect the nodes.
+		LineRenderer lineRenderer = gameObject.GetComponent<LineRenderer>();
+		
+		//Initial settings for the line renderer.
+		lineRenderer.SetVertexCount(numOfNodes);
+		lineRenderer.SetWidth(0.2f, 0.2f);
+		
+		//Create an array for the types of nodes.
+		nodeType = new GameObject[3];
+		nodeType[0] = nodeTown;
+		nodeType[1] = nodeEmpty;
+		nodeType[2] = nodeDungeon;
+		
+		//Create an array for the nodes.
+		nodeTypeSelect = new GameObject[numOfNodes];
 
-		LineRenderer lineRenderer = GetComponent<LineRenderer>();
+		//
+
+		//LineRenderer lineRenderer = GetComponent<LineRenderer>();
 
 		//Runs a loop for each entry in the node array.
 		for(int i = 0; i < nodeTypeSelect.Length; i++){
@@ -107,5 +108,12 @@ public class mapGen : MonoBehaviour {
 				lineRenderer.SetPosition(i, transform.position);
 			}
 		}
+	}
+
+	void OnLevelWasLoaded(){
+		foreach(GameObject node in GameObject.FindGameObjectsWithTag("Node")){
+			Destroy(node);
+		}
+		GenerateMap();
 	}
 }
