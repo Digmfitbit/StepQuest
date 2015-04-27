@@ -17,7 +17,7 @@ public class playerPosition : MonoBehaviour {
 	private float totalSteps;
 	public Text nextStepCost;
 
-	void Start () {
+	void Awake () {
 		nodes = GameObject.FindGameObjectsWithTag("Node");
 		transform.position = nodes[0].transform.position;
 	}
@@ -36,6 +36,10 @@ public class playerPosition : MonoBehaviour {
 				//Only set next node to this if you are not on the last node.
 				if(worldID < nodes.Length - 1){
 					nextNode = nodes[worldID + 1];
+				}
+
+				if(worldID == 0){
+					transform.position = nodes[0].transform.position;
 				}
 					
 				//Set the player position to the current node.
