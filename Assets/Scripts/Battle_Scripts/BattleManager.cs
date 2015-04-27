@@ -6,6 +6,7 @@ public class BattleManager : MonoBehaviour {
 	
 	public GameObject[] players;
 	public GameObject[] enemys;
+	public GameObject ui;
 
 	private GameObject selectedPlayer = null;
 	private GameObject selectedEnemy = null;
@@ -32,6 +33,9 @@ public class BattleManager : MonoBehaviour {
 		setUpFight ();
 
 		fightText = GameObject.Find("tempReadyForFightText").GetComponent<TextMesh>();
+
+		//Hide UI panel
+		ui.SetActive (false);
 	}
 	
 	void Update () 
@@ -40,6 +44,12 @@ public class BattleManager : MonoBehaviour {
 		if (startFight) {
 			startFight = false;
 			Fight ();
+		}
+
+		if (battleOver) 
+		{
+			//Show Ui panel when battle is over
+			ui.SetActive(true);
 		}
 
 		Debug.DrawLine (new Vector3(5,5,0), new Vector3(0,0,0), Color.red);
@@ -187,7 +197,8 @@ public class BattleManager : MonoBehaviour {
 		else if (_deadFighter.tag == "Player") 
 		{
 			_deadFighter.SendMessage ("SetSelected", false);
-			selectedEnemy.SendMessage("SetSelected", false);
+			if(selectedEnemy != null)
+				selectedEnemy.SendMessage("SetSelected", false);
 			allPlayers.Remove(_deadFighter);
 
 			if(_deadFighter == selectedPlayer)
