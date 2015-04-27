@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.map;
 
 public class DestroyScene : MonoBehaviour {
 
@@ -8,5 +9,6 @@ public class DestroyScene : MonoBehaviour {
 	public void destroyScene()
 	{
 		Destroy (GameObject.Find ("FightSceneHolder").gameObject);
+        Switcheroo.reEnable();
 	}
 }

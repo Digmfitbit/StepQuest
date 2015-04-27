@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Assets.Scripts.map;
 
 public class playerPosition : MonoBehaviour {
 
@@ -138,9 +139,7 @@ public class playerPosition : MonoBehaviour {
 						break;
 					case 4:
 						Debug.Log ("This is a battle");
-						foreach(GameObject allObjects in FindObjectsOfType(typeof(GameObject)) as GameObject[]){
-							allObjects.SetActive(false);
-						}
+                        Switcheroo.disable();
 						Application.LoadLevelAdditive("battleTest");
 						
 						break;
