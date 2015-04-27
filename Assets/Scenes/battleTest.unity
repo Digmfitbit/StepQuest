@@ -115,11 +115,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   players:
-  - {fileID: 140660, guid: 0280e3fb8b8f243ecb1a62c467afb7f8, type: 2}
+  - {fileID: 158024, guid: 0280e3fb8b8f243ecb1a62c467afb7f8, type: 2}
   enemys:
-  - {fileID: 126018, guid: 92a07b67c184d4f6a8199eba373a4594, type: 2}
-  numberOfPlayer: 4
-  numberOfEnemy: 5
+  - {fileID: 154816, guid: 92a07b67c184d4f6a8199eba373a4594, type: 2}
+  numberOfPlayer: 3
+  numberOfEnemy: 7
 --- !u!4 &28512931
 Transform:
   m_ObjectHideFlags: 0
@@ -201,7 +201,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 531953736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.0769999, y: .72299999, z: 0}
+  m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
