@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using Assets.Scripts.map;
+using Assets.Scripts;
 
 public class playerPosition : MonoBehaviour {
 
@@ -27,7 +28,7 @@ public class playerPosition : MonoBehaviour {
 
 	void Update () {
 		//Set total steps to component from players stats, will be pulled from FitBit.
-		totalSteps = playerStats.totalSteps;
+		totalSteps = StepController.totalSteps;
 
 		switch(inDungeon){
 		//The character is on the world map.
@@ -58,7 +59,7 @@ public class playerPosition : MonoBehaviour {
 	
 				//Left click and make sure the player has enough steps.
 				if(Input.GetMouseButtonDown(0) && worldID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
-                    playerStats.totalSteps -= nextNode.GetComponent<branchMapGen>().stepCost;
+                    StepController.totalSteps -= nextNode.GetComponent<branchMapGen>().stepCost;
 					Debug.Log ("Subtract " + nextNode.GetComponent<branchMapGen>().stepCost.ToString() + " steps");
 					nextNode.GetComponent<branchMapGen>().stepCost = 0;
 					worldID ++;
@@ -119,7 +120,7 @@ public class playerPosition : MonoBehaviour {
 				
 				//Left click and make sure the player has enough steps.
 				if(Input.GetMouseButtonDown(0) && dungeonID < dungeonNodes.Length - 1 && totalSteps > nextDungeonNode.GetComponent<branchMapGen>().stepCost){
-					playerStats.totalSteps -= nextDungeonNode.GetComponent<branchMapGen>().stepCost;
+                    StepController.totalSteps -= nextDungeonNode.GetComponent<branchMapGen>().stepCost;
 					Debug.Log ("Subtract " + nextDungeonNode.GetComponent<branchMapGen>().stepCost.ToString() + " steps");
 					nextDungeonNode.GetComponent<branchMapGen>().stepCost = 0;
 					dungeonID ++;

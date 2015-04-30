@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using System.Threading;
 using ResponseObjects;
-
+using Assets.Scripts.networking;
 using System.IO;
 
 namespace Assets.Scripts.fitbit
@@ -183,7 +183,7 @@ namespace Assets.Scripts.fitbit
                 }
                 else
                 {
-                    string line = getStringFromResponse(response);
+                    string line = Utilities.getStringFromResponse(response);
                     JSONObject list = new JSONObject(line);
                     list.GetField("friends", delegate(JSONObject hits)
                     {
@@ -237,7 +237,7 @@ namespace Assets.Scripts.fitbit
                 }
                 else
                 {
-                    string line = getStringFromResponse(response);
+                    string line = Utilities.getStringFromResponse(response);
                     //TODO check time
                     PlayerPrefs.SetString(LAST_UPDATED_KEY, System.DateTime.Now.ToString());
 
@@ -271,19 +271,6 @@ namespace Assets.Scripts.fitbit
             request.PreAuthenticate = true;
             request.AllowWriteStreamBuffering = true;
             request.Headers.Add("Authorization", authzHeader);
-        }
-
-        private string getStringFromResponse(HttpWebResponse response)
-        {
-            string line = "";
-            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-            {
-                while (!reader.EndOfStream)
-                {
-                    line = reader.ReadLine();
-                }
-            }
-            return line;
         }
     }
 }

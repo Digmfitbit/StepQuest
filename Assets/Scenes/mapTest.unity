@@ -1030,8 +1030,8 @@ GameObject:
   - 4: {fileID: 1573829064}
   - 136: {fileID: 1573829062}
   - 114: {fileID: 1573829060}
-  - 114: {fileID: 1573829059}
   - 212: {fileID: 1573829061}
+  - 114: {fileID: 1573829059}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1047,19 +1047,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1573829058}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94684b1d4d1ca5547bb1f5c867a017a2, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e00c20d6d62fed4a9d811b65a094b6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalSteps: 0
-  stepRate: 100
-  playerLvl: 0
-  expToNext: 0
-  currentExp: 0
-  playerStrength: 0
-  playerStamina: 0
-  playerEndurance: 0
-  playerRecovery: 0
-  totalSteps_int: 0
   totalSteps_text: {fileID: 1027451080}
 --- !u!114 &1573829060
 MonoBehaviour:

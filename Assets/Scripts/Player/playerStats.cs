@@ -1,11 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
+﻿using System;
 
-public class playerStats : MonoBehaviour {
-
-    public static float totalSteps;
-    public static float stepRate;
+[Serializable]
+public class playerStats {
 
 	//Overall level.
 	public static int playerLvl;
@@ -15,22 +11,19 @@ public class playerStats : MonoBehaviour {
     public static int currentExp;
 
 	//How much damage.
-    public static int playerStrength;
+    public static int playerStrength = 5;
 
 	//How much hits can combo.
-    public static int playerStamina;
+    public static int playerStamina = 5;
 
 	//How much health.
-    public static int playerEndurance;
+    public static int playerEndurance = 5;
 
 	//How fast you recover.
-    public static int playerRecovery;
+    public static int playerRecovery = 5;
 
-    public static int totalSteps_int;
-	public Text totalSteps_text;
-
-	void Start () {
-        //TODO load this from playerPrefs/database
+    public playerStats()
+    {
         playerLvl = 1;
         expToNext = 100;
         currentExp = 0;
@@ -38,17 +31,14 @@ public class playerStats : MonoBehaviour {
         playerStamina = 5;
         playerEndurance = 5;
         playerRecovery = 5;
+    }
 
-        stepRate = 100;
-
+    /**
+     * TODO make this load the proper stat values
+     * from local cache and/or network
+     * */
+	void Load () {
+        //TODO load this from playerPrefs/database
+        
 	}
-
-	void Update () {
-		//This code is only for testing. This will eventually be pulled from the FitBit.
-		totalSteps_int = (int)totalSteps;
-		totalSteps += stepRate * Time.deltaTime;
-		totalSteps_text.text = "Total Steps: " + totalSteps_int.ToString();
-	}
-
-
 }
