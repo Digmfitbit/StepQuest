@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-//using Assets.Scripts.networking;
-//using ResponseObjects;
+using Assets.Scripts.networking;
+using ResponseObjects;
 
 public class StepController : MonoBehaviour {
 
@@ -13,10 +13,23 @@ public class StepController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        /*string line = "{\"friends\":[{\"user\":{\"aboutMe\":\"\",\"avatar\":\"http://www.fitbit.com/images/profile/defaultProfile_100_male.gif\",\"city\":\"\",\"country\":\"\",\"dateOfBirth\":\"\",\"displayName\":\"Fitbit U.\",\"encodedId\":\"666666\",\"fullName\":\"Fitbit User\",\"gender\":\"NA\",\"height\":190.7,\"nickname\":\"\",\"offsetFromUTCMillis\":14400000,\"state\":\"\",\"strideLengthRunning\":0,\"strideLengthWalking\":0,\"timezone\":\"Europe/Moscow\",\"weight\":0}}]}";
+        //TODO: REMOVE THIS JUST FOR TESTING
+        string line = "{\"friends\":[{\"user\":{\"aboutMe\":\"\",\"avatar\":\"http://www.fitbit.com/images/profile/defaultProfile_100_male.gif\",\"city\":\"\",\"country\":\"\",\"dateOfBirth\":\"\",\"displayName\":\"Fitbit U.\",\"encodedId\":\"ABABAB\",\"fullName\":\"Fitbit User\",\"gender\":\"NA\",\"height\":190.7,\"nickname\":\"\",\"offsetFromUTCMillis\":14400000,\"state\":\"\",\"strideLengthRunning\":0,\"strideLengthWalking\":0,\"timezone\":\"Europe/Moscow\",\"weight\":0}}]}";
         JSONObject list = new JSONObject(line);
-        DatabaseController.updatePlayer(new FriendModel(list), new playerStats());
-	*/
+        list.GetField("friends", delegate(JSONObject hits)
+        {
+            foreach (JSONObject user in hits.list)
+            {
+                Debug.Log(user);
+                user.GetField("user", delegate(JSONObject info)
+                {
+                    Debug.Log("friends: ");
+                    FriendModel model = new FriendModel(info);
+                    DatabaseController.updatePlayer(model, new playerStats());
+                    Debug.Log(model.ToString());
+                });
+            }
+        });
     }
 
     void Update()

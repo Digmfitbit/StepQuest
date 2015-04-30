@@ -19,31 +19,29 @@ namespace Assets.Scripts.networking
         private static string UPDATE_URL = BASE_URL + "updateUser.php";
         private static string GET_FRIENDS = BASE_URL + "getFriends.php";
 
-        private static DatabaseController instance;
-
-        private DatabaseController() { }
-
         /**
          * Sends player stats to the server for storing
          * POST to update
          * */
         public static void updatePlayer(FriendModel player, playerStats stats){
             Debug.Log("Updating player");
-            
+            Thread oThread = new Thread(new ThreadStart(() =>
+            {
                 Debug.Log("Starting thread");
-                var request = (HttpWebRequest)WebRequest.Create(UPDATE_URL);
                 //Serialize data to string
                 string serializedStats = serializeDataToString(stats);
                 Debug.Log("stats: " + serializedStats);
                 
                 //Add info to postData
-                var postData = "id=" + player.encodedId;
-                postData += "&stats=" + serializedStats;
-                var data = Encoding.ASCII.GetBytes(postData);
+                Debug.Log("encodedId: " + player.encodedId);
+                var queryParam = "?id=" + player.encodedId.Substring(1,6);
+                queryParam += "&stats=" + WWW.EscapeURL(serializedStats);
 
-                setUpHeaders(request, data);
-                Thread oThread = new Thread(new ThreadStart(() =>
-                {
+                var request = (HttpWebRequest)WebRequest.Create(UPDATE_URL + queryParam);
+                setUpHeaders(request);
+                
+                Debug.Log(UPDATE_URL + queryParam);
+
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
                     //TODO do better error catching
@@ -69,28 +67,23 @@ namespace Assets.Scripts.networking
             return null;
         }
 
-        private static string serializeDataToString(System.Object objectToSerialize){
-            IFormatter formatter = new BinaryFormatter();
+        private static string serializeDataToString(JSONable objectToSerialize){
+            return objectToSerialize.getJSON().Print();
+            /*IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
             formatter.Serialize(stream, objectToSerialize);
             StreamReader sr = new StreamReader(stream);
             string serializedString = sr.ReadToEnd();
-            return serializedString;
+            return serializedString;*/
         }
 
         /**
-         * Sets up post headers for the calls in this function
+         * Sets up GET headers for the calls in this function
          * */
-        private static void setUpHeaders(HttpWebRequest request, byte[] data)
+        private static void setUpHeaders(HttpWebRequest request)
         {
-            request.Method = "POST";
+            request.Method = "GET";
             request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = data.Length;
-
-            using (var stream = request.GetRequestStream())
-            {
-                stream.Write(data, 0, data.Length);
-            }
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
+using Assets.Scripts;
 
-[Serializable]
-public class playerStats {
 
+//[Serializable]
+public class playerStats : JSONable {
+    
 	//Overall level.
 	public static int playerLvl;
 	//How much to level.
@@ -41,4 +43,22 @@ public class playerStats {
         //TODO load this from playerPrefs/database
         
 	}
+
+    JSONObject JSONable.getJSON()
+    {
+        JSONObject json = new JSONObject(JSONObject.Type.OBJECT);
+
+        json.AddField("playerLevel", playerLvl);
+        json.AddField("playerStrength", playerStrength);
+        json.AddField("playerStamina", playerStamina);
+        json.AddField("playerEndurance", playerEndurance);
+        json.AddField("playerRecovery", playerRecovery);
+
+        return json;
+    }
+
+    void JSONable.fromJSON(JSONObject json)
+    {
+
+    }
 }
