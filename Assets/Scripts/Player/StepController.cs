@@ -14,7 +14,7 @@ public class StepController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         //TODO: REMOVE THIS JUST FOR TESTING
-        string line = "{\"friends\":[{\"user\":{\"aboutMe\":\"\",\"avatar\":\"http://www.fitbit.com/images/profile/defaultProfile_100_male.gif\",\"city\":\"\",\"country\":\"\",\"dateOfBirth\":\"\",\"displayName\":\"Fitbit U.\",\"encodedId\":\"ABBBBB\",\"fullName\":\"Fitbit User\",\"gender\":\"NA\",\"height\":190.7,\"nickname\":\"\",\"offsetFromUTCMillis\":14400000,\"state\":\"\",\"strideLengthRunning\":0,\"strideLengthWalking\":0,\"timezone\":\"Europe/Moscow\",\"weight\":0}}]}";
+        string line = "{\"friends\":[{\"user\":{\"aboutMe\":\"\",\"avatar\":\"http://www.fitbit.com/images/profile/defaultProfile_100_male.gif\",\"city\":\"\",\"country\":\"\",\"dateOfBirth\":\"\",\"displayName\":\"Fitbit U.\",\"encodedId\":\"ABBCCC\",\"fullName\":\"Fitbit User\",\"gender\":\"NA\",\"height\":190.7,\"nickname\":\"\",\"offsetFromUTCMillis\":14400000,\"state\":\"\",\"strideLengthRunning\":0,\"strideLengthWalking\":0,\"timezone\":\"Europe/Moscow\",\"weight\":0}}]}";
         JSONObject list = new JSONObject(line);
         list.GetField("friends", delegate(JSONObject hits)
         {
