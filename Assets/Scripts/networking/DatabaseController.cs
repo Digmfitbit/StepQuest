@@ -25,29 +25,35 @@ namespace Assets.Scripts.networking
          * */
         public static void updatePlayer(FriendModel player, playerStats stats){
             Debug.Log("Updating player");
-            Thread oThread = new Thread(new ThreadStart(() =>
-            {
+            
                 Debug.Log("Starting thread");
                 //Serialize data to string
                 string serializedStats = serializeDataToString(stats);
                 Debug.Log("stats: " + serializedStats);
                 
                 //Add info to postData
-                Debug.Log("encodedId: " + player.encodedId);
+                Debug.Log("encodedId: " + player.encodedId.Substring(1, 6));
                 var queryParam = "?id=" + player.encodedId.Substring(1,6);
                 queryParam += "&stats=" + WWW.EscapeURL(serializedStats);
 
                 var request = (HttpWebRequest)WebRequest.Create(UPDATE_URL + queryParam);
+                Debug.Log("UPDATE_URL + queryParam" + UPDATE_URL + queryParam);
                 setUpHeaders(request);
-                
-                Debug.Log(UPDATE_URL + queryParam);
-
+                Debug.Log(request.Accept);
+                Debug.Log(request.Address);
+                Debug.Log(request.ContentType);
+                Debug.Log(request.Headers);
+                Debug.Log(request.RequestUri);
+                Debug.Log(request.AllowAutoRedirect);
+                Thread oThread = new Thread(new ThreadStart(() =>
+                {
+                    Debug.Log("HI");
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
                     //TODO do better error catching
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
-                        Debug.Log("There's been a problem trying to access fitbit:" +
+                        Debug.Log("There's been a problem trying to access the database:" +
                                     Environment.NewLine +
                                     response.StatusDescription);
                     }
@@ -83,7 +89,10 @@ namespace Assets.Scripts.networking
         private static void setUpHeaders(HttpWebRequest request)
         {
             request.Method = "GET";
+            request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
             request.ContentType = "application/x-www-form-urlencoded";
+            request.AllowAutoRedirect = true;
+            request.MaximumAutomaticRedirections = 2;
         }
     }
 }
