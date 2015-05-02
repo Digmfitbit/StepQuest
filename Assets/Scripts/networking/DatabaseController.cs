@@ -26,6 +26,11 @@ namespace Assets.Scripts.networking
          * */
         public static void updatePlayer(FriendModel player, playerStats stats){
             Debug.Log("Updating player");
+            if (player == null)
+            {
+                Debug.Log("Player is null returning");
+                return;
+            }
             Thread oThread = new Thread(new ThreadStart(() =>
             {
                 Debug.Log("Starting thread");
@@ -40,8 +45,23 @@ namespace Assets.Scripts.networking
                 var request = (HttpWebRequest)WebRequest.Create(UPDATE_URL + queryParam);
                 setUpHeaders(request);
 
-                ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback((sender, certificate, chain, policyErrors) => { return true; });
-                var response = (HttpWebResponse)request.GetResponse();
+                ServicePointManager.ServerCertificateValidationCallback +=
+                    new RemoteCertificateValidationCallback(
+                        (sender, certificate, chain, policyErrors) => { return true; });
+                HttpWebResponse response;
+                try
+                {
+                    Debug.Log("HELLO");
+                    response = (HttpWebResponse)request.GetResponse();
+                    Debug.Log("HLL");
+
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("HI");
+                    Debug.Log(e);
+                    return;
+                }
                 using (response)
                 {
                     //TODO do better error catching

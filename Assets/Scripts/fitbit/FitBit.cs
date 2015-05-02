@@ -17,6 +17,7 @@ namespace Assets.Scripts.fitbit
         private static string API_BASE = "https://api.fitbit.com";
         private string LAST_CALL_SINCE_URL = API_BASE + "/1/user/-/activities/steps/date/today/7d.json";
         private string FRIENDS_URL = API_BASE + "/1/user/-/friends.json";
+        private string PROFILE_URL = API_BASE + "/1/user/-/profile.json";
 
         //Key Stuff
         private static string CONSUMER_KEY = "32f9320af9f1c74d9abae8c2eeb01fce";
@@ -28,18 +29,18 @@ namespace Assets.Scripts.fitbit
 
         //Important variables
         private static FitBit instance = null;
-        private OAuth.Manager manager;
+        private static OAuth.Manager manager;
 
-        private bool authenticated;
+        private static bool authenticated;
         private static string access_token;
         private static string access_secret;
 
         bool isAuthenticating;
 
         //Objects that are updated from the threads
-        int steps = 0;
-        List<FriendModel> friends = new List<FriendModel>();
-
+        static int steps = 0;
+        static List<FriendModel> friends = new List<FriendModel>();
+        static FriendModel userModel;
 
         //Random other constants
         private static string LAST_UPDATED_KEY = "LastUpdated";
@@ -48,7 +49,7 @@ namespace Assets.Scripts.fitbit
         private string pin;
 
         private const float UPDATE_INTERVAL = 600;//update every ten minutes
-        private float updateCounter = 601f;
+        private static float updateCounter = 601f;
         public void Update()
         {
             updateCounter += Time.deltaTime;
@@ -65,14 +66,20 @@ namespace Assets.Scripts.fitbit
                 PlayerPrefs.SetString("token_secret", manager["token_secret"]);
                 if (updateCounter > UPDATE_INTERVAL)
                 {
-                    Thread threadFriends = new Thread(new ThreadStart(getFriends));
-                    Thread threadSteps = new Thread(new ThreadStart(getFriends));
-                    threadFriends.Start();
-                    threadSteps.Start();
-                    updateCounter = 0;
+                    updateAll();
                 }
 
             }
+        }
+
+        public void updateAll()
+        {
+            Thread threadFriends = new Thread(new ThreadStart(getFriends));
+            Thread threadSteps = new Thread(new ThreadStart(getFriends));
+            getProfileInfo();
+            threadFriends.Start();
+            threadSteps.Start();
+            updateCounter = 0;
         }
 
         private FitBit()
@@ -162,7 +169,50 @@ namespace Assets.Scripts.fitbit
             }
             return toReturn;
         }
+        /**
+         * Returns hte latest FriendModel representing the current user
+         * */
+        public FriendModel getUserModel()
+        {
+            return userModel;
+        }
 
+        void getProfileInfo()
+        {
+            Thread oThread = new Thread(new ThreadStart(() =>
+            {
+                var authzHeader = manager.GenerateAuthzHeader(PROFILE_URL, "GET");
+                var request = (HttpWebRequest)WebRequest.Create(PROFILE_URL);
+                setUpHeaders(request, authzHeader);
+                try
+                {
+                    using (var response = (HttpWebResponse)request.GetResponse())
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Debug.Log("There's been a problem trying to access fitbit:" +
+                                            Environment.NewLine +
+                                            response.StatusDescription);
+                        }
+                        else
+                        {
+                            string line = Utilities.getStringFromResponse(response);
+                            JSONObject user = new JSONObject(line);
+                            Debug.Log("Fetched userModel: " + line);
+                            user.GetField("user", delegate(JSONObject info)
+                            {
+                                userModel = new FriendModel(info);
+                            });
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                }
+            }));
+            oThread.Start();
+        }
 
         void getFriends()
         {
