@@ -51,15 +51,11 @@ namespace Assets.Scripts.networking
                 HttpWebResponse response;
                 try
                 {
-                    Debug.Log("HELLO");
                     response = (HttpWebResponse)request.GetResponse();
-                    Debug.Log("HLL");
-
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("HI");
-                    Debug.Log(e);
+                    Debug.Log("Exception in updatePLayer(): "+e);
                     return;
                 }
                 using (response)

@@ -208,7 +208,7 @@ namespace Assets.Scripts.fitbit
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e);
+                    Debug.Log("Exception in getProfileInfo(): "+e);
                 }
             }));
             oThread.Start();
