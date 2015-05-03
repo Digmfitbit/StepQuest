@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\Battle_Scripts\Enemy.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\Fighter.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\FireballController.cs" />
+     <Compile Include="Assets\Scripts\Battle_Scripts\Friend.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\StatusBarScript.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\setHealth.cs" />

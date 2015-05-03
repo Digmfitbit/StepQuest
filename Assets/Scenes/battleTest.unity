@@ -116,6 +116,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   players:
   - {fileID: 158024, guid: 0280e3fb8b8f243ecb1a62c467afb7f8, type: 2}
+  friends:
+  - {fileID: 123030, guid: 63366aa1302624e2d9bbb006d990bc96, type: 2}
   enemys:
   - {fileID: 154816, guid: 92a07b67c184d4f6a8199eba373a4594, type: 2}
   ui: {fileID: 272864984}

@@ -37,6 +37,7 @@ public class Fighter : MonoBehaviour {
 	private Vector3 homePos;
 	private Vector3 oldPos;
 	private Vector3 newPos;
+	private float attackSpeed = 20f;
 
 	protected virtual void Awake () 
 	{
@@ -74,16 +75,16 @@ public class Fighter : MonoBehaviour {
 		//Attacking Animation
 		if (isAttacking) 
 		{
-			newPos = Vector3.Slerp (transform.position, enemy.transform.position, Time.deltaTime*10f);
+			newPos = Vector3.Slerp (transform.position, enemy.transform.position, Time.deltaTime * attackSpeed);
 			transform.position = newPos;
 			oldPos = newPos;
 
-			if(Vector3.Distance(transform.position,enemy.transform.position) < 0.25f)
+			if(Vector3.Distance(transform.position,enemy.transform.position) < 0.2)
 				isAttacking = false;
 		} 
 		else 
 		{
-			newPos = Vector3.Slerp (transform.position ,homePos, Time.deltaTime*10f);
+			newPos = Vector3.Slerp (transform.position ,homePos, Time.deltaTime * attackSpeed);
 			transform.position = newPos;
 			oldPos = newPos;
 		}
@@ -110,7 +111,6 @@ public class Fighter : MonoBehaviour {
 
 	protected virtual void Hit(float _damageIn)
 	{
-//		yield return new WaitForSeconds (0.25f);
 		health -= _damageIn;
 
 		//if health is to low call dead function
@@ -118,7 +118,6 @@ public class Fighter : MonoBehaviour {
 			Dead ();
 
 		//display health under fighter
-//		transform.FindChild ("HealthText").gameObject.SendMessage("setText", health.ToString());
 		healthBar.SendMessage ("UpdateStatusBar", health);
 	}
 

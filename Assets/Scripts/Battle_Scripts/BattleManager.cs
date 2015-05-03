@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class BattleManager : MonoBehaviour {
 	
 	public GameObject[] players;
+	public GameObject[] friends;
 	public GameObject[] enemys;
 	public GameObject ui;
 
@@ -26,8 +27,10 @@ public class BattleManager : MonoBehaviour {
 	private bool startFight = false;
 	private bool inRound = false;
 
+	private int roundNr = 0;
 
-	private TextMesh fightText;
+
+	private TextMesh textObject;
 
 	public float attackDuration = 0.5f;
 	
@@ -36,7 +39,7 @@ public class BattleManager : MonoBehaviour {
 		//Places the players and enemys on the field
 		setUpFight ();
 
-		fightText = GameObject.Find("tempReadyForFightText").GetComponent<TextMesh>();
+		textObject = GameObject.Find("tempReadyForFightText").GetComponent<TextMesh>();
 
 		//Hide UI panel
 		ui.SetActive (false);
@@ -51,7 +54,7 @@ public class BattleManager : MonoBehaviour {
 			Fight ();
 		}
 
-		if (playerDead && !inRound) 
+		if (playerDead && !inRound && !battleOver) 
 		{
 			inRound = true;
 			StartCoroutine (StartAttacks ());
@@ -68,7 +71,7 @@ public class BattleManager : MonoBehaviour {
 					player.SendMessage("WinFight");
 				}
 				battleOver = true;
-				fightText.text = "You Win!";
+				textObject.text = "You Win!";
 			}
 
 			//do the same for all players, if no player is left call win function on all enemys alive
@@ -79,7 +82,7 @@ public class BattleManager : MonoBehaviour {
 					enemy.SendMessage("WinFight");
 				}
 				battleOver = true;
-				fightText.text = "You Suck!";
+				textObject.text = "You Suck!";
 			}
 		}
 
@@ -98,6 +101,9 @@ public class BattleManager : MonoBehaviour {
 
 	private IEnumerator StartAttacks()
 	{
+		roundNr += 1;
+		textObject.text = "Round: " + roundNr;
+
 		//Manual fight sequence
 		if(playerSelected && fightMode && !playerDead)
 			playerScript.attack (selectedEnemy);
@@ -205,7 +211,7 @@ public class BattleManager : MonoBehaviour {
 			{
 				fightMode = true;
 				startFight = true;
-				fightText.text = "Fight!";
+				textObject.text = "Fight!";
 
 				playerScript = selectedPlayer.GetComponent<Player> ();
 				enemyScript = selectedEnemy.GetComponent<Enemy> ();
@@ -271,7 +277,7 @@ public class BattleManager : MonoBehaviour {
 
 		for (int i = 0; i < numberOfFriends; i++) 
 		{
-			GameObject toInstantiateFriend = players [0];
+			GameObject toInstantiateFriend = friends [0];
 			toInstantiateFriend.name = "Friends_"+i;
 			toInstantiateFriend.tag = "Friend";
 			toInstantiateFriend.transform.localScale = scaleUp;
