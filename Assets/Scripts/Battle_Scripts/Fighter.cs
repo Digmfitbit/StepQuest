@@ -18,6 +18,7 @@ public class Fighter : MonoBehaviour {
 	
 	protected bool selected = false;
 	public bool alive = true;
+	private bool isAttacking = false;
 
 	public GameObject HealthBar;
 	private GameObject healthBar;
@@ -31,9 +32,16 @@ public class Fighter : MonoBehaviour {
 	public TextMesh textUnderFighter;
 	private Animator animationController;
 	private LineRenderer lineRenderer;
+	private GameObject enemy;
+
+	private Vector3 homePos;
+	private Vector3 oldPos;
+	private Vector3 newPos;
 
 	protected virtual void Awake () 
 	{
+		homePos = transform.position;
+
 		//Get components
 		battelManager = GameObject.Find ("BattleManager");
 		battelManagerScript = battelManager.GetComponent<BattleManager>();
@@ -64,35 +72,46 @@ public class Fighter : MonoBehaviour {
 	protected virtual void Update ()
 	{
 
-		if (alive) //do this as long as fighter is alive
-		{
+		if (alive)
 			ShowSelection ();
 
 
-
+		if (isAttacking) {
+			newPos = Vector3.Slerp (transform.position, enemy.transform.position, Time.deltaTime*10f);
+			transform.position = newPos;
+			oldPos = newPos;
+		} else 
+		{
+			newPos = Vector3.Slerp (transform.position ,homePos, Time.deltaTime*10f);
+			transform.position = newPos;
+			oldPos = newPos;
 		}
+
+
 	}
 	
 	//attack function calls hit function at opponent
 	public virtual void attack(GameObject _enemy)
 	{
+		enemy = _enemy;
+
+		StartCoroutine(attackAnimation ());
+
 		if (probabilityOfMissing < Random.Range (0, 100)) {								//how high is the propability of a failed attack
 			//call hit function on selected opponent
-			_enemy.SendMessage ("Hit", damage);
-//			lineRenderer.SetPosition (0, transform.position);
-//			lineRenderer.SetPosition (1, _enemy.transform.position);
-//			lineRenderer.material.color = new Color(1f,0f,0f,1f);
+			enemy.SendMessage ("Hit", damage);
 		} else 
 		{
 			Debug.Log ("Shit I missed!!!");
-//			lineRenderer.material.color = new Color(0f,1f,0f,0f);
 		}
-
-
-//		yield return new WaitForSeconds(1.0f);
 	}
 
-
+	public virtual IEnumerator attackAnimation()
+	{	
+		isAttacking = true;
+		yield return new WaitForSeconds(0.25f);
+		isAttacking = false;	
+	}
 
 
 	protected virtual void Hit(float _damageIn)

@@ -33,7 +33,7 @@ GameObject:
   - 95: {fileID: 9535334}
   - 120: {fileID: 12061602}
   m_Layer: 0
-  m_Name: Friends_2
+  m_Name: Friends_1
   m_TagString: Friend
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

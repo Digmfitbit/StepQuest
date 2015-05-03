@@ -24,10 +24,12 @@ public class BattleManager : MonoBehaviour {
 	private bool battleOver = false;
 	private bool fightMode = false;
 	private bool startFight = false;
+	private bool inRound = false;
 
 
 	private TextMesh fightText;
 
+	public float attackDuration = 0.5f;
 	
 	void Awake () 
 	{
@@ -43,19 +45,18 @@ public class BattleManager : MonoBehaviour {
 	void Update () 
 	{
 		//if everthing is ready to fight start fight
-		if (startFight) {
+		if (startFight) 
+		{
 			startFight = false;
 			Fight ();
 		}
 
-		if (battleOver) 
+		if (playerDead && !inRound) 
 		{
-			//Show Ui panel when battle is over
-			ui.SetActive(true);
+			inRound = true;
+			StartCoroutine (StartAttacks ());
 		}
-
-		Debug.DrawLine (new Vector3(5,5,0), new Vector3(0,0,0), Color.red);
-
+	
 		//Check if the battle is over. Battle is over when all enemys or player are dead.
 		if (!battleOver)
 		{
@@ -81,19 +82,25 @@ public class BattleManager : MonoBehaviour {
 				fightText.text = "You Suck!";
 			}
 		}
+
+		if (battleOver) 
+		{
+			//Show Ui panel when battle is over
+			ui.SetActive(true);
+		}
 	}
 
 	private void Fight()
 	{
+		inRound = true;
+		StartCoroutine( StartAttacks ());
+	}
+
+	private IEnumerator StartAttacks()
+	{
 		//Manual fight sequence
-//		Debug.Log ("Fight between: " + selectedPlayer.name + " vs. " + selectedEnemy.name);
-		if(playerSelected && fightMode)
+		if(playerSelected && fightMode && !playerDead)
 			playerScript.attack (selectedEnemy);
-
-		if(enemySelected && fightMode)
-			enemyScript.attack (selectedPlayer);
-//		Debug.Log ("PlayerHealth: " + playerScript.health + " EnemyHealth: " + enemyScript.health);
-
 
 		//Automated fight sequence
 		foreach(GameObject _player in allFriends )
@@ -104,30 +111,33 @@ public class BattleManager : MonoBehaviour {
 				//pick a random alive enemy and attack them
 				if(allEnemys.Count > 0)
 				{
-					GameObject randomEnemy = allEnemys[Random.Range(0, allEnemys.Count)];
-					_player.SendMessage("attack",randomEnemy);
+
+					if(allEnemys.Count > 0)
+					{
+						yield return new WaitForSeconds(attackDuration);
+						GameObject randomEnemy = allEnemys[Random.Range(0, allEnemys.Count)];
+						_player.SendMessage("attack",randomEnemy);
+					}
 				}
 			}
 		}
-
+		
 		//Enemy fight back
 		//Get a random enemy and let them attack a random player
 		foreach (GameObject _enemy in allEnemys) 
 		{
-			if(_enemy != selectedEnemy)
+			if(allFriends.Count > 0)
 			{
-				if(allFriends.Count > 0)
-				{
-					GameObject randomEnemyToFightBack = allEnemys[Random.Range(0, allEnemys.Count)];
-					GameObject randomPlayer = allFriends[Random.Range(0, allFriends.Count)];
-					randomEnemyToFightBack.SendMessage("attack",randomPlayer);
-				}
+				yield return new WaitForSeconds(attackDuration);
+				GameObject randomEnemyToFightBack = allEnemys[Random.Range(0, allEnemys.Count)];
+				GameObject randomPlayer = allFriends[Random.Range(0, allFriends.Count)];
+				randomEnemyToFightBack.SendMessage("attack",randomPlayer);
 			}
 		}
 
-
 		//set up next round
 		fightMode = false;
+		inRound = false;
 		if (selectedEnemy != null) 
 		{
 			selectedEnemy.SendMessage ("SetSelected", false);
@@ -232,6 +242,7 @@ public class BattleManager : MonoBehaviour {
 		{
 			playerDead = true;
 			playerSelected = false;
+			allFriends.Remove(_deadFighter);
 		}
 	}
 
@@ -251,17 +262,18 @@ public class BattleManager : MonoBehaviour {
 			selectedPlayer = instancePlayer;
 			playerSelected = true;
 			selectedPlayer.SendMessage("SetSelected", true);
+			allFriends.Add(instancePlayer);
 		}
 
 		for (int i = 0; i < numberOfPlayer; i++) 
 		{
-			GameObject toInstantiatePlayer = players [0];
-			toInstantiatePlayer.name = "Friends_"+i;
-			toInstantiatePlayer.tag = "Friend";
-			toInstantiatePlayer.transform.localScale = scaleUp;
-			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-2, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
-			allFriends.Add(instancePlayer);
-			instancePlayer.transform.parent = fightSceneHolder;
+			GameObject toInstantiateFriend = players [0];
+			toInstantiateFriend.name = "Friends_"+i;
+			toInstantiateFriend.tag = "Friend";
+			toInstantiateFriend.transform.localScale = scaleUp;
+			GameObject instanceFriend = Instantiate (toInstantiateFriend, new Vector2 (- i-2, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
+			allFriends.Add(instanceFriend);
+			instanceFriend.transform.parent = fightSceneHolder;
 		}
 
 		for(int i = 0; i < numberOfEnemy; i++)
