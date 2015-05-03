@@ -106,7 +106,7 @@ public class BattleManager : MonoBehaviour {
 
 		//Manual fight sequence
 		if(playerSelected && fightMode && !playerDead)
-			playerScript.attack (selectedEnemy);
+			playerScript.StartAttack (selectedEnemy);
 
 		//Automated fight sequence
 		foreach(GameObject _player in allFriends )
@@ -122,21 +122,21 @@ public class BattleManager : MonoBehaviour {
 					{
 						yield return new WaitForSeconds(attackDuration);
 						GameObject randomEnemy = allEnemys[Random.Range(0, allEnemys.Count)];
-						_player.SendMessage("attack",randomEnemy);
+						_player.SendMessage("StartAttack",randomEnemy);
 					}
 				}
 			}
 		}
 		
 		//Enemy fight back
-		//Let every Enemy attack a random Player
+		//Let every Enemy StartAttack a random Player
 		foreach (GameObject _enemy in allEnemys) 
 		{
 			if(allFriends.Count > 0)
 			{
 				yield return new WaitForSeconds(attackDuration);
 				GameObject randomPlayer = allFriends[Random.Range(0, allFriends.Count)];
-				_enemy.SendMessage("attack",randomPlayer);
+				_enemy.SendMessage("StartAttack",randomPlayer);
 			}
 		}
 

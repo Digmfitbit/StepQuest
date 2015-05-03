@@ -18,7 +18,7 @@ public class Fighter : MonoBehaviour {
 	
 	protected bool selected = false;
 	public bool alive = true;
-	private bool isAttacking = false;
+	protected bool isAttacking = false;
 
 	public GameObject HealthBar;
 	private GameObject healthBar;
@@ -29,19 +29,17 @@ public class Fighter : MonoBehaviour {
 	protected GameObject battelManager;
 	protected BattleManager battelManagerScript;
 	protected SpriteRenderer spriteRenderer;
-	public TextMesh textUnderFighter;
-	private Animator animationController;
-	private LineRenderer lineRenderer;
-	private GameObject enemy;
+	protected TextMesh textUnderFighter;
+	protected Animator animationController;
+	protected LineRenderer lineRenderer;
+	protected GameObject enemy;
 
-	private Vector3 homePos;
-	private Vector3 oldPos;
-	private Vector3 newPos;
-	private float attackSpeed = 20f;
+	protected Vector3 homePos;
+	protected Vector3 newPos;
+	protected float attackSpeed = 20f;
 
 	protected virtual void Awake () 
 	{
-
 		//Get components
 		battelManager = GameObject.Find ("BattleManager");
 		battelManagerScript = battelManager.GetComponent<BattleManager>();
@@ -63,7 +61,6 @@ public class Fighter : MonoBehaviour {
 		staminaBar = Instantiate(StaminaBar ,transform.position + new Vector3(0f,-0.8f,0f) , Quaternion.identity) as GameObject;
 		staminaBar.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
 		staminaBar.transform.SetParent (transform);
-
 	}
 
 
@@ -72,39 +69,51 @@ public class Fighter : MonoBehaviour {
 		if (alive)
 			ShowSelection ();
 
-		//Attacking Animation
+		//Fight Code
 		if (isAttacking) 
 		{
-			newPos = Vector3.Slerp (transform.position, enemy.transform.position, Time.deltaTime * attackSpeed);
-			transform.position = newPos;
-			oldPos = newPos;
-
-			if(Vector3.Distance(transform.position,enemy.transform.position) < 0.2)
-				isAttacking = false;
-		} 
-		else 
+			attack ();
+		}
+		else
 		{
-			newPos = Vector3.Slerp (transform.position ,homePos, Time.deltaTime * attackSpeed);
+			//Bring Fighter back to home positon
+			newPos = Vector3.Slerp (transform.position, homePos, Time.deltaTime * attackSpeed);
 			transform.position = newPos;
-			oldPos = newPos;
+		}
+	}
+
+	public virtual void StartAttack (GameObject _enemy)
+	{
+		if (alive) 
+		{
+			enemy = _enemy;
+			isAttacking = true;
 		}
 	}
 
 
-	//attack function calls hit function at opponent
-	public virtual void attack(GameObject _enemy)
+	public virtual void attack()
 	{
-		enemy = _enemy;
-		isAttacking = true;
-
-		//how high is the propability of a failed attack, call hit function on selected opponent
-		if (probabilityOfMissing < Random.Range (0, 100)) 
-		{								
-			enemy.SendMessage ("Hit", damage);
-		} 
-		else 
+		//Attacking Animation - Move the fighter to the opponent. If the fighter is close enough he hits him by calling the hit function on the opponent. 
+		if (isAttacking) 
 		{
-			Debug.Log ("Shit I missed!!!");
+			newPos = Vector3.Slerp (transform.position, enemy.transform.position, Time.deltaTime * attackSpeed);
+			transform.position = newPos;
+			
+			if(Vector3.Distance(transform.position,enemy.transform.position) < 0.2)
+			{
+				isAttacking = false;
+				
+				//how high is the propability of a failed attack, call hit function on selected opponent
+				if (probabilityOfMissing < Random.Range (0, 100)) 
+				{								
+					enemy.SendMessage ("Hit", damage);
+				} 
+				else 
+				{
+					Debug.Log ("Shit I missed!!!");
+				}
+			}
 		}
 	}
 
@@ -114,9 +123,10 @@ public class Fighter : MonoBehaviour {
 		health -= _damageIn;
 
 		//if health is to low call dead function
-		if (health <= 0)
+		if (health <= 0) 
+		{
 			Dead ();
-
+		}
 		//display health under fighter
 		healthBar.SendMessage ("UpdateStatusBar", health);
 	}

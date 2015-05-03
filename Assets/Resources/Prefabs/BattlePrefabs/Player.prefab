@@ -165,7 +165,6 @@ MonoBehaviour:
   alive: 1
   HealthBar: {fileID: 139568, guid: a0af7a9fb4dd847f086b877b197c977a, type: 2}
   StaminaBar: {fileID: 130072, guid: d473663ab89ce428a94f48251b0e2122, type: 2}
-  textUnderFighter: {fileID: 0}
 --- !u!114 &11493336
 MonoBehaviour:
   m_ObjectHideFlags: 1
