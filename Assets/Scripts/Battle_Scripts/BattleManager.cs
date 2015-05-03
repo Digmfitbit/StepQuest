@@ -15,14 +15,16 @@ public class BattleManager : MonoBehaviour {
 	public int numberOfPlayer = 1;
 	public int numberOfEnemy = 1;
 
-	private List<GameObject> allPlayers = new List<GameObject>();
+	private List<GameObject> allFriends = new List<GameObject>();
 	private List<GameObject> allEnemys = new List<GameObject>();
 	
 	private bool playerSelected = false;
+	private bool playerDead = false;
 	private bool enemySelected = false;
 	private bool battleOver = false;
 	private bool fightMode = false;
 	private bool startFight = false;
+
 
 	private TextMesh fightText;
 
@@ -60,7 +62,7 @@ public class BattleManager : MonoBehaviour {
 			//check if enemies left, if not call win function at all left over players
 			if (allEnemys.Count <= 0)
 			{
-				foreach (GameObject player in allPlayers) 
+				foreach (GameObject player in allFriends) 
 				{
 					player.SendMessage("WinFight");
 				}
@@ -69,9 +71,9 @@ public class BattleManager : MonoBehaviour {
 			}
 
 			//do the same for all players, if no player is left call win function on all enemys alive
-			if (allPlayers.Count <= 0) 
+			if (allFriends.Count <= 0 && playerDead) 
 			{
-				foreach(GameObject enemy in allPlayers)
+				foreach(GameObject enemy in allFriends)
 				{
 					enemy.SendMessage("WinFight");
 				}
@@ -94,7 +96,7 @@ public class BattleManager : MonoBehaviour {
 
 
 		//Automated fight sequence
-		foreach(GameObject _player in allPlayers )
+		foreach(GameObject _player in allFriends )
 		{
 			// all player except the selected fight
 			if(_player != selectedPlayer)
@@ -114,10 +116,10 @@ public class BattleManager : MonoBehaviour {
 		{
 			if(_enemy != selectedEnemy)
 			{
-				if(allPlayers.Count > 0)
+				if(allFriends.Count > 0)
 				{
 					GameObject randomEnemyToFightBack = allEnemys[Random.Range(0, allEnemys.Count)];
-					GameObject randomPlayer = allPlayers[Random.Range(0, allPlayers.Count)];
+					GameObject randomPlayer = allFriends[Random.Range(0, allFriends.Count)];
 					randomEnemyToFightBack.SendMessage("attack",randomPlayer);
 				}
 			}
@@ -137,40 +139,61 @@ public class BattleManager : MonoBehaviour {
 	public void setSelection(GameObject _fighter)
 	{
 		//selection is only possible in if we are not in fight mode. 
-		if (!fightMode) 
+		if (!fightMode)
 		{
-			if (_fighter.tag == "Player") {
-				if (selectedPlayer != null) {
-					if (selectedPlayer == _fighter) {
-						selectedPlayer.SendMessage ("SetSelected", false);
-						selectedPlayer = null;
-						playerSelected = false;
-					} else {
-						//tell the player selected befor that he is no longer selected
-						selectedPlayer.SendMessage ("SetSelected", false);
 
-						//set newly selected player to be the selected fighter
-						selectedPlayer = _fighter;
-						selectedPlayer.SendMessage ("SetSelected", true);
-					}
-				} else {
-					selectedPlayer = _fighter;
-					playerSelected = true;
-					selectedPlayer.SendMessage ("SetSelected", true);
-				}
-			} else {
-				if (playerSelected && _fighter.tag == "Enemy") {
+			if (_fighter.tag == "Enemy")
+			{
+				if (selectedEnemy == null) 
+				{
 					selectedEnemy = _fighter;
-					enemySelected = true;
 					selectedEnemy.SendMessage ("SetSelected", true);
-				} else {
-					Debug.Log ("Select Fighter First");
+					enemySelected = true;
+				}
+				else 
+				{
+					selectedEnemy.SendMessage ("SetSelected", false);
+					selectedEnemy = _fighter;
+					selectedEnemy.SendMessage ("SetSelected", true);
+					enemySelected = true;
 				}
 			}
+
+
+//		{
+//			if (_fighter.tag == "Friend") {
+//				if (selectedPlayer != null) {
+//					if (selectedPlayer == _fighter) {
+//						selectedPlayer.SendMessage ("SetSelected", false);
+//						selectedPlayer = null;
+//						playerSelected = false;
+//					} else {
+//						//tell the player selected befor that he is no longer selected
+//						selectedPlayer.SendMessage ("SetSelected", false);
+//
+//						//set newly selected player to be the selected fighter
+//						selectedPlayer = _fighter;
+//						selectedPlayer.SendMessage ("SetSelected", true);
+//					}
+//				} else {
+//					selectedPlayer = _fighter;
+//					playerSelected = true;
+//					selectedPlayer.SendMessage ("SetSelected", true);
+//				}
+//			} else {
+//				if (playerSelected && _fighter.tag == "Enemy") {
+//					selectedEnemy = _fighter;
+//					enemySelected = true;
+//					selectedEnemy.SendMessage ("SetSelected", true);
+//				} else {
+//					Debug.Log ("Select Fighter First");
+//				}
+//			}
 		
 
 			//After player and enemy are selected the game goes into fight mode
-			if (playerSelected && enemySelected) {
+			if (enemySelected) 
+			{
 				fightMode = true;
 				startFight = true;
 				fightText.text = "Fight!";
@@ -185,30 +208,30 @@ public class BattleManager : MonoBehaviour {
 	{
 		if (_deadFighter.tag == "Enemy") {
 			_deadFighter.SendMessage ("SetSelected", false);
-			allEnemys.Remove(_deadFighter);
+			allEnemys.Remove (_deadFighter);
 
-			if(_deadFighter == selectedEnemy)
-			{
+			if (_deadFighter == selectedEnemy) {
 				enemySelected = false;
 				selectedEnemy = null;
 				fightMode = false;
 			}
-		} 
-		else if (_deadFighter.tag == "Player") 
-		{
+		} else if (_deadFighter.tag == "Friend") {
 			_deadFighter.SendMessage ("SetSelected", false);
-			if(selectedEnemy != null)
-				selectedEnemy.SendMessage("SetSelected", false);
-			allPlayers.Remove(_deadFighter);
+			if (selectedEnemy != null)
+				selectedEnemy.SendMessage ("SetSelected", false);
+			allFriends.Remove (_deadFighter);
 
-			if(_deadFighter == selectedPlayer)
-			{
-				enemySelected = false;
-				playerSelected = false;
-				selectedEnemy = null;
-				selectedPlayer = null;
-				fightMode = false;
-			}
+//			if(_deadFighter == selectedPlayer)
+//			{
+//				enemySelected = false;
+//				selectedEnemy = null;
+//				selectedPlayer = null;
+//				fightMode = false;
+//			}
+		} else if (_deadFighter.tag == "Player") 
+		{
+			playerDead = true;
+			playerSelected = false;
 		}
 	}
 
@@ -218,13 +241,26 @@ public class BattleManager : MonoBehaviour {
 		Vector3 scaleUp = new Vector3 (2, 2, 1);
 		Transform fightSceneHolder = GameObject.Find("FightSceneHolder").transform;
 
+		for (int i = 0; i < 1; i++) 
+		{
+			GameObject toInstantiatePlayer = players [0];
+			toInstantiatePlayer.tag = "Player";
+			toInstantiatePlayer.transform.localScale = scaleUp;
+			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-1, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
+			instancePlayer.transform.parent = fightSceneHolder;
+			selectedPlayer = instancePlayer;
+			playerSelected = true;
+			selectedPlayer.SendMessage("SetSelected", true);
+		}
+
 		for (int i = 0; i < numberOfPlayer; i++) 
 		{
 			GameObject toInstantiatePlayer = players [0];
-			toInstantiatePlayer.name = "Player_"+i;
+			toInstantiatePlayer.name = "Friends_"+i;
+			toInstantiatePlayer.tag = "Friend";
 			toInstantiatePlayer.transform.localScale = scaleUp;
-			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-1, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
-			allPlayers.Add(instancePlayer);
+			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-2, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
+			allFriends.Add(instancePlayer);
 			instancePlayer.transform.parent = fightSceneHolder;
 		}
 
