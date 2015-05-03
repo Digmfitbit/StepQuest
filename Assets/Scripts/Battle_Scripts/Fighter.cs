@@ -40,7 +40,6 @@ public class Fighter : MonoBehaviour {
 
 	protected virtual void Awake () 
 	{
-		homePos = transform.position;
 
 		//Get components
 		battelManager = GameObject.Find ("BattleManager");
@@ -51,12 +50,9 @@ public class Fighter : MonoBehaviour {
 
 		animationController = gameObject.GetComponent<Animator> ();
 
-		lineRenderer = gameObject.GetComponent<LineRenderer> ();
-		lineRenderer.SetWidth (0.2f, 0.05f);
-
 		//initialize variables
-//		damage = Random.Range (10, 20);
 		damage = 20;
+		homePos = transform.position;
 
 		//make health and stamina bar
 		healthBar = Instantiate(HealthBar ,transform.position + new Vector3(0f,-0.7f,0f) , Quaternion.identity) as GameObject;
@@ -68,54 +64,53 @@ public class Fighter : MonoBehaviour {
 		staminaBar.transform.SetParent (transform);
 
 	}
-	
+
+
 	protected virtual void Update ()
 	{
-
 		if (alive)
 			ShowSelection ();
 
-
-		if (isAttacking) {
+		//Attacking Animation
+		if (isAttacking) 
+		{
 			newPos = Vector3.Slerp (transform.position, enemy.transform.position, Time.deltaTime*10f);
 			transform.position = newPos;
 			oldPos = newPos;
-		} else 
+
+			if(Vector3.Distance(transform.position,enemy.transform.position) < 0.25f)
+				isAttacking = false;
+		} 
+		else 
 		{
 			newPos = Vector3.Slerp (transform.position ,homePos, Time.deltaTime*10f);
 			transform.position = newPos;
 			oldPos = newPos;
 		}
-
-
 	}
-	
+
+
 	//attack function calls hit function at opponent
 	public virtual void attack(GameObject _enemy)
 	{
 		enemy = _enemy;
+		isAttacking = true;
 
-		StartCoroutine(attackAnimation ());
-
-		if (probabilityOfMissing < Random.Range (0, 100)) {								//how high is the propability of a failed attack
-			//call hit function on selected opponent
+		//how high is the propability of a failed attack, call hit function on selected opponent
+		if (probabilityOfMissing < Random.Range (0, 100)) 
+		{								
 			enemy.SendMessage ("Hit", damage);
-		} else 
+		} 
+		else 
 		{
 			Debug.Log ("Shit I missed!!!");
 		}
 	}
 
-	public virtual IEnumerator attackAnimation()
-	{	
-		isAttacking = true;
-		yield return new WaitForSeconds(0.25f);
-		isAttacking = false;	
-	}
-
 
 	protected virtual void Hit(float _damageIn)
 	{
+//		yield return new WaitForSeconds (0.25f);
 		health -= _damageIn;
 
 		//if health is to low call dead function
@@ -127,6 +122,7 @@ public class Fighter : MonoBehaviour {
 		healthBar.SendMessage ("UpdateStatusBar", health);
 	}
 
+	
 	protected virtual void Dead()
 	{
 		alive = false;
@@ -137,10 +133,12 @@ public class Fighter : MonoBehaviour {
 		animationController.SetBool ("isDead", true);
 	}
 
+
 	public virtual void WinFight()
 	{
 
 	}
+
 
 	protected virtual void OnMouseDown()
 	{
@@ -151,10 +149,12 @@ public class Fighter : MonoBehaviour {
 		}
 	}
 
+
 	public virtual void SetSelected(bool _selected)
 	{
 		selected = _selected;
 	}
+
 
 	protected virtual void ShowSelection()
 	{

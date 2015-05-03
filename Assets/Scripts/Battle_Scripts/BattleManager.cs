@@ -12,7 +12,7 @@ public class BattleManager : MonoBehaviour {
 	private GameObject selectedEnemy = null;
 	private Player playerScript;
 	private Enemy enemyScript;
-	public int numberOfPlayer = 1;
+	public int numberOfFriends = 1;
 	public int numberOfEnemy = 1;
 
 	private List<GameObject> allFriends = new List<GameObject>();
@@ -123,32 +123,31 @@ public class BattleManager : MonoBehaviour {
 		}
 		
 		//Enemy fight back
-		//Get a random enemy and let them attack a random player
+		//Let every Enemy attack a random Player
 		foreach (GameObject _enemy in allEnemys) 
 		{
 			if(allFriends.Count > 0)
 			{
 				yield return new WaitForSeconds(attackDuration);
-				GameObject randomEnemyToFightBack = allEnemys[Random.Range(0, allEnemys.Count)];
 				GameObject randomPlayer = allFriends[Random.Range(0, allFriends.Count)];
-				randomEnemyToFightBack.SendMessage("attack",randomPlayer);
+				_enemy.SendMessage("attack",randomPlayer);
 			}
 		}
 
 		//set up next round
 		fightMode = false;
-		inRound = false;
 		if (selectedEnemy != null) 
 		{
 			selectedEnemy.SendMessage ("SetSelected", false);
 			selectedEnemy = null;
 		}
 		enemySelected = false;
+		inRound = false;
 	}
 
 	public void setSelection(GameObject _fighter)
 	{
-		//selection is only possible in if we are not in fight mode. 
+		//selection is only possible if we are not in fight mode. 
 		if (!fightMode)
 		{
 
@@ -216,19 +215,24 @@ public class BattleManager : MonoBehaviour {
 
 	public void someoneDied(GameObject _deadFighter)
 	{
-		if (_deadFighter.tag == "Enemy") {
+		if (_deadFighter.tag == "Enemy") 
+		{
 			_deadFighter.SendMessage ("SetSelected", false);
-			allEnemys.Remove (_deadFighter);
 
-			if (_deadFighter == selectedEnemy) {
+			if (_deadFighter == selectedEnemy)
+			{
 				enemySelected = false;
 				selectedEnemy = null;
 				fightMode = false;
 			}
-		} else if (_deadFighter.tag == "Friend") {
+			allEnemys.Remove (_deadFighter);
+		} 
+		else if (_deadFighter.tag == "Friend") 
+		{
 			_deadFighter.SendMessage ("SetSelected", false);
 			if (selectedEnemy != null)
 				selectedEnemy.SendMessage ("SetSelected", false);
+
 			allFriends.Remove (_deadFighter);
 
 //			if(_deadFighter == selectedPlayer)
@@ -265,7 +269,7 @@ public class BattleManager : MonoBehaviour {
 			allFriends.Add(instancePlayer);
 		}
 
-		for (int i = 0; i < numberOfPlayer; i++) 
+		for (int i = 0; i < numberOfFriends; i++) 
 		{
 			GameObject toInstantiateFriend = players [0];
 			toInstantiateFriend.name = "Friends_"+i;
