@@ -7,14 +7,14 @@ public class BattleManager : MonoBehaviour {
 	public GameObject[] players;
 	public GameObject[] friends;
 	public GameObject[] enemys;
-	public GameObject ui;
+
 
 	private GameObject selectedPlayer = null;
 	private GameObject selectedEnemy = null;
 	private Player playerScript;
 	private Enemy enemyScript;
 	public int numberOfFriends = 1;
-	public int numberOfEnemy = 1;
+	private int numberOfEnemy;
 
 	private List<GameObject> allFriends = new List<GameObject>();
 	private List<GameObject> allEnemys = new List<GameObject>();
@@ -27,6 +27,8 @@ public class BattleManager : MonoBehaviour {
 	private bool startFight = false;
 	private bool inRound = false;
 
+	private bool playerstatsAdded = false;
+
 	private int roundNr = 0;
 
 
@@ -37,12 +39,11 @@ public class BattleManager : MonoBehaviour {
 	void Awake () 
 	{
 		//Places the players and enemys on the field
-		setUpFight ();
+		setUpFight (playerStats.playerLvl);
 
 		textObject = GameObject.Find("tempReadyForFightText").GetComponent<TextMesh>();
 
-		//Hide UI panel
-		ui.SetActive (false);
+
 	}
 	
 	void Update () 
@@ -89,7 +90,12 @@ public class BattleManager : MonoBehaviour {
 		if (battleOver) 
 		{
 			//Show Ui panel when battle is over
-			ui.SetActive(true);
+
+			if(!playerstatsAdded)
+			{
+				playerstatsAdded = true;
+				GameObject.Find("StatsManager").GetComponent<StatsManager>().AddPlayerExperiences();
+			}
 		}
 	}
 
@@ -256,12 +262,20 @@ public class BattleManager : MonoBehaviour {
 		}
 	}
 
-	private void setUpFight()
+	private void setUpFight(float _playerLevel)
 	{
 		//Scle of the fighters
 		Vector3 scaleUp = new Vector3 (2, 2, 1);
 		Transform fightSceneHolder = GameObject.Find("FightSceneHolder").transform;
 
+		//determin number of Enemys by player level
+		if (numberOfEnemy <= 0) {
+			numberOfEnemy = 2;
+		} else {
+			numberOfEnemy = Mathf.RoundToInt (_playerLevel * 2);
+		}
+
+		//Make all the Fighters
 		for (int i = 0; i < 1; i++) 
 		{
 			GameObject toInstantiatePlayer = players [0];
