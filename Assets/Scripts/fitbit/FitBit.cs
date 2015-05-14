@@ -20,8 +20,10 @@ namespace Assets.Scripts.fitbit
         private string PROFILE_URL = API_BASE + "/1/user/-/profile.json";
 
         //Key Stuff
-        private static string CONSUMER_KEY = "32f9320af9f1c74d9abae8c2eeb01fce";
-        private static string CONSUMER_SECRET = "85d48cce8a2cfef8173993ef027d4000";
+        private static string CONSUMER_KEY = "09c24eab9e15ab8ba06114c374c3f9a0";
+        //old: "32f9320af9f1c74d9abae8c2eeb01fce";
+        private static string CONSUMER_SECRET = "442c84bc3fd739e39ed6d3c161261d1f";
+        //old: "85d48cce8a2cfef8173993ef027d4000";
         private static string RequestTokenURL = "https://api.fitbit.com/oauth/request_token";
         private static string AccessTokenURL = "https://api.fitbit.com/oauth/access_token";
         private static string authorizeURL = "https://www.fitbit.com/oauth/authorize";
@@ -50,6 +52,8 @@ namespace Assets.Scripts.fitbit
 
         private const float UPDATE_INTERVAL = 600;//update every ten minutes
         private static float updateCounter = 601f;
+        private DateTime lastUpdatedTime;
+        private bool updateTime = false;
         public void Update()
         {
             updateCounter += Time.deltaTime;
@@ -68,18 +72,20 @@ namespace Assets.Scripts.fitbit
                 {
                     updateAll();
                 }
-
+            }
+            if (updateTime)
+            {
+                updateTime = false;
+                PlayerPrefs.SetString("timeUpdated", lastUpdatedTime.ToString());
             }
         }
 
         public void updateAll()
         {
             Debug.Log("updating Fitbit");
-            Thread threadFriends = new Thread(new ThreadStart(getFriends));
-            Thread threadSteps = new Thread(new ThreadStart(getUpdatedSteps));
             getProfileInfo();
-            threadFriends.Start();
-            threadSteps.Start();
+            getUpdatedSteps();
+            getFriends();
             updateCounter = 0;
         }
 
@@ -218,43 +224,57 @@ namespace Assets.Scripts.fitbit
 
         void getFriends()
         {
-            var authzHeader = manager.GenerateAuthzHeader(FRIENDS_URL, "GET");
-            var request = (HttpWebRequest)WebRequest.Create(FRIENDS_URL);
-            setUpHeaders(request, authzHeader);
-
-            List<string> toReturn = new List<string>();
-
-            using (var response = (HttpWebResponse)request.GetResponse())
+            Thread oThread = new Thread(new ThreadStart(() =>
             {
-                //TODO do better error catching
-                if (response.StatusCode != HttpStatusCode.OK)
+                var authzHeader = manager.GenerateAuthzHeader(FRIENDS_URL, "GET");
+                var request = (HttpWebRequest)WebRequest.Create(FRIENDS_URL);
+                setUpHeaders(request, authzHeader);
+
+                List<string> toReturn = new List<string>();
+
+                HttpWebResponse response;
+                try
                 {
-                    Debug.Log("There's been a problem trying to access fitbit:" +
-                                    Environment.NewLine +
-                                    response.StatusDescription);
+                    response = (HttpWebResponse)request.GetResponse();
                 }
-                else
+                catch (Exception e)
                 {
-                    string line = Utilities.getStringFromResponse(response);
-                    JSONObject list = new JSONObject(line);
-                    list.GetField("friends", delegate(JSONObject hits)
+                    Debug.Log("Exception in getFriends(): " + e);
+                    return;
+                }
+                using (response)
+                {
+                    //TODO do better error catching
+                    if (response.StatusCode != HttpStatusCode.OK)
                     {
-                        foreach (JSONObject user in hits.list)
+                        Debug.Log("There's been a problem trying to access fitbit:" +
+                                        Environment.NewLine +
+                                        response.StatusDescription);
+                    }
+                    else
+                    {
+                        string line = Utilities.getStringFromResponse(response);
+                        JSONObject list = new JSONObject(line);
+                        list.GetField("friends", delegate(JSONObject hits)
                         {
-                            user.GetField("user", delegate(JSONObject info)
+                            foreach (JSONObject user in hits.list)
                             {
-                                //TODO extract more info here if we want
-                                FriendModel model = new FriendModel(info);
-                                friends.Add(model);
-                            });
-                        }
-                    });
+                                user.GetField("user", delegate(JSONObject info)
+                                {
+                                    //TODO extract more info here if we want
+                                    FriendModel model = new FriendModel(info);
+                                    friends.Add(model);
+                                });
+                            }
+                        });
+                    }
+                    // Example for someone with no friends:
+                    //{
+                    //"friends":  []
+                    //}
                 }
-                // Example for someone with no friends:
-                //{
-                //"friends":  []
-                //}
-            }
+            }));
+            oThread.Start();
         }
 
         /**
@@ -274,62 +294,77 @@ namespace Assets.Scripts.fitbit
         * */
         private void getUpdatedSteps()
         {
-            
-            var authzHeader = manager.GenerateAuthzHeader(LAST_CALL_SINCE_URL, "GET");
-            var request = (HttpWebRequest)WebRequest.Create(LAST_CALL_SINCE_URL);
-            setUpHeaders(request, authzHeader);
-            Debug.Log("updating Steps");
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    Debug.Log("There's been a problem trying to access fitbit:" +
-                                    Environment.NewLine +
-                                    response.StatusDescription);
-                }
-                else
-                {
-                    string line = Utilities.getStringFromResponse(response);
-                    //TODO check time
-                    PlayerPrefs.SetString(LAST_UPDATED_KEY, System.DateTime.Now.ToString());
-
-                    string[] list = line.Split(new char[] { '[', '{', '}' });
-                    //ignore first and last
-                    //TODO ignore dateTimes since last updated
-                    DateTime now = System.DateTime.Now;
-                    DateTime lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString("timeUpdated", now.ToString()));
-                    if(now == lastUpdatedTime){
-                        lastUpdatedTime = DateTime.MinValue;
-                    }
-                    Debug.Log(line);
-                    for (int i = 1; i < list.Length - 1; i++)
-                    {
-                        Debug.Log(list[i]);
-                        if (!list[i].StartsWith("\"dateTime"))
-                        {
-                            continue;
-                        }
-                        string[] itemInfo = list[i].Split(new char[] { '\"' });
-                        string dateTime = itemInfo[3];
-                        DateTime syncTime = Convert.ToDateTime(dateTime);
-                        if (syncTime > lastUpdatedTime)
-                        {
-                            string value = itemInfo[7];
-                            steps += Convert.ToInt32(value);
-                            lastUpdatedTime = syncTime;
-                            Debug.Log("steps: " + steps);
-                        }
-                    }
-                    PlayerPrefs.SetString("timeUpdated", lastUpdatedTime.ToString());
-                    //Example response with whitespace for clarity
-                    //{"activities-steps":[
-                    //  {"dateTime":"2015-04-13","value":"0"},
-                    //  {"dateTime":"2015-04-14","value":"0"},
-                    //  ...,
-                    //  {"dateTime":"2015-04-19","value":"0"}
-                    //]}
-                }
+            DateTime now = System.DateTime.Now;
+            lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString("timeUpdated", now.ToString()));
+            if (now == lastUpdatedTime)
+            {// Set to the min value
+                lastUpdatedTime = DateTime.MinValue;
             }
+
+            Thread oThread = new Thread(new ThreadStart(() =>
+            {
+                var authzHeader = manager.GenerateAuthzHeader(LAST_CALL_SINCE_URL, "GET");
+                var request = (HttpWebRequest)WebRequest.Create(LAST_CALL_SINCE_URL);
+                setUpHeaders(request, authzHeader);
+                Debug.Log("updating Steps");
+                HttpWebResponse response;
+                try
+                {
+                    response = (HttpWebResponse)request.GetResponse();
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Exception in getUpdatedSteps(): " + e);
+                    return;
+                }
+                using (response)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Debug.Log("There's been a problem trying to access fitbit:" +
+                                        Environment.NewLine +
+                                        response.StatusDescription);
+                    }
+                    else
+                    {
+                        string line = Utilities.getStringFromResponse(response);
+                    
+                        string[] list = line.Split(new char[] { '[', '{', '}' });
+                        //ignore first and last
+                        //TODO ignore dateTimes since last updated
+                        Debug.Log(line);
+                        for (int i = 1; i < list.Length - 1; i++)
+                        {
+                            Debug.Log(list[i]);
+                            if (!list[i].StartsWith("\"dateTime"))
+                            {
+                                continue;
+                            }
+                            string[] itemInfo = list[i].Split(new char[] { '\"' });
+                            string dateTime = itemInfo[3];
+                            DateTime syncTime = Convert.ToDateTime(dateTime);
+                            if (syncTime > lastUpdatedTime)
+                            {
+                                string value = itemInfo[7];
+                                steps += Convert.ToInt32(value);
+                                lastUpdatedTime = syncTime;
+                                Debug.Log("steps: " + steps);
+                            }
+                        }
+                        Debug.Log("GOT HERE");
+                        updateTime = true;
+
+                        //Example response with whitespace for clarity
+                        //{"activities-steps":[
+                        //  {"dateTime":"2015-04-13","value":"0"},
+                        //  {"dateTime":"2015-04-14","value":"0"},
+                        //  ...,
+                        //  {"dateTime":"2015-04-19","value":"0"}
+                        //]}
+                    }
+                }
+            }));
+            oThread.Start();
         }
 
         private void setUpHeaders(HttpWebRequest request, string authzHeader){
