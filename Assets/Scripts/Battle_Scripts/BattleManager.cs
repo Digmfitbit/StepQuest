@@ -8,6 +8,9 @@ public class BattleManager : MonoBehaviour {
 	public GameObject[] enemys;
 	public GameObject ui;
 
+    public GameObject attackBar;
+    private bool comboOver = false;
+
 	private GameObject selectedPlayer = null;
 	private GameObject selectedEnemy = null;
 	private Player playerScript;
@@ -43,7 +46,7 @@ public class BattleManager : MonoBehaviour {
 		//if everthing is ready to fight start fight
 		if (startFight) {
 			startFight = false;
-			Fight ();
+			StartCoroutine (Fight());
 		}
 
 		if (battleOver) 
@@ -81,18 +84,25 @@ public class BattleManager : MonoBehaviour {
 		}
 	}
 
-	private void Fight()
-	{
-		//Manual fight sequence
-//		Debug.Log ("Fight between: " + selectedPlayer.name + " vs. " + selectedEnemy.name);
-		if(playerSelected && fightMode)
-			playerScript.attack (selectedEnemy);
+    private IEnumerator Fight()
+    {
+        //Manual fight sequence
+        //		Debug.Log ("Fight between: " + selectedPlayer.name + " vs. " + selectedEnemy.name);
+        if (playerSelected && fightMode)
+            playerScript.attack(selectedEnemy);
+		
+        while (!comboOver)
+            yield return null;
 
-		if(enemySelected && fightMode)
-			enemyScript.attack (selectedPlayer);
+        if(enemySelected && fightMode)
+			enemyScript.strike (selectedPlayer);
 //		Debug.Log ("PlayerHealth: " + playerScript.health + " EnemyHealth: " + enemyScript.health);
 
+        CompleteFight();
+    }
 
+    private void CompleteFight()
+    {
 		//Automated fight sequence
 		foreach(GameObject _player in allPlayers )
 		{
@@ -103,7 +113,7 @@ public class BattleManager : MonoBehaviour {
 				if(allEnemys.Count > 0)
 				{
 					GameObject randomEnemy = allEnemys[Random.Range(0, allEnemys.Count)];
-					_player.SendMessage("attack",randomEnemy);
+					_player.SendMessage("strike",randomEnemy);
 				}
 			}
 		}
@@ -118,7 +128,7 @@ public class BattleManager : MonoBehaviour {
 				{
 					GameObject randomEnemyToFightBack = allEnemys[Random.Range(0, allEnemys.Count)];
 					GameObject randomPlayer = allPlayers[Random.Range(0, allPlayers.Count)];
-					randomEnemyToFightBack.SendMessage("attack",randomPlayer);
+					randomEnemyToFightBack.SendMessage("strike",randomPlayer);
 				}
 			}
 		}
@@ -132,6 +142,7 @@ public class BattleManager : MonoBehaviour {
 			selectedEnemy = null;
 		}
 		enemySelected = false;
+        comboOver = false;
 	}
 
 	public void setSelection(GameObject _fighter)
@@ -217,6 +228,7 @@ public class BattleManager : MonoBehaviour {
 		//Scle of the fighters
 		Vector3 scaleUp = new Vector3 (2, 2, 1);
 		Transform fightSceneHolder = GameObject.Find("FightSceneHolder").transform;
+        attackBar.SendMessage("Reset");
 
 		for (int i = 0; i < numberOfPlayer; i++) 
 		{
@@ -226,6 +238,7 @@ public class BattleManager : MonoBehaviour {
 			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-1, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
 			allPlayers.Add(instancePlayer);
 			instancePlayer.transform.parent = fightSceneHolder;
+            instancePlayer.SendMessage("SetAttackBar", attackBar);
 		}
 
 		for(int i = 0; i < numberOfEnemy; i++)
@@ -239,4 +252,9 @@ public class BattleManager : MonoBehaviour {
 		}
 	
 	}
+
+    private void SetComboOver (bool c)
+    {
+        comboOver = c;
+    }
 }

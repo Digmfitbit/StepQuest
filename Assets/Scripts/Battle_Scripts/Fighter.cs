@@ -14,6 +14,10 @@ public class Fighter : MonoBehaviour {
 	protected float damage;
 	protected float damageMax;
 
+    protected bool startAttack = true;
+    protected bool comboFill = true;
+    protected bool mouseReset = false;
+
 	protected float probabilityOfMissing = 20f;
 	
 	protected bool selected = false;
@@ -23,20 +27,22 @@ public class Fighter : MonoBehaviour {
 	private GameObject healthBar;
 	public GameObject StaminaBar;
 	private GameObject staminaBar;
+    public AttackBar attackBar;
 
 	//Components
-	protected GameObject battelManager;
-	protected BattleManager battelManagerScript;
+	protected GameObject battleManager;
+	protected BattleManager battleManagerScript;
 	protected SpriteRenderer spriteRenderer;
 	public TextMesh textUnderFighter;
 	private Animator animationController;
 	private LineRenderer lineRenderer;
+    private GameObject tempEnemy = null;
 
 	protected virtual void Awake () 
 	{
 		//Get components
-		battelManager = GameObject.Find ("BattleManager");
-		battelManagerScript = battelManager.GetComponent<BattleManager>();
+		battleManager = GameObject.Find ("BattleManager");
+		battleManagerScript = battleManager.GetComponent<BattleManager>();
 
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer> ();
 		spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);		//start sprite with half the opacity for testing
@@ -63,18 +69,86 @@ public class Fighter : MonoBehaviour {
 	
 	protected virtual void Update ()
 	{
-
 		if (alive) //do this as long as fighter is alive
 		{
 			ShowSelection ();
-
-
-
 		}
+
+        // Combo implementation
+        if (!startAttack)
+        {
+            // looks for mouse up before reading mouse downs again 
+            // (prevents auto combo click after selecting enemy)
+            if (!mouseReset && Input.GetMouseButtonUp(0))
+                mouseReset = true;
+
+            // if threshold has reached 1 (impossible), end the combo
+            if (attackBar.GetThreshold() >= 1f)
+            {
+                battleManager.SendMessage("SetComboOver", true);
+                attackBar.Reset();
+                startAttack = true;
+                Debug.Log("Max Combo, NICE!");
+            }
+
+            // if player clicks while combo-ing
+            if (mouseReset && Input.GetMouseButtonDown(0))
+            {
+                // strike if above threshold
+                if (attackBar.GetBarHeight() > attackBar.GetThreshold())
+                {
+                    strike(tempEnemy);
+                    attackBar.RaiseThreshold();
+                }
+                // end combo if player fails
+                else
+                {
+                    battleManager.SendMessage("SetComboOver", true);
+                    attackBar.Reset();
+                    startAttack = true;
+                }
+            }
+
+            // move the attack bar
+            if (comboFill)
+            {
+                // update bar height
+                float newBarHeight = Mathf.Lerp(attackBar.GetBarHeight(), attackBar.GetBarHeight() + attackBar.barSpeed, Time.deltaTime);
+                attackBar.SetBarHeight(newBarHeight);
+
+                // check for bounds
+                if (attackBar.GetBarHeight() >= 1f)
+                    comboFill = false;
+            }
+            else
+            {
+                // update bar height
+                float newBarHeight = Mathf.Lerp(attackBar.GetBarHeight(), attackBar.GetBarHeight() - attackBar.barSpeed, Time.deltaTime);
+                attackBar.SetBarHeight(newBarHeight);
+
+                // check for bounds
+                if (attackBar.GetBarHeight() <= 0f)
+                    comboFill = true;
+            }
+        } // end combo implementation
 	}
 	
-	//attack function calls hit function at opponent
-	public virtual void attack(GameObject _enemy)
+    // initiates a player attack
+    public virtual void attack(GameObject _enemy)
+    {
+        if (startAttack)
+        {
+            attackBar.gameObject.SetActive(true);
+            startAttack = false;
+            comboFill = true;
+            mouseReset = false;
+            tempEnemy = _enemy;
+        }
+    }
+
+
+	//strike function calls hit function at opponent
+	public virtual void strike(GameObject _enemy)
 	{
 		if (probabilityOfMissing < Random.Range (0, 100)) {								//how high is the propability of a failed attack
 			//call hit function on selected opponent
@@ -112,7 +186,7 @@ public class Fighter : MonoBehaviour {
 	{
 		alive = false;
 
-		battelManagerScript.someoneDied (gameObject);
+		battleManagerScript.someoneDied (gameObject);
 
 		//trigger dead animation
 		animationController.SetBool ("isDead", true);
@@ -128,7 +202,7 @@ public class Fighter : MonoBehaviour {
 		if(alive)
 		{
 			//Tell the GameManager that sombody click on you, snitch!
-			battelManagerScript.setSelection (gameObject);
+			battleManagerScript.setSelection (gameObject);
 		}
 	}
 
@@ -145,4 +219,9 @@ public class Fighter : MonoBehaviour {
 			spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);
 		}
 	}
+
+    protected virtual void SetAttackBar(GameObject ab)
+    {
+        attackBar = ab.GetComponent<AttackBar>();
+    }
 }
