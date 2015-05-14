@@ -8,6 +8,8 @@ public class BattleManager : MonoBehaviour {
 	public GameObject[] friends;
 	public GameObject[] enemys;
 
+    public GameObject attackBar;
+    private bool comboOver = false;
 
 	private GameObject selectedPlayer = null;
 	private GameObject selectedEnemy = null;
@@ -114,6 +116,10 @@ public class BattleManager : MonoBehaviour {
 		if(playerSelected && fightMode && !playerDead)
 			playerScript.StartAttack (selectedEnemy);
 
+        // wait to finish round until player's combo is over
+        while (!comboOver)
+            yield return null;
+
 		//Automated fight sequence
 		foreach(GameObject _player in allFriends )
 		{
@@ -123,13 +129,9 @@ public class BattleManager : MonoBehaviour {
 				//pick a random alive enemy and attack them
 				if(allEnemys.Count > 0)
 				{
-
-					if(allEnemys.Count > 0)
-					{
-						yield return new WaitForSeconds(attackDuration);
-						GameObject randomEnemy = allEnemys[Random.Range(0, allEnemys.Count)];
-						_player.SendMessage("StartAttack",randomEnemy);
-					}
+					yield return new WaitForSeconds(attackDuration);
+					GameObject randomEnemy = allEnemys[Random.Range(0, allEnemys.Count)];
+					_player.SendMessage("StartAttack",randomEnemy);
 				}
 			}
 		}
@@ -154,6 +156,7 @@ public class BattleManager : MonoBehaviour {
 			selectedEnemy = null;
 		}
 		enemySelected = false;
+        comboOver = false;
 		inRound = false;
 	}
 
@@ -267,6 +270,7 @@ public class BattleManager : MonoBehaviour {
 		//Scle of the fighters
 		Vector3 scaleUp = new Vector3 (2, 2, 1);
 		Transform fightSceneHolder = GameObject.Find("FightSceneHolder").transform;
+        attackBar.SendMessage("Reset");
 
 		//determin number of Enemys by player level
 		if (numberOfEnemy <= 0) {
@@ -283,6 +287,7 @@ public class BattleManager : MonoBehaviour {
 			toInstantiatePlayer.transform.localScale = scaleUp;
 			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-1, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
 			instancePlayer.transform.parent = fightSceneHolder;
+            instancePlayer.SendMessage("SetAttackBar", attackBar);
 			selectedPlayer = instancePlayer;
 			playerSelected = true;
 			selectedPlayer.SendMessage("SetSelected", true);
@@ -311,4 +316,9 @@ public class BattleManager : MonoBehaviour {
 		}
 	
 	}
+
+    private void SetComboOver(bool c)
+    {
+        comboOver = c;
+    }
 }

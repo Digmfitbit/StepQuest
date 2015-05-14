@@ -26,13 +26,13 @@ public class Fighter : MonoBehaviour {
 	private GameObject staminaBar;
 
 	//Components
-	protected GameObject battelManager;
-	protected BattleManager battelManagerScript;
+	protected GameObject battleManager;
+	protected BattleManager battleManagerScript;
 	protected SpriteRenderer spriteRenderer;
 	protected TextMesh textUnderFighter;
 	protected Animator animationController;
 	protected LineRenderer lineRenderer;
-	protected GameObject enemy;
+	protected Fighter enemy;
 
 	protected Vector3 homePos;
 	protected Vector3 newPos;
@@ -41,8 +41,8 @@ public class Fighter : MonoBehaviour {
 	protected virtual void Awake () 
 	{
 		//Get components
-		battelManager = GameObject.Find ("BattleManager");
-		battelManagerScript = battelManager.GetComponent<BattleManager>();
+		battleManager = GameObject.Find ("BattleManager");
+		battleManagerScript = battleManager.GetComponent<BattleManager>();
 
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer> ();
 		spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);		//start sprite with half the opacity for testing
@@ -70,11 +70,7 @@ public class Fighter : MonoBehaviour {
 			ShowSelection ();
 
 		//Fight Code
-		if (isAttacking) 
-		{
-			attack ();
-		}
-		else
+		if (!isAttacking)
 		{
 			//Bring Fighter back to home positon
 			newPos = Vector3.Slerp (transform.position, homePos, Time.deltaTime * attackSpeed);
@@ -86,36 +82,44 @@ public class Fighter : MonoBehaviour {
 	{
 		if (alive) 
 		{
-			enemy = _enemy;
-			isAttacking = true;
+            if (_enemy.GetComponent<Fighter>())
+                enemy = _enemy.GetComponent<Fighter>();
+            else
+                Debug.Log("enemy being set is not a Fighter");
+
+			attack();
 		}
 	}
 
 
 	public virtual void attack()
 	{
-		//Attacking Animation - Move the fighter to the opponent. If the fighter is close enough he hits him by calling the hit function on the opponent. 
-		if (isAttacking) 
-		{
-			newPos = Vector3.Slerp (transform.position, enemy.transform.position, Time.deltaTime * attackSpeed);
-			transform.position = newPos;
-			
-			if(Vector3.Distance(transform.position,enemy.transform.position) < 0.2)
-			{
-				isAttacking = false;
-				
-				//how high is the propability of a failed attack, call hit function on selected opponent
-				if (probabilityOfMissing < Random.Range (0, 100)) 
-				{								
-					enemy.SendMessage ("Hit", damage);
-				} 
-				else 
-				{
-					Debug.Log ("Shit I missed!!!");
-				}
-			}
-		}
+        isAttacking = true;
+        StartCoroutine(FighterAttack());
 	}
+
+    protected virtual IEnumerator FighterAttack()
+    {
+        //Attacking Animation - Move the fighter to the opponent. If the fighter is close enough he hits him by calling the hit function on the opponent. 
+        while (Vector3.Distance(transform.position, enemy.transform.position) > 0.2)
+        {
+            newPos = Vector3.Slerp(transform.position, enemy.transform.position, Time.deltaTime * attackSpeed);
+            transform.position = newPos;
+            yield return null;
+        }
+
+        isAttacking = false;
+
+        //how high is the propability of a failed attack, call hit function on selected opponent
+        if (probabilityOfMissing < Random.Range(0, 100))
+        {
+            enemy.SendMessage("Hit", damage);
+        }
+        else
+        {
+            Debug.Log("Shit I missed!!!");
+        }
+    }
 
 
 	protected virtual void Hit(float _damageIn)
@@ -136,7 +140,7 @@ public class Fighter : MonoBehaviour {
 	{
 		alive = false;
 
-		battelManagerScript.someoneDied (gameObject);
+		battleManagerScript.someoneDied (gameObject);
 
 		//trigger dead animation
 		animationController.SetBool ("isDead", true);
@@ -154,7 +158,7 @@ public class Fighter : MonoBehaviour {
 		if(alive)
 		{
 			//Tell the GameManager that sombody click on you, snitch!
-			battelManagerScript.setSelection (gameObject);
+			battleManagerScript.setSelection (gameObject);
 		}
 	}
 
