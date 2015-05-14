@@ -76,7 +76,7 @@ namespace Assets.Scripts.fitbit
         {
             Debug.Log("updating Fitbit");
             Thread threadFriends = new Thread(new ThreadStart(getFriends));
-            Thread threadSteps = new Thread(new ThreadStart(getFriends));
+            Thread threadSteps = new Thread(new ThreadStart(getUpdatedSteps));
             getProfileInfo();
             threadFriends.Start();
             threadSteps.Start();
@@ -278,7 +278,7 @@ namespace Assets.Scripts.fitbit
             var authzHeader = manager.GenerateAuthzHeader(LAST_CALL_SINCE_URL, "GET");
             var request = (HttpWebRequest)WebRequest.Create(LAST_CALL_SINCE_URL);
             setUpHeaders(request, authzHeader);
-
+            Debug.Log("updating Steps");
             using (var response = (HttpWebResponse)request.GetResponse())
             {
                 if (response.StatusCode != HttpStatusCode.OK)
@@ -301,8 +301,10 @@ namespace Assets.Scripts.fitbit
                     if(now == lastUpdatedTime){
                         lastUpdatedTime = DateTime.MinValue;
                     }
+                    Debug.Log(line);
                     for (int i = 1; i < list.Length - 1; i++)
                     {
+                        Debug.Log(list[i]);
                         if (!list[i].StartsWith("\"dateTime"))
                         {
                             continue;
