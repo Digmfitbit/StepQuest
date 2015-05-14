@@ -18,7 +18,7 @@ namespace Assets.Scripts.networking
     {
         private static string BASE_URL = "http://www.cs.drexel.edu/~jgm55/fitbit/";
         private static string UPDATE_URL = BASE_URL + "updateUser.php";
-        private static string GET_FRIENDS = BASE_URL + "getFriends.php";
+        private static string GET_FRIENDS = BASE_URL + "fetchUsers.php";
 
         /**
          * Sends player stats to the server for storing

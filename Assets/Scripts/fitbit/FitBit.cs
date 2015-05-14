@@ -15,7 +15,7 @@ namespace Assets.Scripts.fitbit
     {
         //URLs for endpoints
         private static string API_BASE = "https://api.fitbit.com";
-        private string LAST_CALL_SINCE_URL = API_BASE + "/1/user/-/activities/steps/date/today/7d.json";
+        private string LAST_CALL_SINCE_URL = API_BASE + "/1/user/-/activities/steps/date/today/1d.json";
         private string FRIENDS_URL = API_BASE + "/1/user/-/friends.json";
         private string PROFILE_URL = API_BASE + "/1/user/-/profile.json";
 
@@ -74,6 +74,7 @@ namespace Assets.Scripts.fitbit
 
         public void updateAll()
         {
+            Debug.Log("updating Fitbit");
             Thread threadFriends = new Thread(new ThreadStart(getFriends));
             Thread threadSteps = new Thread(new ThreadStart(getFriends));
             getProfileInfo();
@@ -90,6 +91,7 @@ namespace Assets.Scripts.fitbit
             manager["consumer_secret"] = CONSUMER_SECRET;
             authenticated = false;
             isAuthenticating = false;
+            
             //if stored.
             if ((access_token = PlayerPrefs.GetString("token")) != "")
             {
@@ -268,7 +270,7 @@ namespace Assets.Scripts.fitbit
 
         /**
         * Gets the number of steps uploaded to fitbit since the last time this was called
-        * DOESNT WORK YET
+        * 
         * */
         private void getUpdatedSteps()
         {
@@ -294,6 +296,11 @@ namespace Assets.Scripts.fitbit
                     string[] list = line.Split(new char[] { '[', '{', '}' });
                     //ignore first and last
                     //TODO ignore dateTimes since last updated
+                    DateTime now = System.DateTime.Now;
+                    DateTime lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString("timeUpdated", now.ToString()));
+                    if(now == lastUpdatedTime){
+                        lastUpdatedTime = DateTime.MinValue;
+                    }
                     for (int i = 1; i < list.Length - 1; i++)
                     {
                         if (!list[i].StartsWith("\"dateTime"))
@@ -302,9 +309,16 @@ namespace Assets.Scripts.fitbit
                         }
                         string[] itemInfo = list[i].Split(new char[] { '\"' });
                         string dateTime = itemInfo[3];
-                        string value = itemInfo[7];
-                        steps += Convert.ToInt32(value);
+                        DateTime syncTime = Convert.ToDateTime(dateTime);
+                        if (syncTime > lastUpdatedTime)
+                        {
+                            string value = itemInfo[7];
+                            steps += Convert.ToInt32(value);
+                            lastUpdatedTime = syncTime;
+                            Debug.Log("steps: " + steps);
+                        }
                     }
+                    PlayerPrefs.SetString("timeUpdated", lastUpdatedTime.ToString());
                     //Example response with whitespace for clarity
                     //{"activities-steps":[
                     //  {"dateTime":"2015-04-13","value":"0"},
