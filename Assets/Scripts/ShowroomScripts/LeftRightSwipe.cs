@@ -12,7 +12,7 @@ public class LeftRightSwipe : MonoBehaviour {
 	private bool goRight, goLeft = false;
 	private bool draging;
 	private bool lerpToHomePos = true;
-	private float lerpSpeedLeftRight = 6f;
+	private float lerpSpeedLeftRight = 10f;
 
 	// Use this for initialization
 	void Start ()
@@ -36,23 +36,23 @@ public class LeftRightSwipe : MonoBehaviour {
 			if (goRight) 
 			{
 				transform.position = new Vector2 (Mathf.Lerp (transform.position.x, positionRight, Time.deltaTime * lerpSpeedLeftRight), 0f);
-				if (Mathf.Abs (transform.position.x - positionRight) < 0.2) 
+				if (Mathf.Abs (transform.position.x - positionRight) < 0.02) 
 				{
 					transform.position = new Vector2(positionRight,0f);
 					objectHome = transform.position;
 					goRight = false;
-					SetNewHome(transform.position.x);
+					SetNewHomePos(transform.position.x);
 				}
 			} 
 			else if (goLeft) 
 			{
 				transform.position = new Vector2 (Mathf.Lerp (transform.position.x, positionLeft, Time.deltaTime * lerpSpeedLeftRight), 0f);
-				if (Mathf.Abs (transform.position.x - positionLeft) < 0.2) 
+				if (Mathf.Abs (transform.position.x - positionLeft) < 0.02) 
 				{
 					transform.position = new Vector2(positionLeft,0f);
 					objectHome = transform.position;
 					goLeft = false;
-					SetNewHome(transform.position.x);
+					SetNewHomePos(transform.position.x);
 				}
 			} 
 
@@ -94,7 +94,7 @@ public class LeftRightSwipe : MonoBehaviour {
 		draging = false;
 	}
 
-	void SetNewHome(float newHomeX_)
+	void SetNewHomePos(float newHomeX_)
 	{
 		objectHome.x = newHomeX_;
 		positionLeft = objectHome.x - 10f;
