@@ -161,9 +161,9 @@ namespace Assets.Scripts.fitbit
 
         public void clearCache()
         {
-            PlayerPrefs.SetString(TOKEN_KEY, "");
-            PlayerPrefs.SetString(TOKEN_SECRET_KEY, "");
-            PlayerPrefs.SetString(TIME_UPDATED_KEY, "");
+            PlayerPrefs.DeleteKey(TOKEN_KEY);
+            PlayerPrefs.DeleteKey(TOKEN_SECRET_KEY);
+            PlayerPrefs.DeleteKey(TIME_UPDATED_KEY);
         }
 
         public void enterPin()
