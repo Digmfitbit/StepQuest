@@ -16,4 +16,8 @@ public class buttonFunctions : MonoBehaviour {
 	public void ExitApplication(){
 		Application.Quit();
 	}
+
+	public bool Interact(){
+		return true;
+	}
 }
