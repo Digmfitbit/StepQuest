@@ -20,6 +20,12 @@ namespace Assets.Scripts.fitbit
         private string FRIENDS_URL = API_BASE + "/1/user/-/friends.json";
         private string PROFILE_URL = API_BASE + "/1/user/-/profile.json";
 
+        //STUFF FOR KEYS For PlayerPrefs
+        public static string TOKEN_KEY = "token";
+        public static string TOKEN_SECRET_KEY = "token_secret";
+        public static string TIME_UPDATED_KEY = "timeUpdated";
+
+
         //Key Stuff
         private static string CONSUMER_KEY = "09c24eab9e15ab8ba06114c374c3f9a0";
         //old: "32f9320af9f1c74d9abae8c2eeb01fce";
@@ -65,13 +71,13 @@ namespace Assets.Scripts.fitbit
             {
                 Debug.Log("Opening URL");
                 openedURL = true;
-                var url = SERVICE_SPECIFIC_AUTHORIZE_URL_STUB + manager["token"];
+                var url = SERVICE_SPECIFIC_AUTHORIZE_URL_STUB + manager[TOKEN_KEY];
                 Application.OpenURL(url);
             }
             if (authenticated)
             {
-                PlayerPrefs.SetString("token", manager["token"]);
-                PlayerPrefs.SetString("token_secret", manager["token_secret"]);
+                PlayerPrefs.SetString(TOKEN_KEY, manager[TOKEN_KEY]);
+                PlayerPrefs.SetString(TOKEN_SECRET_KEY, manager[TOKEN_SECRET_KEY]);
                 if (updateCounter > UPDATE_INTERVAL)
                 {
                     updateAll();
@@ -80,7 +86,7 @@ namespace Assets.Scripts.fitbit
             if (updateTime)
             {
                 updateTime = false;
-                PlayerPrefs.SetString("timeUpdated", lastUpdatedTime.ToString());
+                PlayerPrefs.SetString(TIME_UPDATED_KEY, lastUpdatedTime.ToString());
             }
         }
 
@@ -91,7 +97,7 @@ namespace Assets.Scripts.fitbit
             getProfileInfo();
 
             DateTime now = System.DateTime.Now;
-            lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString("timeUpdated", now.ToString()));
+            lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_KEY, now.ToString()));
             if (now == lastUpdatedTime)
             {// Set to the min value
                 lastUpdatedTime = DateTime.MinValue;
@@ -112,13 +118,13 @@ namespace Assets.Scripts.fitbit
             isAuthenticating = false;
             
             //if stored.
-            if ((access_token = PlayerPrefs.GetString("token")) != "")
+            if ((access_token = PlayerPrefs.GetString(TOKEN_KEY)) != "")
             {
                 authenticated = true;
-                access_secret = PlayerPrefs.GetString("token_secret");
+                access_secret = PlayerPrefs.GetString(TOKEN_SECRET_KEY);
 
-                manager["token"] = access_token;
-                manager["token_secret"] = access_secret;
+                manager[TOKEN_KEY] = access_token;
+                manager[TOKEN_SECRET_KEY] = access_secret;
             }
             else
             { // Need to verify. Launch browser.
@@ -132,7 +138,7 @@ namespace Assets.Scripts.fitbit
         void getToken(){
             Debug.Log("Fetching token");
             Debug.Log(manager.AcquireRequestToken(RequestTokenURL, "POST").AllText);
-            Debug.Log("token: " + manager["token"]);
+            Debug.Log("token: " + manager[TOKEN_KEY]);
             gotURL = true;
         }
 
@@ -151,6 +157,13 @@ namespace Assets.Scripts.fitbit
         public bool isAuthenticated()
         {
             return authenticated;
+        }
+
+        public void clearCache()
+        {
+            PlayerPrefs.SetString(TOKEN_KEY, "");
+            PlayerPrefs.SetString(TOKEN_SECRET_KEY, "");
+            PlayerPrefs.SetString(TIME_UPDATED_KEY, "");
         }
 
         public void enterPin()
@@ -175,7 +188,6 @@ namespace Assets.Scripts.fitbit
             
             isAuthenticating = false;
             authenticated = true;
-
         }
 
         /**
@@ -359,7 +371,6 @@ namespace Assets.Scripts.fitbit
                             Debug.Log(hits1);
                             hits1.GetField("dataset", delegate(JSONObject hits2)
                             {
-                                Debug.Log(hits2);
                                 foreach (JSONObject timeObj in hits2.list)
                                 {
                                     timeObj.GetField("time", delegate(JSONObject time)
@@ -368,8 +379,6 @@ namespace Assets.Scripts.fitbit
                                         //TODO CHECK THE TIME;
                                         dateTime = new DateTime(day.Year, day.Month, day.Day,hoursMinutes.Hour,
                                             hoursMinutes.Minute,hoursMinutes.Second);
-                                        Debug.Log("dateTime: "+dateTime.ToString("MM/dd/yyyy HH:mm"));
-                                        Debug.Log("hoursMin: "+hoursMinutes.ToString("MM/dd/yyyy HH:mm"));
 
                                     });
                                     timeObj.GetField("value", delegate(JSONObject val)
@@ -383,7 +392,6 @@ namespace Assets.Scripts.fitbit
                             });
                         });
                         Debug.Log("steps: " + steps);
-                        Debug.Log("GOT HERE");
                         updateTime = true;
                         lastUpdatedTime = dateTime;
 
