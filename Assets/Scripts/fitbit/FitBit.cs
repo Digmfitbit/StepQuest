@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+
 using UnityEngine.UI;
 using UnityEngine;
 using System.Threading;
@@ -54,6 +55,9 @@ namespace Assets.Scripts.fitbit
         private static float updateCounter = 601f;
         private DateTime lastUpdatedTime;
         private bool updateTime = false;
+
+        private Thread dispatcher;
+
         public void Update()
         {
             updateCounter += Time.deltaTime;
@@ -82,8 +86,16 @@ namespace Assets.Scripts.fitbit
 
         public void updateAll()
         {
+            dispatcher = Thread.CurrentThread;
             Debug.Log("updating Fitbit");
             getProfileInfo();
+
+            DateTime now = System.DateTime.Now;
+            lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString("timeUpdated", now.ToString()));
+            if (now == lastUpdatedTime)
+            {// Set to the min value
+                lastUpdatedTime = DateTime.MinValue;
+            }
             getUpdatedSteps();
             getFriends();
 
@@ -295,13 +307,7 @@ namespace Assets.Scripts.fitbit
         * */
         private void getUpdatedSteps()
         {
-            DateTime now = System.DateTime.Now;
-            lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString("timeUpdated", now.ToString()));
-            if (now == lastUpdatedTime)
-            {// Set to the min value
-                lastUpdatedTime = DateTime.MinValue;
-            }
-
+            
             Thread oThread = new Thread(new ThreadStart(() =>
             {
                 var authzHeader = manager.GenerateAuthzHeader(LAST_CALL_SINCE_URL, "GET");
@@ -316,6 +322,8 @@ namespace Assets.Scripts.fitbit
                 catch (Exception e)
                 {
                     Debug.Log("Exception in getUpdatedSteps(): " + e);
+                    Thread.Sleep(1000);
+                    getUpdatedSteps();
                     return;
                 }
                 using (response)
@@ -329,66 +337,55 @@ namespace Assets.Scripts.fitbit
                     else
                     {
                         string line = Utilities.getStringFromResponse(response);
-                        
-                        //ignore first and last
+                        DateTime dateTime = lastUpdatedTime;
                         Debug.Log(line);
                         JSONObject list = new JSONObject(line);
                         DateTime day = new DateTime();
                         list.GetField("activities-steps", delegate(JSONObject hits)
                         {
-                            hits.GetField("dateTime", delegate(JSONObject date)
+                            foreach (JSONObject hit in hits.list)
                             {
-                                Debug.Log(date);
-                                day = Convert.ToDateTime(date.ToString());
-                            });
+                                hit.GetField("dateTime", delegate(JSONObject date)
+                                {
+                                    Debug.Log(date);
+                                    day = Utilities.ConvertToDateTime(date.ToString());
+                                    Debug.Log(day);
+                                });
+                            }
+                            
                         });
                         list.GetField("activities-steps-intraday", delegate(JSONObject hits1)
                         {
-                            foreach (JSONObject dataset in hits1.list)
+                            Debug.Log(hits1);
+                            hits1.GetField("dataset", delegate(JSONObject hits2)
                             {
-                                dataset.GetField("dataset", delegate(JSONObject hits2)
+                                Debug.Log(hits2);
+                                foreach (JSONObject timeObj in hits2.list)
                                 {
-                                    foreach (JSONObject timeObj in hits2.list)
+                                    timeObj.GetField("time", delegate(JSONObject time)
                                     {
-                                        DateTime dateTime = new DateTime(day.Year, day.Month, day.Day);
-                                        timeObj.GetField("time", delegate(JSONObject time)
-                                        {
-                                            Debug.Log(time.ToString());
-                                            DateTime hoursMinutes = Convert.ToDateTime(time.ToString());
-                                            //TODO CHECK THE TIME;
-                                            dateTime = new DateTime(day.Year, day.Month, day.Day,hoursMinutes.Hour,
-                                                hoursMinutes.Minute,hoursMinutes.Second);
+                                        DateTime hoursMinutes = Utilities.ConvertToDateTime(time.ToString());
+                                        //TODO CHECK THE TIME;
+                                        dateTime = new DateTime(day.Year, day.Month, day.Day,hoursMinutes.Hour,
+                                            hoursMinutes.Minute,hoursMinutes.Second);
+                                        Debug.Log("dateTime: "+dateTime.ToString("MM/dd/yyyy HH:mm"));
+                                        Debug.Log("hoursMin: "+hoursMinutes.ToString("MM/dd/yyyy HH:mm"));
 
-                                        });
-                                        timeObj.GetField("value", delegate(JSONObject val)
+                                    });
+                                    timeObj.GetField("value", delegate(JSONObject val)
+                                    {
+                                        if (dateTime > lastUpdatedTime)
                                         {
-                                            Debug.Log(val.ToString());
                                             steps += Convert.ToInt32(val);
-                                        });
-                                    }
-                                });
-                            }
+                                        }
+                                    });
+                                }
+                            });
                         });
-                        /*for (int i = 1; i < list.Length - 1; i++)
-                        {
-                            Debug.Log(list[i]);
-                            if (!list[i].StartsWith("\"dateTime"))
-                            {
-                                continue;
-                            }
-                            string[] itemInfo = list[i].Split(new char[] { '\"' });
-                            string dateTime = itemInfo[3];
-                            DateTime syncTime = Convert.ToDateTime(dateTime);
-                            if (syncTime > lastUpdatedTime)
-                            {
-                                string value = itemInfo[7];
-                                steps += Convert.ToInt32(value);
-                                lastUpdatedTime = syncTime;
-                                Debug.Log("steps: " + steps);
-                            }
-                        }*/
+                        Debug.Log("steps: " + steps);
                         Debug.Log("GOT HERE");
                         updateTime = true;
+                        lastUpdatedTime = dateTime;
 
                         //Example response with whitespace for clarity
                         //{"activities-steps":[
@@ -409,6 +406,7 @@ namespace Assets.Scripts.fitbit
             }));
             oThread.Start();
         }
+
 
         private void setUpHeaders(HttpWebRequest request, string authzHeader){
             request.Method = "GET";
