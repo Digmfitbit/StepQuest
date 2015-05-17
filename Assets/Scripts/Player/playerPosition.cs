@@ -16,7 +16,7 @@ public class playerPosition : MonoBehaviour {
 	public GameObject[] dungeonNodes;
 	public GameObject nextDungeonNode;
 
-	private float totalSteps;
+	public float totalSteps;
 	public Text nextStepCost;
 
 	void Awake () {
@@ -58,7 +58,7 @@ public class playerPosition : MonoBehaviour {
 				}
 	
 				//Left click and make sure the player has enough steps.
-				if(Input.GetMouseButtonDown(0) && worldID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
+				/*if(Input.GetMouseButtonDown(0) && worldID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
                     StepController.totalSteps -= nextNode.GetComponent<branchMapGen>().stepCost;
 					Debug.Log ("Subtract " + nextNode.GetComponent<branchMapGen>().stepCost.ToString() + " steps");
 					nextNode.GetComponent<branchMapGen>().stepCost = 0;
@@ -69,26 +69,9 @@ public class playerPosition : MonoBehaviour {
 				else if(Input.GetMouseButtonDown (1) && worldID > 0){
 					//Move to the previous node, free of charge.
 					worldID --;
-				}
+				}*/
 
-				else if(Input.GetKeyDown(KeyCode.Return)){
-					switch(nodes[worldID].GetComponent<branchMapGen>().id){
-					case 0:
-						Debug.Log ("This is the town of " + nodes[worldID].GetComponent<townGen>().townName.ToString ());
-						nodes[worldID].GetComponent<branchMapGen>().Town();
-						break;
-					case 1:
-						Debug.Log ("This is nothing here!");
-						break;
-					case 2:
-						Debug.Log ("This is a Dungeon");
-						nodes[worldID].GetComponent<branchMapGen>().dunGen = true;
-						inDungeon = true;
-						break;
-					default:
-						break;
-					}
-				}
+
 	
 				//Draw the next cost on screen.
 				nextStepCost.text = "Next Step Cost: " + nextNode.GetComponent<branchMapGen>().stepCost.ToString ();
@@ -117,7 +100,8 @@ public class playerPosition : MonoBehaviour {
 					Debug.Log ("This node has an event!");
 				}
 				*/
-				
+
+				/*
 				//Left click and make sure the player has enough steps.
 				if(Input.GetMouseButtonDown(0) && dungeonID < dungeonNodes.Length - 1 && totalSteps > nextDungeonNode.GetComponent<branchMapGen>().stepCost){
                     StepController.totalSteps -= nextDungeonNode.GetComponent<branchMapGen>().stepCost;
@@ -131,16 +115,54 @@ public class playerPosition : MonoBehaviour {
 					//Move to the previous node, free of charge.
 					dungeonID --;
 				}
+				*/
+
 				
-				else if(Input.GetKeyDown(KeyCode.Return)){
-					switch(dungeonNodes[dungeonID].GetComponent<branchMapGen>().id){
+				//Draw the next cost on screen.
+				nextStepCost.text = "Next Step Cost: " + nextDungeonNode.GetComponent<branchMapGen>().stepCost.ToString ();
+
+			}
+
+			break;
+		
+		default: 
+			break;
+		}
+	}
+
+	public void Interact(){
+			switch(inDungeon){
+
+			// Not in Dungeon
+			case false:
+					switch(nodes[worldID].GetComponent<branchMapGen>().id){
+					case 0:
+						Debug.Log ("This is the town of " + nodes[worldID].GetComponent<townGen>().townName.ToString ());
+						nodes[worldID].GetComponent<branchMapGen>().Town();
+						break;
+					case 1:
+						Debug.Log ("This is nothing here!");
+						break;
+					case 2:
+						Debug.Log ("This is a Dungeon");
+						nodes[worldID].GetComponent<branchMapGen>().dunGen = true;
+						inDungeon = true;
+						break;
+					default:
+						break;
+					}
+				break;
+
+			// In Dungeon
+			case true:
+				switch(dungeonNodes[dungeonID].GetComponent<branchMapGen>().id){
 					case 5:
 						Debug.Log ("This is an item");
 						Debug.Log ("You received a " + dungeonNodes[dungeonID].GetComponent<itemGenerator>().itemName);
 						break;
 					case 4:
 						Debug.Log ("This is a battle");
-                        Switcheroo.disable();
+						Switcheroo.disable();
 						Application.LoadLevelAdditive("battleTest");
 						
 						break;
@@ -155,18 +177,11 @@ public class playerPosition : MonoBehaviour {
 						break;
 					default:
 						break;
-					}
 				}
-				
-				//Draw the next cost on screen.
-				nextStepCost.text = "Next Step Cost: " + nextDungeonNode.GetComponent<branchMapGen>().stepCost.ToString ();
+				break;
 
-			}
-
-			break;
-		
-		default: 
-			break;
+			default:
+				break;
 		}
 	}
 }

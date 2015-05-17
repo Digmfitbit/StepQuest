@@ -113,14 +113,14 @@ RectTransform:
   m_GameObject: {fileID: 74327750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.9000001, y: 1.89999986, z: 1.89999986}
   m_Children:
   - {fileID: 700636105}
   m_Father: {fileID: 1718023805}
   m_RootOrder: 3
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -102, y: 35}
+  m_AnchoredPosition: {x: -175, y: 52}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &74327752
@@ -162,8 +162,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1534844484}
-        m_MethodName: ExitApplication
+      - m_Target: {fileID: 1573829060}
+        m_MethodName: Interact
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -229,14 +229,14 @@ RectTransform:
   m_GameObject: {fileID: 269322952}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.9000001, y: 1.89999986, z: 1.89999986}
   m_Children:
   - {fileID: 458301381}
   m_Father: {fileID: 1718023805}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 102, y: 35}
+  m_AnchoredPosition: {x: 175, y: 52}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &269322954
@@ -564,7 +564,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Exit
+  m_Text: Interact
 --- !u!222 &700636107
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -729,7 +729,7 @@ RectTransform:
   m_GameObject: {fileID: 1177225778}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.9000001, y: 1.89999986, z: 1.89999986}
   m_Children:
   - {fileID: 589326757}
   - {fileID: 1133450192}
@@ -737,7 +737,7 @@ RectTransform:
   m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 102, y: 77}
+  m_AnchoredPosition: {x: 175, y: 123}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1177225780
@@ -931,6 +931,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2020516, guid: 74cacf674eb20184287616bc2b6c8942, type: 2}
+      propertyPath: orthographic size
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 74cacf674eb20184287616bc2b6c8942, type: 2}
   m_IsPrefabParent: 0
@@ -1069,6 +1073,7 @@ MonoBehaviour:
   nextNode: {fileID: 0}
   dungeonNodes: []
   nextDungeonNode: {fileID: 0}
+  totalSteps: 0
   nextStepCost: {fileID: 1434786863}
 --- !u!212 &1573829061
 SpriteRenderer:
@@ -1104,7 +1109,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 1573829058}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: .5
   m_Height: 2
   m_Direction: 1
