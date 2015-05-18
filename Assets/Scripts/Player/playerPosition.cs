@@ -19,6 +19,8 @@ public class playerPosition : MonoBehaviour {
 	public float totalSteps;
 	public Text nextStepCost;
 
+	public Text townName;
+
 	void Awake () {
 		nodes = GameObject.FindGameObjectsWithTag("Node");
 		if(nodes.Length > 0){
@@ -139,6 +141,8 @@ public class playerPosition : MonoBehaviour {
 					case 0:
 						Debug.Log ("This is the town of " + nodes[worldID].GetComponent<townGen>().townName.ToString ());
 						nodes[worldID].GetComponent<branchMapGen>().Town();
+						townName.text = nodes[worldID].GetComponent<townGen>().townName.ToString();
+						GameObject.Find ("EventSystem").GetComponent<buttonFunctions>().OpenTownMenu();
 						break;
 					case 1:
 						Debug.Log ("This is nothing here!");
