@@ -87,6 +87,35 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &241111879
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 241111880}
+  m_Layer: 0
+  m_Name: ShowroomHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &241111880
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 241111879}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1789942704}
+  - {fileID: 1082018238}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!1 &1082018236
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,8 +146,7 @@ MonoBehaviour:
   friendShowroom: {fileID: 105468, guid: b12a6ee0477d749aaa35aee313a8e50a, type: 2}
   mainShowroom: {fileID: 185988, guid: 5d77aae8f9c444ecca703a7fbbab71d0, type: 2}
   playerShowroom: {fileID: 155528, guid: 5adab52a974554384991a57a90505fb7, type: 2}
-  showroomParent: {fileID: 0}
-  numberOfFriends: 10
+  numberOfFriends: 4
 --- !u!4 &1082018238
 Transform:
   m_ObjectHideFlags: 0
@@ -129,7 +157,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 241111880}
   m_RootOrder: 1
 --- !u!1 &1789942699
 GameObject:
@@ -191,7 +219,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 3.79999995
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -213,5 +241,5 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 241111880}
   m_RootOrder: 0

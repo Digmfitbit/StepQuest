@@ -28,7 +28,7 @@ public class LeftRightSwipe : MonoBehaviour {
 		if (Input.GetMouseButtonDown (0)) 
 		{
 			mouseOffset = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10)).x - transform.position.x;
-			Debug.Log("MouseOffset"+ mouseOffset);
+//			Debug.Log("MouseOffset"+ mouseOffset);
 		}
 
 		if (!draging) 
@@ -74,8 +74,6 @@ public class LeftRightSwipe : MonoBehaviour {
 	void OnMouseDown()
 	{
 		draging = true;
-
-
 	}
 
 	void OnMouseUp()
@@ -89,7 +87,6 @@ public class LeftRightSwipe : MonoBehaviour {
 		{
 			goLeft = true;
 			lerpToHomePos = false;
-
 		}
 		draging = false;
 	}
@@ -102,6 +99,6 @@ public class LeftRightSwipe : MonoBehaviour {
 
 		lerpToHomePos = true;
 
-		Debug.Log("Home: "+ objectHome.x +"Left: " + positionLeft + "Right: " + positionRight);
+//		Debug.Log("Home: "+ objectHome.x +"Left: " + positionLeft + "Right: " + positionRight);
 	}
 }

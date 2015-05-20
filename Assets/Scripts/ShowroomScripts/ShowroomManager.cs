@@ -9,7 +9,7 @@ public class ShowroomManager : MonoBehaviour {
 	public GameObject playerShowroom;
 	List<GameObject> allShowrooms = new List<GameObject>();
 	List<GameObject> friendShowrooms;
-	public GameObject showroomParent;
+	private GameObject showroomParent;
 	int numberOfShowrooms;
 	float spaceBetweenShowrooms = 10f;
 
@@ -18,6 +18,7 @@ public class ShowroomManager : MonoBehaviour {
 	// Use this for initialization
 	void Awake () 
 	{
+		//min number of showrooms is two (Main showroom and player showroom)
 		numberOfShowrooms = 2 + numberOfFriends;
 		//Get all showroom objects and user/friend data
 
@@ -39,10 +40,7 @@ public class ShowroomManager : MonoBehaviour {
 
 	void setUpShowroom()
 	{
-
-
 		float spaceBetweenShowrooms = 10f;
-
 
 		for (int i = 0; i < numberOfShowrooms; i++) {
 		
@@ -55,10 +53,16 @@ public class ShowroomManager : MonoBehaviour {
 			else if (i == 1)
 			{
 				toInstantiate = Instantiate (playerShowroom, new Vector2 (spaceBetweenShowrooms, 0f), Quaternion.identity) as GameObject;
+				GameObject player = Instantiate(Resources.Load("Prefabs/BattlePrefabs/PlayerShowroom",typeof(GameObject)),new Vector3 (spaceBetweenShowrooms, 0f, -1f) , Quaternion.identity) as GameObject;
+				player.transform.localScale = new Vector3(5f,5f);
+				player.transform.SetParent(toInstantiate.transform);
 			}
 			else if(i > 1)
 			{
 				toInstantiate = Instantiate(friendShowroom, new Vector2(i * spaceBetweenShowrooms, 0f), Quaternion.identity) as GameObject;
+				GameObject friend = Instantiate(Resources.Load("Prefabs/BattlePrefabs/PlayerShowroom",typeof(GameObject)),new Vector3 (i * spaceBetweenShowrooms, 0f, -1f) , Quaternion.identity) as GameObject;
+				friend.transform.localScale = new Vector3(5f,5f);
+				friend.transform.SetParent(toInstantiate.transform);
 			}
 
 			toInstantiate.transform.SetParent(showroomParent.transform);

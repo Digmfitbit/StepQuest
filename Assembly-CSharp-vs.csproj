@@ -66,6 +66,7 @@
      <Compile Include="Assets\Scripts\Player\playerStats.cs" />
      <Compile Include="Assets\Scripts\ShowroomScripts\LeftRightSwipe.cs" />
      <Compile Include="Assets\Scripts\ShowroomScripts\ShowroomManager.cs" />
+     <Compile Include="Assets\Scripts\ShowroomScripts\ShowroomPlayer.cs" />
      <Compile Include="Assets\Scripts\buttonFunctions.cs" />
      <Compile Include="Assets\Scripts\centerCam.cs" />
      <Compile Include="Assets\Scripts\fitbit\FitBit.cs" />
