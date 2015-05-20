@@ -15,7 +15,6 @@ public class LoadGame : MonoBehaviour {
     private static string access_secret = "";
     
     private OAuth.Manager manager;
-    private DateTime lastUpdated;
 
     string gameScreen = "MapTest";
     FitBit fitBitManager;
@@ -23,15 +22,6 @@ public class LoadGame : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        string dateTimeString;
-        if ((dateTimeString = PlayerPrefs.GetString("LastUpdated")) != "")
-        {
-            lastUpdated = Convert.ToDateTime(dateTimeString);
-        }
-        else
-        {
-            lastUpdated = DateTime.MinValue;
-        }
         // set up fitBit singleton
         fitBitManager = FitBit.getInstance();
         if (fitBitManager.isAuthenticated())
@@ -67,6 +57,11 @@ public class LoadGame : MonoBehaviour {
     public void getStepsSinceLastCall()
     {
         Debug.Log(FitBit.getInstance().getStepsSinceLastCall());
+    }
+
+    public void clearCache()
+    {
+        FitBit.getInstance().clearCache();
     }
 
     public void getFriends()

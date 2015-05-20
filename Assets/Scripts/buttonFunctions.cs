@@ -16,4 +16,24 @@ public class buttonFunctions : MonoBehaviour {
 	public void ExitApplication(){
 		Application.Quit();
 	}
+
+	public bool Interact(){
+		return true;
+	}
+
+	public GameObject townMenuPanel;
+	private Animator anim;
+	void Start () {
+		anim = townMenuPanel.GetComponent<Animator>();
+		anim.enabled = false;
+	}
+
+	public void OpenTownMenu(){
+		anim.enabled = true;
+		anim.Play("TownMenuSlideIn");
+	}
+	public void CloseTown(){
+		anim.Play("TownMenuSlideOut");
+	}
+
 }
