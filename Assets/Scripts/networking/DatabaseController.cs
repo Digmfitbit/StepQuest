@@ -21,13 +21,13 @@ namespace Assets.Scripts.networking
         private static string UPDATE_URL = BASE_URL + "updateUser.php";
         private static string GET_FRIENDS = BASE_URL + "fetchUsers.php";
 
-        private static List<playerStats> friendsList = null;
+        private static List<PlayerStats> friendsList = null;
 
         /**
          * Sends player stats to the server for storing
          * GET to update TODO should be POST
          * */
-        public static void updatePlayer(FriendModel player, playerStats stats){
+        public static void updatePlayer(FriendModel player, PlayerStats stats){
             Debug.Log("Updating player");
             if (player == null)
             {
@@ -86,7 +86,7 @@ namespace Assets.Scripts.networking
         public static void updateFriendsList(List<string> friendIds)
         {
             Debug.Log("Getting Friend Stats");
-            List<playerStats> friendStats = new List<playerStats>();
+            List<PlayerStats> friendStats = new List<PlayerStats>();
             Thread oThread = new Thread(new ThreadStart(() =>
             {
                 Debug.Log("getFriends()");
@@ -135,7 +135,7 @@ namespace Assets.Scripts.networking
         /**
          * Gets the game data for the given friend ids
          * */
-        public static List<playerStats> getFriends()
+        public static List<PlayerStats> getFriends()
         {
             return friendsList;
         }

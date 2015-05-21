@@ -3,29 +3,41 @@ using Assets.Scripts;
 
 
 //[Serializable]
-public class playerStats : JSONable {
-    
+public class PlayerStats : JSONable {
+
+    public string id;
+
 	//Overall level.
-	public static int playerLvl;
+	public int playerLvl;
 	//How much to level.
-    public static int expToNext;
+    public int expToNext;
 	//How much do they currently have.
-    public static int currentExp;
+    public int currentExp;
 
 	//How much damage.
-    public static int playerStrength = 5;
+    public int playerStrength = 5;
 
 	//How much hits can combo.
-    public static int playerStamina = 5;
+    public int playerStamina = 5;
 
 	//How much health.
-    public static int playerEndurance = 5;
+    public int playerEndurance = 5;
 
 	//How fast you recover.
-    public static int playerRecovery = 5;
+    public int playerRecovery = 5;
 
-    public playerStats()
+    public PlayerStats(string id)
     {
+        this.id = id;
+        Load();
+    }
+
+    /**
+     * TODO make this load the proper stat values
+     * from local cache and/or network on Awake()
+     * */
+	void Load () {
+        //TODO load this from playerPrefs/database
         playerLvl = 1;
         expToNext = 100;
         currentExp = 0;
@@ -33,15 +45,6 @@ public class playerStats : JSONable {
         playerStamina = 5;
         playerEndurance = 5;
         playerRecovery = 5;
-    }
-
-    /**
-     * TODO make this load the proper stat values
-     * from local cache and/or network
-     * */
-	void Load () {
-        //TODO load this from playerPrefs/database
-        
 	}
 
     JSONObject JSONable.getJSON()
