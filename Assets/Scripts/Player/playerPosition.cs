@@ -21,6 +21,8 @@ public class playerPosition : MonoBehaviour {
 
 	public Text townName;
 
+	public Text interactText;
+
 	void Awake () {
 		nodes = GameObject.FindGameObjectsWithTag("Node");
 		if(nodes.Length > 0){
@@ -36,6 +38,18 @@ public class playerPosition : MonoBehaviour {
 		//The character is on the world map.
 		case false:
 			nodes = GameObject.FindGameObjectsWithTag("Node");
+
+			switch(nodes[worldID].GetComponent<branchMapGen>().id){
+			case 0:
+				interactText.text = "Enter Town";
+				break;
+			case 2:
+				interactText.text = "Enter Dungeon";
+				break;
+			default:
+				interactText.text = "Nothing Here";
+				break;
+			}
 
 			if(nodes.Length > 0){
 
