@@ -17,6 +17,7 @@ public class StepController : MonoBehaviour {
         //TODO: REMOVE THIS JUST FOR TESTING
 
         DatabaseController.updatePlayer(FitBit.getInstance().getUserModel(), new playerStats());
+        DatabaseController.updateFriendsList(FitBit.getInstance().getFriendIDs());
     }
 
     void Update()

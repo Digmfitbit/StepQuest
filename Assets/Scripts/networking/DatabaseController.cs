@@ -11,6 +11,7 @@ using System.Threading;
 using System.IO;
 using Assets.Scripts.networking;
 using System.Net.Security;
+using System.Collections.Specialized;
 
 namespace Assets.Scripts.networking
 {
@@ -20,9 +21,11 @@ namespace Assets.Scripts.networking
         private static string UPDATE_URL = BASE_URL + "updateUser.php";
         private static string GET_FRIENDS = BASE_URL + "fetchUsers.php";
 
+        private static List<playerStats> friendsList = null;
+
         /**
          * Sends player stats to the server for storing
-         * POST to update
+         * GET to update TODO should be POST
          * */
         public static void updatePlayer(FriendModel player, playerStats stats){
             Debug.Log("Updating player");
@@ -55,7 +58,7 @@ namespace Assets.Scripts.networking
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Exception in updatePLayer(): "+e);
+                    Debug.Log("Exception in updatePlayer(): "+e);
                     return;
                 }
                 using (response)
@@ -76,21 +79,69 @@ namespace Assets.Scripts.networking
             oThread.Start();
         }
         /**
+         * Updates the FriendsLst in the background. 
+         * Takes a list of the Friend Ids from fitbit
+         * */
+        //TODO make this private
+        public static void updateFriendsList(List<string> friendIds)
+        {
+            Debug.Log("Getting Friend Stats");
+            List<playerStats> friendStats = new List<playerStats>();
+            Thread oThread = new Thread(new ThreadStart(() =>
+            {
+                Debug.Log("getFriends()");
+                HttpWebResponse response;
+
+                try
+                {
+                    var request = (HttpWebRequest)WebRequest.Create(GET_FRIENDS);
+                    setUpHeaders(request);
+                    request.Method = "POST";
+                    StreamWriter dataStream = new StreamWriter(request.GetRequestStream());
+                
+                    foreach (string friendId in friendIds)
+                    {
+                        dataStream.Write("friendId[]="+ friendId);
+                    }
+                    ServicePointManager.ServerCertificateValidationCallback +=
+                        new RemoteCertificateValidationCallback(
+                            (sender, certificate, chain, policyErrors) => { return true; });                
+                    response = (HttpWebResponse)request.GetResponse();
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Exception in updateFriendsList(): "+e);
+                    return;
+                }
+                using (response)
+                {
+                    //TODO do better error catching
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Debug.Log("There's been a problem trying to access the database:" +
+                                    Environment.NewLine +
+                                    response.StatusDescription);
+                    }
+                    else
+                    {
+                        string line = Utilities.getStringFromResponse(response);
+                        Debug.Log(line);
+                    }
+                }
+            }));
+            oThread.Start();
+        }
+
+        /**
          * Gets the game data for the given friend ids
          * */
-        public static List<playerStats> getFriends(List<string> friendIds)
+        public static List<playerStats> getFriends()
         {
-            return null;
+            return friendsList;
         }
 
         private static string serializeDataToString(JSONable objectToSerialize){
             return objectToSerialize.getJSON().Print();
-            /*IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            formatter.Serialize(stream, objectToSerialize);
-            StreamReader sr = new StreamReader(stream);
-            string serializedString = sr.ReadToEnd();
-            return serializedString;*/
         }
 
         /**
