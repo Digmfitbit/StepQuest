@@ -59,6 +59,10 @@ public class playerStats : JSONable {
 
     void JSONable.fromJSON(JSONObject json)
     {
-
+        playerLvl = Convert.ToInt32(json.GetField("playerLevel").ToString());
+        playerStrength = Convert.ToInt32(json.GetField("playerStrength").ToString());
+        playerStamina = Convert.ToInt32(json.GetField("playerStamina").ToString());
+        playerEndurance = Convert.ToInt32(json.GetField("playerEndurance").ToString());
+        playerRecovery = Convert.ToInt32(json.GetField("playerRecovery").ToString());
     }
 }
