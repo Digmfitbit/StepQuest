@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerManager : MonoBehaviour {
 
-    public playerStats mainPlayer;
+    public PlayerStats mainPlayer;
 
 
     void Awake()

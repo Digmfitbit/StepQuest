@@ -24,7 +24,7 @@ namespace Assets.Scripts.networking
          * Sends player stats to the server for storing
          * POST to update
          * */
-        public static void updatePlayer(FriendModel player, playerStats stats){
+        public static void updatePlayer(FriendModel player, PlayerStats stats){
             Debug.Log("Updating player");
             if (player == null)
             {
@@ -78,7 +78,7 @@ namespace Assets.Scripts.networking
         /**
          * Gets the game data for the given friend ids
          * */
-        public static List<playerStats> getFriends(List<string> friendIds)
+        public static List<PlayerStats> getFriends(List<string> friendIds)
         {
             return null;
         }

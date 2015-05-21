@@ -3,7 +3,7 @@ using Assets.Scripts;
 
 
 //[Serializable]
-public class playerStats : JSONable {
+public class PlayerStats : JSONable {
 
     public string id;
 
@@ -26,7 +26,7 @@ public class playerStats : JSONable {
 	//How fast you recover.
     public int playerRecovery = 5;
 
-    public playerStats(string id)
+    public PlayerStats(string id)
     {
         this.id = id;
         Load();
