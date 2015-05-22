@@ -62,8 +62,6 @@ namespace Assets.Scripts.fitbit
         private DateTime lastUpdatedTime;
         private bool updateTime = false;
 
-        private Thread dispatcher;
-
         public void Update()
         {
             updateCounter += Time.deltaTime;
@@ -92,7 +90,6 @@ namespace Assets.Scripts.fitbit
 
         public void updateAll()
         {
-            dispatcher = Thread.CurrentThread;
             Debug.Log("updating Fitbit");
             getProfileInfo();
 
@@ -242,6 +239,8 @@ namespace Assets.Scripts.fitbit
                 catch (Exception e)
                 {
                     Debug.Log("Exception in getProfileInfo(): "+e);
+                    Thread.Sleep(1000);
+                    getProfileInfo();
                 }
             }));
             oThread.Start();
@@ -265,6 +264,8 @@ namespace Assets.Scripts.fitbit
                 catch (Exception e)
                 {
                     Debug.Log("Exception in getFriends(): " + e);
+                    Thread.Sleep(1000);
+                    getFriends();
                     return;
                 }
                 using (response)
@@ -414,7 +415,6 @@ namespace Assets.Scripts.fitbit
             }));
             oThread.Start();
         }
-
 
         private void setUpHeaders(HttpWebRequest request, string authzHeader){
             request.Method = "GET";

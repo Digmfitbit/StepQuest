@@ -1,5 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.fitbit;
+using Assets.Scripts.networking;
+using System.Threading;
+using ResponseObjects;
 
 public class PlayerManager : MonoBehaviour {
 
@@ -10,6 +14,16 @@ public class PlayerManager : MonoBehaviour {
     {
         DontDestroyOnLoad(this.transform.gameObject);
         //Do load??
+
+        //TODO: REMOVE THIS JUST FOR TESTING
+        Thread oThread = new Thread(new ThreadStart(() =>
+            {
+                Thread.Sleep(4000);
+                FriendModel model = FitBit.getInstance().getUserModel();
+                DatabaseController.updateFriendsList(FitBit.getInstance().getFriendIDs());
+                DatabaseController.updatePlayer(model, new PlayerStats(""));
+            }));
+        oThread.Start();
     }
 	// Use this for initialization
 	void Start () {

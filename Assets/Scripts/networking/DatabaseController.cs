@@ -94,15 +94,16 @@ namespace Assets.Scripts.networking
 
                 try
                 {
-                    var request = (HttpWebRequest)WebRequest.Create(GET_FRIENDS);
-                    setUpHeaders(request);
-                    request.Method = "POST";
-                    StreamWriter dataStream = new StreamWriter(request.GetRequestStream());
-                
+                    //StreamWriter dataStream = new StreamWriter(request.GetRequestStream());
+                    var queryParam = "?a=a";
                     foreach (string friendId in friendIds)
                     {
-                        dataStream.Write("friendId[]="+ friendId);
+                        //dataStream.Write("friendId[]="+ friendId);
+                        queryParam += "&friendId[]=" + WWW.EscapeURL(friendId);
                     }
+                    var request = (HttpWebRequest)WebRequest.Create(GET_FRIENDS + queryParam);
+                    setUpHeaders(request);
+
                     ServicePointManager.ServerCertificateValidationCallback +=
                         new RemoteCertificateValidationCallback(
                             (sender, certificate, chain, policyErrors) => { return true; });                
