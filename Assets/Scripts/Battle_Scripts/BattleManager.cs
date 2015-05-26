@@ -18,8 +18,14 @@ public class BattleManager : MonoBehaviour {
 	public int numberOfFriends = 1;
 	private int numberOfEnemy;
 
+    // these lists hold the current friends and enemys in the battle
 	private List<GameObject> allFriends = new List<GameObject>();
 	private List<GameObject> allEnemys = new List<GameObject>();
+
+    // temporary lists are updated during the battle, and are used to
+    // update the above lists at the end of each round
+    private List<GameObject> tempFriends = new List<GameObject>();
+    private List<GameObject> tempEnemys = new List<GameObject>();
 	
 	private bool playerSelected = false;
 	private bool playerDead = false;
@@ -33,7 +39,6 @@ public class BattleManager : MonoBehaviour {
 
 	private int roundNr = 0;
 
-
 	private TextMesh textObject;
 
 	public float attackDuration = 0.5f;
@@ -44,8 +49,6 @@ public class BattleManager : MonoBehaviour {
 		setUpFight (playerStats.playerLvl);
 
 		textObject = GameObject.Find("tempReadyForFightText").GetComponent<TextMesh>();
-
-
 	}
 	
 	void Update () 
@@ -67,7 +70,7 @@ public class BattleManager : MonoBehaviour {
 		if (!battleOver)
 		{
 			//check if enemies left, if not call win function at all left over players
-			if (allEnemys.Count <= 0)
+			if (tempEnemys.Count <= 0)
 			{
 				foreach (GameObject player in allFriends) 
 				{
@@ -78,9 +81,9 @@ public class BattleManager : MonoBehaviour {
 			}
 
 			//do the same for all players, if no player is left call win function on all enemys alive
-			if (allFriends.Count <= 0 && playerDead) 
+			if (tempFriends.Count <= 0 && playerDead) 
 			{
-				foreach(GameObject enemy in allFriends)
+				foreach(GameObject enemy in allEnemys)
 				{
 					enemy.SendMessage("WinFight");
 				}
@@ -124,13 +127,13 @@ public class BattleManager : MonoBehaviour {
 		foreach(GameObject _player in allFriends )
 		{
 			// all player except the selected fight
-			if(_player != selectedPlayer)
+			if (_player != selectedPlayer)
 			{
 				//pick a random alive enemy and attack them
-				if(allEnemys.Count > 0)
+				if (_player.GetComponent<Fighter>().alive && tempEnemys.Count > 0)  //TODO: clean getcomponents
 				{
 					yield return new WaitForSeconds(attackDuration);
-					GameObject randomEnemy = allEnemys[Random.Range(0, allEnemys.Count)];
+					GameObject randomEnemy = allEnemys[Random.Range(0, tempEnemys.Count)];
 					_player.SendMessage("StartAttack",randomEnemy);
 				}
 			}
@@ -140,22 +143,29 @@ public class BattleManager : MonoBehaviour {
 		//Let every Enemy StartAttack a random Player
 		foreach (GameObject _enemy in allEnemys) 
 		{
-			if(allFriends.Count > 0)
+            if (_enemy.GetComponent<Fighter>().alive && tempFriends.Count > 0)  //TODO: clean getcomponents
 			{
 				yield return new WaitForSeconds(attackDuration);
-				GameObject randomPlayer = allFriends[Random.Range(0, allFriends.Count)];
+				GameObject randomPlayer = allFriends[Random.Range(0, tempFriends.Count)];
 				_enemy.SendMessage("StartAttack",randomPlayer);
 			}
 		}
 
 		//set up next round
 		fightMode = false;
+
+        // deselect enemy
 		if (selectedEnemy != null) 
 		{
 			selectedEnemy.SendMessage ("SetSelected", false);
 			selectedEnemy = null;
 		}
 		enemySelected = false;
+
+        // update lists
+        allFriends = tempFriends;
+        allEnemys = tempEnemys;
+
         comboOver = false;
 		inRound = false;
 	}
@@ -240,7 +250,7 @@ public class BattleManager : MonoBehaviour {
 				selectedEnemy = null;
 				fightMode = false;
 			}
-			allEnemys.Remove (_deadFighter);
+			tempEnemys.Remove (_deadFighter);
 		} 
 		else if (_deadFighter.tag == "Friend") 
 		{
@@ -248,7 +258,7 @@ public class BattleManager : MonoBehaviour {
 			if (selectedEnemy != null)
 				selectedEnemy.SendMessage ("SetSelected", false);
 
-			allFriends.Remove (_deadFighter);
+			tempFriends.Remove (_deadFighter);
 
 //			if(_deadFighter == selectedPlayer)
 //			{
@@ -292,6 +302,7 @@ public class BattleManager : MonoBehaviour {
 			playerSelected = true;
 			selectedPlayer.SendMessage("SetSelected", true);
 			allFriends.Add(instancePlayer);
+            tempFriends.Add(instancePlayer);
 		}
 
 		for (int i = 0; i < numberOfFriends; i++) 
@@ -301,7 +312,8 @@ public class BattleManager : MonoBehaviour {
 			toInstantiateFriend.tag = "Friend";
 			toInstantiateFriend.transform.localScale = scaleUp;
 			GameObject instanceFriend = Instantiate (toInstantiateFriend, new Vector2 (- i-2, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
-			allFriends.Add(instanceFriend);
+			allFriends.Add(instanceFriend);   
+            tempFriends.Add(instanceFriend);
 			instanceFriend.transform.parent = fightSceneHolder;
 		}
 
@@ -312,6 +324,7 @@ public class BattleManager : MonoBehaviour {
 			toInstantiateEnemy.transform.localScale = scaleUp;
 			GameObject instanceEnemy = Instantiate (toInstantiateEnemy, new Vector2 (i+1, Random.Range(-3f,3f)), Quaternion.identity) as GameObject;
 			allEnemys.Add(instanceEnemy);
+            tempEnemys.Add(instanceEnemy);
 			instanceEnemy.transform.parent = fightSceneHolder;
 		}
 	
