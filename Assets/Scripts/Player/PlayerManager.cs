@@ -7,7 +7,7 @@ using ResponseObjects;
 
 public class PlayerManager : MonoBehaviour {
 
-    public PlayerStats mainPlayer;
+    public PlayerStats mainPlayer = new PlayerStats("");
 
 
     void Awake()
