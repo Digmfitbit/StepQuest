@@ -279,7 +279,9 @@ public class BattleManager : MonoBehaviour {
 	private void setUpFight(float _playerLevel)
 	{
 		//Scle of the fighters
-		Vector3 scaleUp = new Vector3 (2, 2, 1);
+		Vector3 scaleUp = new Vector3 (2f, 2f, 1f);
+		Vector3 scaleDown = new Vector3 (0.5f, 0.5f, 1f);
+
 		Transform fightSceneHolder = GameObject.Find("FightSceneHolder").transform;
         attackBar.SendMessage("Reset");
 
@@ -295,7 +297,7 @@ public class BattleManager : MonoBehaviour {
 		{
 			GameObject toInstantiatePlayer = players [0];
 			toInstantiatePlayer.tag = "Player";
-			toInstantiatePlayer.transform.localScale = scaleUp;
+			toInstantiatePlayer.transform.localScale = scaleDown;
 			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-1, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
 			instancePlayer.transform.parent = fightSceneHolder;
             instancePlayer.SendMessage("SetAttackBar", attackBar);
@@ -311,7 +313,7 @@ public class BattleManager : MonoBehaviour {
 			GameObject toInstantiateFriend = friends [0];
 			toInstantiateFriend.name = "Friends_"+i;
 			toInstantiateFriend.tag = "Friend";
-			toInstantiateFriend.transform.localScale = scaleUp;
+			toInstantiateFriend.transform.localScale = scaleDown;
 			GameObject instanceFriend = Instantiate (toInstantiateFriend, new Vector2 (- i-2, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
 			allFriends.Add(instanceFriend);   
             tempFriends.Add(instanceFriend);
