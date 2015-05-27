@@ -26,6 +26,21 @@ public class PlayerStats : JSONable {
 	//How fast you recover.
     public int playerRecovery = 5;
 
+	//**Player Looks**//
+	//What sprite do I have to load.
+	public string playerClassID;
+	//User picked color for the character.
+	public string playerColor;
+	// >> **Armor** What visible items does the player have?
+
+	//**Showroom**, how does the showroom look.
+	//BG sprite for showroom
+	public int showroomBG;
+	// >> **Items** Visible objects in the showroom
+
+
+
+
     public PlayerStats(string id)
     {
         this.id = id;
@@ -45,6 +60,13 @@ public class PlayerStats : JSONable {
         playerStamina = 5;
         playerEndurance = 5;
         playerRecovery = 5;
+
+		//player looks
+		playerClassID = "class_01";
+		playerColor = "red";
+
+		//showroom
+		showroomBG = 1;
 	}
 
     JSONObject JSONable.getJSON()
@@ -57,6 +79,13 @@ public class PlayerStats : JSONable {
         json.AddField("playerEndurance", playerEndurance);
         json.AddField("playerRecovery", playerRecovery);
 
+		//player looks
+		json.AddField ("playerClassID", playerClassID);
+		json.AddField ("playerColor", playerColor);
+
+		//showroom
+		json.AddField ("showroomBG", showroomBG);
+
         return json;
     }
 
@@ -67,5 +96,12 @@ public class PlayerStats : JSONable {
         playerStamina = Convert.ToInt32(json.GetField("playerStamina").ToString());
         playerEndurance = Convert.ToInt32(json.GetField("playerEndurance").ToString());
         playerRecovery = Convert.ToInt32(json.GetField("playerRecovery").ToString());
+
+		//player looks
+		playerClassID = Convert.ToString (json.GetField("playerClassID").ToString());
+		playerColor = Convert.ToString (json.GetField("playerColor").ToString());
+
+		//showroom
+		showroomBG = Convert.ToString (json.GetField("showroomBG").ToString());
     }
 }
