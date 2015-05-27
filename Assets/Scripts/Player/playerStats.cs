@@ -62,7 +62,7 @@ public class PlayerStats : JSONable {
         playerRecovery = 5;
 
 		//player looks
-		playerClassID = "class_01";
+		playerClassID = "character_01";
 		playerColor = "red";
 
 		//showroom
@@ -102,6 +102,6 @@ public class PlayerStats : JSONable {
 		playerColor = Convert.ToString (json.GetField("playerColor").ToString());
 
 		//showroom
-		showroomBG = Convert.ToString (json.GetField("showroomBG").ToString());
+		showroomBG = Convert.ToInt32 (json.GetField("showroomBG").ToString());
     }
 }
