@@ -95,7 +95,35 @@ public class playerPosition : MonoBehaviour {
 			break;
 		//The character is in a dungeon.
 		case true:
+
 			dungeonNodes = GameObject.FindGameObjectsWithTag ("DungeonNode");
+
+			switch(dungeonNodes[dungeonID].GetComponent<branchMapGen>().id){
+			case 5:
+				if(dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasBeenUsed == false){
+					Debug.Log ("This is an item");
+					Debug.Log ("You received a " + dungeonNodes[dungeonID].GetComponent<itemGenerator>().itemName);
+					dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasBeenUsed = true;
+				}
+				else{
+					Debug.Log ("Nothing Here");
+				}
+				break;
+			case 4:
+				if(dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasBeenUsed == false){
+					Debug.Log ("This is a battle");
+					Switcheroo.disable();
+					Application.LoadLevelAdditive("battleTest");
+					dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasBeenUsed = true;
+				}
+				else{
+				
+				}
+				
+				break;
+			default:
+				break;
+			}
 
 			if(dungeonNodes.Length > 0){
 				

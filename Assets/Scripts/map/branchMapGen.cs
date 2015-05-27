@@ -11,6 +11,8 @@ public class branchMapGen : MonoBehaviour {
 
 	public bool dunGen = false;
 
+	public bool hasBeenUsed = false;
+
 	private GameObject[] prevNodes;
 	private GUIText stepCost_text;
 
