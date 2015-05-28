@@ -63,8 +63,9 @@ namespace Assets.Scripts.fitbit
         private bool updateTime = false;
 
         private static float multiplier = 1f;
-        private static string MULTIPLIER_KEY = "MULTIPLIER";
-        private static float MULTIPLY_DAILY_ADDITION = 0.1f;
+        private static const string MULTIPLIER_KEY = "MULTIPLIER";
+        private static const float MULTIPLY_DAILY_ADDITION = 0.1f;
+        private static const float MAX_MULTIPLIER = 2f;
 
         public void Update()
         {
@@ -152,6 +153,7 @@ namespace Assets.Scripts.fitbit
             else if(lastUpdatedTime.DayOfYear == DateTime.Now.DayOfYear - 1)
             {
                 multiplier += MULTIPLY_DAILY_ADDITION;
+                multiplier = Mathf.Min(multiplier, MAX_MULTIPLIER);
                 PlayerPrefs.SetFloat(MULTIPLIER_KEY, multiplier);
                 Debug.Log("multiplier updated: " + multiplier);
             }
