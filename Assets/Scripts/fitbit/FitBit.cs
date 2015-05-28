@@ -59,8 +59,12 @@ namespace Assets.Scripts.fitbit
 
         private const float UPDATE_INTERVAL = 600;//update every ten minutes
         private static float updateCounter = 601f;
-        private DateTime lastUpdatedTime;
+        private static DateTime lastUpdatedTime;
         private bool updateTime = false;
+
+        private static float multiplier = 1f;
+        private static string MULTIPLIER_KEY = "MULTIPLIER";
+        private static float MULTIPLY_DAILY_ADDITION = 0.1f;
 
         public void Update()
         {
@@ -92,13 +96,6 @@ namespace Assets.Scripts.fitbit
         {
             Debug.Log("updating Fitbit");
             getProfileInfo();
-
-            DateTime now = System.DateTime.Now;
-            lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_KEY, now.ToString()));
-            if (now == lastUpdatedTime)
-            {// Set to the min value
-                lastUpdatedTime = DateTime.MinValue;
-            }
             getUpdatedSteps();
             getFriends();
 
@@ -144,6 +141,25 @@ namespace Assets.Scripts.fitbit
             if(instance == null){
                 instance = new FitBit();
             }
+            multiplier = PlayerPrefs.GetFloat(MULTIPLIER_KEY, 1f);
+
+            DateTime minTime = DateTime.MinValue;
+            lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_KEY, minTime.ToString()));
+            if (minTime == lastUpdatedTime)
+            {// Set to the min value if we do not have the time
+                multiplier = 1f;// reset multiplier
+            }//TODO make this work for leap years
+            else if(lastUpdatedTime.DayOfYear == DateTime.Now.DayOfYear - 1)
+            {
+                multiplier += MULTIPLY_DAILY_ADDITION;
+                PlayerPrefs.SetFloat(MULTIPLIER_KEY, multiplier);
+                Debug.Log("multiplier updated: " + multiplier);
+            }
+            else if (lastUpdatedTime.DayOfYear != DateTime.Now.DayOfYear)
+            {
+                multiplier = 1f;
+            }
+
             return instance;
         }
 
@@ -386,7 +402,7 @@ namespace Assets.Scripts.fitbit
                                     {
                                         if (dateTime > lastUpdatedTime)
                                         {
-                                            steps += Convert.ToInt32(val);
+                                            steps += (int)(multiplier * Convert.ToInt32(val));
                                         }
                                     });
                                 }
