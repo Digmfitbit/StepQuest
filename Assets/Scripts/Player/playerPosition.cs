@@ -95,34 +95,38 @@ public class playerPosition : MonoBehaviour {
 			break;
 		//The character is in a dungeon.
 		case true:
-
 			dungeonNodes = GameObject.FindGameObjectsWithTag ("DungeonNode");
 
-			switch(dungeonNodes[dungeonID].GetComponent<branchMapGen>().id){
-			case 5:
-				if(dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasBeenUsed == false){
-					Debug.Log ("This is an item");
-					Debug.Log ("You received a " + dungeonNodes[dungeonID].GetComponent<itemGenerator>().itemName);
-					dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasBeenUsed = true;
+
+			foreach(GameObject node in dungeonNodes){
+				if(node.GetComponent<branchMapGen>().u_id == dungeonID){
+					switch(node.GetComponent<branchMapGen>().id){
+					case 5:
+						if(node.GetComponent<branchMapGen>().hasBeenUsed == false){
+							Debug.Log ("This is an item");
+							Debug.Log ("You received a " + dungeonNodes[dungeonID].GetComponent<itemGenerator>().itemName);
+							node.GetComponent<branchMapGen>().hasBeenUsed = true;
+						}
+						else{
+							Debug.Log ("Nothing Here");
+						}
+						break;
+					case 4:
+						if(node.GetComponent<branchMapGen>().hasBeenUsed == false){
+							Debug.Log ("This is a battle");
+							Switcheroo.disable();
+							Application.LoadLevelAdditive("battleTest");
+							node.GetComponent<branchMapGen>().hasBeenUsed = true;
+						}
+						else{
+						
+						}
+						
+						break;
+					default:
+						break;
+					}
 				}
-				else{
-					Debug.Log ("Nothing Here");
-				}
-				break;
-			case 4:
-				if(dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasBeenUsed == false){
-					Debug.Log ("This is a battle");
-					Switcheroo.disable();
-					Application.LoadLevelAdditive("battleTest");
-					dungeonNodes[dungeonID].GetComponent<branchMapGen>().hasBeenUsed = true;
-				}
-				else{
-				
-				}
-				
-				break;
-			default:
-				break;
 			}
 
 			if(dungeonNodes.Length > 0){
@@ -133,7 +137,13 @@ public class playerPosition : MonoBehaviour {
 				}
 				
 				//Set the player position to the current node.
-				transform.position = Vector3.MoveTowards(transform.position, dungeonNodes[dungeonID].transform.position, .5f);
+				foreach(GameObject node in dungeonNodes){
+					if(node.GetComponent<branchMapGen>().u_id == dungeonID){
+						transform.position = Vector3.MoveTowards(transform.position, node.transform.position, .5f);
+
+					}
+				}
+				//transform.position = Vector3.MoveTowards(transform.position, dungeonNodes[dungeonID].transform.position, .5f);
 				Vector3 temp = transform.position;
 				temp.z = -1;
 				transform.position = temp;
@@ -201,31 +211,35 @@ public class playerPosition : MonoBehaviour {
 
 			// In Dungeon
 			case true:
-				switch(dungeonNodes[dungeonID].GetComponent<branchMapGen>().id){
-					case 5:
-						Debug.Log ("This is an item");
-						Debug.Log ("You received a " + dungeonNodes[dungeonID].GetComponent<itemGenerator>().itemName);
-						break;
-					case 4:
-						Debug.Log ("This is a battle");
-						Switcheroo.disable();
-						Application.LoadLevelAdditive("battleTest");
-						
-						break;
-					case 3:
-						Debug.Log ("This is the Exit");
-						//dungeonNodes[dungeonID].GetComponent<branchMapGen>().dunGen = false;
-						foreach(GameObject dungeonNode in dungeonNodes){
-							Destroy(dungeonNode);
-						}
-						dungeonID = 0;
-						inDungeon = false;
-						break;
-					default:
-						break;
-				}
-				break;
 
+			foreach(GameObject node in dungeonNodes){
+				if(node.GetComponent<branchMapGen>().u_id == dungeonID){
+					switch(node.GetComponent<branchMapGen>().id){
+						case 5:
+							Debug.Log ("This is an item");
+							Debug.Log ("You received a " + node.GetComponent<itemGenerator>().itemName);
+							break;
+						case 4:
+							Debug.Log ("This is a battle");
+							Switcheroo.disable();
+							Application.LoadLevelAdditive("battleTest");
+							
+							break;
+						case 3:
+							Debug.Log ("This is the Exit");
+							//dungeonNodes[dungeonID].GetComponent<branchMapGen>().dunGen = false;
+							foreach(GameObject dungeonNode in dungeonNodes){
+								Destroy(dungeonNode);
+							}
+							dungeonID = 0;
+							inDungeon = false;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+				break;
 			default:
 				break;
 		}
