@@ -17,6 +17,8 @@ public class itemGenerator : MonoBehaviour {
 
 	public string itemName;
 
+	public int[] statBoost;
+
 	public int strBoost;
 	public int stamBoost;
 	public int endBoost;
@@ -25,7 +27,11 @@ public class itemGenerator : MonoBehaviour {
 	public int seed;
 	private System.Random rand;
 
+	public GameObject player;
+
 	void Awake () {
+		player = GameObject.Find ("Player");
+
 		seed = (int)gameObject.GetComponent<branchMapGen>().stepCost + (int)gameObject.GetComponent<branchMapGen>().u_id + GameObject.Find ("mapGen").GetComponent<mapGen>().seed;
 		rand = new System.Random(seed);
 
@@ -35,10 +41,13 @@ public class itemGenerator : MonoBehaviour {
 		switch(itemType){
 		case "Weapon":
 			weaponType = weaponTypes[rand.Next (0,weaponTypes.Length)];
+			statBoost = new int[]{rand.Next (0,10), rand.Next (0,10), rand.Next (0,3), rand.Next(0,4)};
+			/*
 			strBoost = rand.Next (0,10);
 			stamBoost = rand.Next (0,10);
 			endBoost = rand.Next (0,3);
 			recBoost = rand.Next (0,4);
+			*/
 			itemName = adjective + " " + weaponType;
 			break;
 		case "Armor":
@@ -54,7 +63,19 @@ public class itemGenerator : MonoBehaviour {
 		}
 	}
 
-	void Update () {
-		
+	public void GrantItem () {
+		switch(itemType){
+		case "Weapon":
+			if(player.GetComponent<playerInv>().weaponName != "nothing"){
+				Debug.Log ("There is already a weapon");
+			}
+			else{
+				player.GetComponent<playerInv>().weaponName = itemName;
+				//player.
+			}
+			break;
+		case "Armor":
+			break;
+		}
 	}
 }
