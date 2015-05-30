@@ -10,6 +10,5 @@ namespace Assets.Scripts
     {
         JSONObject getJSON();
         void fromJSON(JSONObject json);
-
     }
 }

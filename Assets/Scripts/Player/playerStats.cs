@@ -38,9 +38,19 @@ public class PlayerStats : JSONable {
 	public int showroomBG;
 	// >> **Items** Visible objects in the showroom
 
+    /**
+     * The constructor to use most times when constructing from
+     * Either the local cache or the network call
+     * */
+    public PlayerStats(JSONObject jsonObject)
+    {
+        ((JSONable)this).fromJSON(jsonObject);
+    }
 
-
-
+    /**
+     * Call only when a player first starts the game.
+     * 
+     * */
     public PlayerStats(string id)
     {
         this.id = id;
