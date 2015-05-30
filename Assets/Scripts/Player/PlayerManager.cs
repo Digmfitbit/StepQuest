@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Assets.Scripts.fitbit;
 using Assets.Scripts.networking;
 using System.Threading;
@@ -8,7 +9,7 @@ using ResponseObjects;
 public class PlayerManager : MonoBehaviour {
 
     public PlayerStats mainPlayer = new PlayerStats("");
-
+	public List<PlayerStats> fitBitFriends = new List<PlayerStats>();
 
     void Awake()
     {

@@ -218,7 +218,8 @@ public class playerPosition : MonoBehaviour {
 						case 5:
 							Debug.Log ("This is an item");
 							Debug.Log ("You received a " + node.GetComponent<itemGenerator>().itemName);
-							break;
+							node.GetComponent<itemGenerator>().GrantItem();	
+						break;
 						case 4:
 							Debug.Log ("This is a battle");
 							Switcheroo.disable();
