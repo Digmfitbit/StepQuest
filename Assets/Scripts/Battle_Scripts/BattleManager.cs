@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts;
 
 public class BattleManager : MonoBehaviour {
 	
@@ -46,8 +47,9 @@ public class BattleManager : MonoBehaviour {
 	void Awake () 
 	{
 		//Places the players and enemys on the field
-        // TODO: load playerstats from PlayerManager
-		setUpFight (new PlayerStats("").playerLvl);
+        //load playerstats from PlayerManager
+        PlayerManager manager = FindObjectOfType<PlayerManager>();
+		setUpFight (manager.mainPlayer.playerLvl);
 
 		textObject = GameObject.Find("tempReadyForFightText").GetComponent<TextMesh>();
 	}

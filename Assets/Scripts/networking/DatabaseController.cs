@@ -42,9 +42,8 @@ namespace Assets.Scripts.networking
                 Debug.Log("stats: " + serializedStats);
                 
                 //Add info to postData
-                var queryParam = "?id=" + stats.id;
+                var queryParam = "?id=" + stats.id.Substring(1, 6);
                 queryParam += "&stats=" + WWW.EscapeURL(serializedStats);
-
                 var request = (HttpWebRequest)WebRequest.Create(UPDATE_URL + queryParam);
                 setUpHeaders(request);
 
@@ -86,7 +85,7 @@ namespace Assets.Scripts.networking
         public static void updateFriendsList(List<string> friendIds)
         {
             Debug.Log("Getting Friend Stats");
-            List<PlayerStats> friendStats = new List<PlayerStats>();
+            friendsList = new List<PlayerStats>();
             Thread oThread = new Thread(new ThreadStart(() =>
             {
                 Debug.Log("getFriends()");
@@ -106,47 +105,45 @@ namespace Assets.Scripts.networking
 
                     ServicePointManager.ServerCertificateValidationCallback +=
                         new RemoteCertificateValidationCallback(
-                            (sender, certificate, chain, policyErrors) => { return true; });                
+                            (sender, certificate, chain, policyErrors) => { return true; });
                     response = (HttpWebResponse)request.GetResponse();
+
+                    using (response)
+                    {
+                        //TODO do better error catching
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Debug.Log("There's been a problem trying to access the database:" +
+                                        Environment.NewLine +
+                                        response.StatusDescription);
+                        }
+                        else
+                        {
+                            string line = Utilities.getStringFromResponse(response);
+                            JSONObject lineObj = new JSONObject(line);
+                            lineObj.GetField("friends", delegate(JSONObject idList)
+                            {
+                                Debug.Log("idlist: " + idList);
+                                foreach (JSONObject obj in idList.list)
+                                {
+                                    Debug.Log("obj: " + obj);
+                                    obj.GetField("stats", delegate(JSONObject stats)
+                                    {
+                                        string str = WWW.UnEscapeURL(stats.ToString());
+                                        str = str.Substring(1, str.Length - 2);
+                                        stats = new JSONObject(str);
+                                        PlayerStats playerStats = new PlayerStats(stats);
+                                        friendsList.Add(playerStats);
+                                    });
+                                }
+                            });
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Exception in updateFriendsList(): "+e);
+                    Debug.Log("Exception in updateFriendsList(): " + e);
                     return;
-                }
-                using (response)
-                {
-                    //TODO do better error catching
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        Debug.Log("There's been a problem trying to access the database:" +
-                                    Environment.NewLine +
-                                    response.StatusDescription);
-                    }
-                    else
-                    {
-                        string line = Utilities.getStringFromResponse(response);
-                        JSONObject lineObj = new JSONObject(line);
-                        lineObj.GetField("friends", delegate(JSONObject idList)
-                        {
-                            Debug.Log("idlist: "+idList);
-                            foreach (JSONObject obj in idList.list)
-                            {
-                                Debug.Log("obj: "+obj);
-                                obj.GetField("stats", delegate(JSONObject stats)
-                                {
-                                    stats = new JSONObject(WWW.UnEscapeURL(stats.ToString()));
-                                    PlayerStats playerStats = new PlayerStats(stats);
-                                    friendsList.Add(playerStats);
-                                    Debug.Log("playerstats: "+playerStats);
-                                });
-                            }
-                        });
-                        
-                        
-                        Debug.Log(line);
-
-                    }
                 }
             }));
             oThread.Start();

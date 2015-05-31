@@ -26,8 +26,6 @@ public class Fighter : MonoBehaviour {
 	private GameObject staminaBar;
 
     // Fighter's stats
-    // TODO: create for enemies/load from friendslist for friends
-    protected PlayerStats playerStats = new PlayerStats("");
 
 	//Components
 	protected GameObject battleManager;

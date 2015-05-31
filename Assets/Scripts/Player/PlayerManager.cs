@@ -23,7 +23,7 @@ public class PlayerManager : MonoBehaviour {
                 Thread.Sleep(4000);
                 FriendModel model = FitBit.getInstance().getUserModel();
                 DatabaseController.updateFriendsList(FitBit.getInstance().getFriendIDs());
-                mainPlayer = new PlayerStats(model.encodedId);
+                mainPlayer = new PlayerStats(model);
                 DatabaseController.updatePlayer(mainPlayer);
                 /*string s = PlayerPrefs.GetString(PLAYER_MODEL_KEY, "");
                 if (s == "")
