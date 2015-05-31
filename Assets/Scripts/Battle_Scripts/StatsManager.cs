@@ -7,18 +7,16 @@ public class StatsManager : MonoBehaviour {
 	public GameObject ui;
 	public GameObject gui_wonExpPoints;
 	public GameObject gui_playerExpPoints;
+    PlayerStats playerStats;
 
 	void Start(){
 		//Hide UI panel
 		GameObject.Find ("Panel_BattleOver").SetActive (false);
 		CalculateExperiences ();
+
+        PlayerManager manager = FindObjectOfType<PlayerManager>();
+        playerStats = manager.mainPlayer;
 	}
-
-	 
-
-
-    // TODO: read playerStats from PlayerManager
-    PlayerStats playerStats = new PlayerStats("");
 
 	public void CalculateExperiences()
 	{

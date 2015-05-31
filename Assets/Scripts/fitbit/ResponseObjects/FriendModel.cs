@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ResponseObjects
 {
-    class FriendModel
+    public class FriendModel
     {
         public string aboutMe, avatar, city, country, dateOfBirth, displayName, encodedId,
             fullName, gender, nickname, state, timezone;

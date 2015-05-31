@@ -1,6 +1,7 @@
 ﻿using System;
 using Assets.Scripts;
 
+using ResponseObjects;
 
 //[Serializable]
 public class PlayerStats : JSONable {
@@ -36,6 +37,8 @@ public class PlayerStats : JSONable {
 	//**Showroom**, how does the showroom look.
 	//BG sprite for showroom
 	public int showroomBG;
+
+    public string fitbitPictureUrl;
 	// >> **Items** Visible objects in the showroom
 
     /**
@@ -51,9 +54,10 @@ public class PlayerStats : JSONable {
      * Call only when a player first starts the game.
      * 
      * */
-    public PlayerStats(string id)
+    public PlayerStats(FriendModel playerModel)
     {
-        this.id = id;
+        this.id = playerModel.encodedId;
+        this.fitbitPictureUrl = playerModel.avatar;
         Load();
     }
 
@@ -95,7 +99,7 @@ public class PlayerStats : JSONable {
 
 		//showroom
 		json.AddField ("showroomBG", showroomBG);
-
+        json.AddField("fitbitPictureUrl", fitbitPictureUrl);
         return json;
     }
 
@@ -131,6 +135,10 @@ public class PlayerStats : JSONable {
         json.GetField("showroomBG", delegate(JSONObject numb)
         {
             showroomBG = Convert.ToInt32(numb.ToString());
+        });
+        json.GetField("fitbitPictureUrl", delegate(JSONObject str)
+        {
+            fitbitPictureUrl = str.ToString();
         });
     }
 }
