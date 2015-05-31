@@ -141,25 +141,25 @@ namespace Assets.Scripts.fitbit
         {
             if(instance == null){
                 instance = new FitBit();
-            }
-            multiplier = PlayerPrefs.GetFloat(MULTIPLIER_KEY, 1f);
+                multiplier = PlayerPrefs.GetFloat(MULTIPLIER_KEY, 1f);
 
-            DateTime minTime = DateTime.MinValue;
-            lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_KEY, minTime.ToString()));
-            if (minTime == lastUpdatedTime)
-            {// Set to the min value if we do not have the time
-                multiplier = 1f;// reset multiplier
-            }//TODO make this work for leap years
-            else if(lastUpdatedTime.DayOfYear == DateTime.Now.DayOfYear - 1)
-            {
-                multiplier += MULTIPLY_DAILY_ADDITION;
-                multiplier = Mathf.Min(multiplier, MAX_MULTIPLIER);
-                PlayerPrefs.SetFloat(MULTIPLIER_KEY, multiplier);
-                Debug.Log("multiplier updated: " + multiplier);
-            }
-            else if (lastUpdatedTime.DayOfYear != DateTime.Now.DayOfYear)
-            {
-                multiplier = 1f;
+                DateTime minTime = DateTime.MinValue;
+                lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_KEY, minTime.ToString()));
+                if (minTime == lastUpdatedTime)
+                {// Set to the min value if we do not have the time
+                    multiplier = 1f;// reset multiplier
+                }//TODO make this work for leap years
+                else if (lastUpdatedTime.DayOfYear == DateTime.Now.DayOfYear - 1)
+                {
+                    multiplier += MULTIPLY_DAILY_ADDITION;
+                    multiplier = Mathf.Min(multiplier, MAX_MULTIPLIER);
+                    PlayerPrefs.SetFloat(MULTIPLIER_KEY, multiplier);
+                    Debug.Log("multiplier updated: " + multiplier);
+                }
+                else if (lastUpdatedTime.DayOfYear != DateTime.Now.DayOfYear)
+                {
+                    multiplier = 1f;
+                }
             }
 
             return instance;

@@ -27,9 +27,9 @@ namespace Assets.Scripts.networking
          * Sends player stats to the server for storing
          * GET to update TODO should be POST
          * */
-        public static void updatePlayer(FriendModel player, PlayerStats stats){
+        public static void updatePlayer(PlayerStats stats){
             Debug.Log("Updating player");
-            if (player == null)
+            if (stats == null)
             {
                 Debug.Log("Player is null returning");
                 return;
@@ -42,7 +42,7 @@ namespace Assets.Scripts.networking
                 Debug.Log("stats: " + serializedStats);
                 
                 //Add info to postData
-                var queryParam = "?id=" + player.encodedId.Substring(1,6);
+                var queryParam = "?id=" + stats.id;
                 queryParam += "&stats=" + WWW.EscapeURL(serializedStats);
 
                 var request = (HttpWebRequest)WebRequest.Create(UPDATE_URL + queryParam);
@@ -126,7 +126,26 @@ namespace Assets.Scripts.networking
                     else
                     {
                         string line = Utilities.getStringFromResponse(response);
+                        JSONObject lineObj = new JSONObject(line);
+                        lineObj.GetField("friends", delegate(JSONObject idList)
+                        {
+                            Debug.Log("idlist: "+idList);
+                            foreach (JSONObject obj in idList.list)
+                            {
+                                Debug.Log("obj: "+obj);
+                                obj.GetField("stats", delegate(JSONObject stats)
+                                {
+                                    stats = new JSONObject(WWW.UnEscapeURL(stats.ToString()));
+                                    PlayerStats playerStats = new PlayerStats(stats);
+                                    friendsList.Add(playerStats);
+                                    Debug.Log("playerstats: "+playerStats);
+                                });
+                            }
+                        });
+                        
+                        
                         Debug.Log(line);
+
                     }
                 }
             }));
