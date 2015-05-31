@@ -8,9 +8,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 431222}
-  - 65: {fileID: 6555550}
   - 212: {fileID: 21221980}
   - 114: {fileID: 11407492}
+  - 61: {fileID: 6194734}
   m_Layer: 0
   m_Name: node_Dungeon_Empty
   m_TagString: DungeonNode
@@ -30,18 +30,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!65 &6555550
-BoxCollider:
+--- !u!61 &6194734
+BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 118974}
+  m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .5, y: .5, z: .5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: .533333361, y: .533333361}
 --- !u!114 &11407492
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -59,6 +60,7 @@ MonoBehaviour:
   isUnlocked: 0
   hasEvent: 0
   dunGen: 0
+  hasBeenUsed: 0
   seed: 0
 --- !u!212 &21221980
 SpriteRenderer:

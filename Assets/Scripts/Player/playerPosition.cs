@@ -65,7 +65,7 @@ public class playerPosition : MonoBehaviour {
 				//Set the player position to the current node.
 				transform.position = Vector3.MoveTowards(transform.position, nodes[worldID].transform.position, .5f);
 				Vector3 temp = transform.position;
-				temp.z = -1;
+				temp.z = -0.1f;
 				transform.position = temp;
 	
 				//Check if the node has an event
@@ -104,7 +104,7 @@ public class playerPosition : MonoBehaviour {
 					case 5:
 						if(node.GetComponent<branchMapGen>().hasBeenUsed == false){
 							Debug.Log ("This is an item");
-							Debug.Log ("You received a " + dungeonNodes[dungeonID].GetComponent<itemGenerator>().itemName);
+							node.GetComponent<itemGenerator>().GrantItem();
 							node.GetComponent<branchMapGen>().hasBeenUsed = true;
 						}
 						else{
@@ -145,7 +145,7 @@ public class playerPosition : MonoBehaviour {
 				}
 				//transform.position = Vector3.MoveTowards(transform.position, dungeonNodes[dungeonID].transform.position, .5f);
 				Vector3 temp = transform.position;
-				temp.z = -1;
+				temp.z = -0.1f;
 				transform.position = temp;
 				
 				//Check if the node has an event

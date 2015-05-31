@@ -1516,6 +1516,10 @@ Prefab:
       propertyPath: orthographic size
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2020516, guid: 74cacf674eb20184287616bc2b6c8942, type: 2}
+      propertyPath: orthographic
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 74cacf674eb20184287616bc2b6c8942, type: 2}
   m_IsPrefabParent: 0
@@ -1618,6 +1622,7 @@ GameObject:
   - 114: {fileID: 1573829060}
   - 212: {fileID: 1573829061}
   - 114: {fileID: 1573829059}
+  - 114: {fileID: 1573829063}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1698,6 +1703,23 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1573829063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1573829058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47dfcffc1d3393944adf2280f3de373d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponName: 
+  weaponLevel: 0
+  weaponStats: 00000000000000000000000000000000
+  armorName: 
+  armorLevel: 0
+  armorStats: 00000000000000000000000000000000
 --- !u!4 &1573829064
 Transform:
   m_ObjectHideFlags: 0
@@ -1705,7 +1727,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1573829058}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.1330004, y: 1.60360003, z: -1.15629995}
+  m_LocalPosition: {x: 12.1330004, y: 1.60360003, z: -.100000001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

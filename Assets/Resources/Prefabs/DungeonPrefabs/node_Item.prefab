@@ -8,10 +8,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400536}
-  - 65: {fileID: 6542432}
   - 212: {fileID: 21227412}
   - 114: {fileID: 11487050}
   - 114: {fileID: 11454210}
+  - 61: {fileID: 6154714}
   m_Layer: 0
   m_Name: node_Item
   m_TagString: DungeonNode
@@ -31,18 +31,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!65 &6542432
-BoxCollider:
+--- !u!61 &6154714
+BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 140742}
+  m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .5, y: .5, z: .5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1}
 --- !u!114 &11454210
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -54,7 +55,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2caf6d7da84967459af2398066161a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemType: 
+  adjective: 
+  weaponType: 
+  armorType: 
+  itemName: 
+  statBoost: 
+  strBoost: 0
+  stamBoost: 0
+  endBoost: 0
+  recBoost: 0
+  itemLevel: 0
   seed: 0
+  player: {fileID: 0}
 --- !u!114 &11487050
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -72,6 +85,7 @@ MonoBehaviour:
   isUnlocked: 0
   hasEvent: 0
   dunGen: 0
+  hasBeenUsed: 0
   seed: 0
 --- !u!212 &21227412
 SpriteRenderer:

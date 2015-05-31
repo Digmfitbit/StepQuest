@@ -5,8 +5,8 @@ public class centerCam : MonoBehaviour {
 	void Update () {
 
 		//Scroll to zoom
-		Camera.main.orthographicSize += Input.GetAxis ("Mouse ScrollWheel") * -10;
-		Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 1, 1000);
+		Camera.main.fieldOfView += Input.GetAxis ("Mouse ScrollWheel") * -10;
+		Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, 90, 1000);
 
 		//Center the camera at player's position.
 		Vector3 temp;

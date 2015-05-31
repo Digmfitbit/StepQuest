@@ -11,10 +11,10 @@ public class dungeonGen : MonoBehaviour {
 	public GameObject nodeEnemy;
 	
 	private int randomNodeType;
-	private Vector3 randomDirect;
+	private Vector2 randomDirect;
 	private Vector3 newPos;
 
-	private Vector3[] randomDirects = new []{new Vector3(-1,0,0), new Vector3(1,0,0), new Vector3(0,-1,0), new Vector3(0,1,0), new Vector3(1,1,0), new Vector3(-1,-1,0), new Vector3(1, -1, 0), new Vector3(-1, 1, 0)};
+	private Vector2[] randomDirects = new []{new Vector2(-1,0), new Vector2(1,0), new Vector2(0,-1), new Vector2(0,1), new Vector2(1,1), new Vector2(-1,-1), new Vector2(1, -1), new Vector2(-1, 1)};
 	
 	public int numOfNodes;
 	
@@ -93,10 +93,10 @@ public class dungeonGen : MonoBehaviour {
 					randomDirect = randomDirects[rand.Next (0,randomDirects.Length)];
 
 					//Set the next nodes position to the random direction.
-					newPos = randomDirect + prevNodes[prevNodes.Length-1].transform.position;
+					newPos = new Vector3(randomDirect.x, randomDirect.y, 0) + prevNodes[prevNodes.Length-1].transform.position;
 					
 					//Check to make sure that it will not collide with another node, if it does, reset the loop.
-					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 1.2f) == false && randomDirect != new Vector3(0,0,0)){
+					if(Physics2D.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 1.2f) == false && randomDirect != new Vector2(0,0)){
 						(Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity) as GameObject).transform.parent = this.transform;
 						lineRenderer.SetPosition(i,  newPos);
 						break;
