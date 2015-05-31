@@ -10,7 +10,7 @@ public class StatsManager : MonoBehaviour {
 
 	void Start(){
 		//Hide UI panel
-		ui.SetActive (false);
+		GameObject.Find ("Panel_BattleOver").SetActive (false);
 		CalculateExperiences ();
 	}
 
@@ -30,7 +30,7 @@ public class StatsManager : MonoBehaviour {
 
 	public void AddPlayerExperiences()
 	{
-		ui.SetActive(true);
+		GameObject.Find ("Panel_BattleOver").SetActive(true);
 		StartCoroutine (UIAddExperiencPoints());
 		//Add exp to player stats
 		playerStats.currentExp += expToWin;
