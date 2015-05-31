@@ -95,7 +95,6 @@ public class branchMapGen : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
-		Debug.Log("ASDASDA");
 		Debug.Log("Node " + u_id.ToString());
 		switch(GameObject.FindWithTag ("Player").GetComponent<playerPosition>().inDungeon){
 		case true:
