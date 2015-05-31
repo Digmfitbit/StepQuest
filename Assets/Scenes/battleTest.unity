@@ -167,7 +167,7 @@ RectTransform:
   m_Children:
   - {fileID: 345996855}
   m_Father: {fileID: 272864985}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 2, y: -44}
@@ -280,9 +280,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1013539415}
   - {fileID: 1451605357}
   - {fileID: 1161840441}
   - {fileID: 100059689}
+  - {fileID: 2017764422}
   m_Father: {fileID: 761330201}
   m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
@@ -495,8 +497,6 @@ RectTransform:
   m_Children:
   - {fileID: 272864985}
   - {fileID: 1912446458}
-  - {fileID: 2017764422}
-  - {fileID: 1013539415}
   m_Father: {fileID: 1342292286}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
@@ -586,11 +586,11 @@ RectTransform:
   m_LocalScale: {x: .417465508, y: .417465657, z: .417465657}
   m_Children:
   - {fileID: 1776539347}
-  m_Father: {fileID: 761330201}
-  m_RootOrder: 3
+  m_Father: {fileID: 272864985}
+  m_RootOrder: 0
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -59.5999985, y: -16.6000004}
+  m_AnchoredPosition: {x: -54.6000061, y: -11.5999985}
   m_SizeDelta: {x: 103.099998, y: 52.9000015}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1013539416
@@ -686,7 +686,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 272864985}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 5, y: 4}
@@ -900,7 +900,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 272864985}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 1, y: 53.5}
@@ -1464,11 +1464,11 @@ RectTransform:
   m_LocalScale: {x: .417465508, y: .417465657, z: .417465657}
   m_Children:
   - {fileID: 1990278393}
-  m_Father: {fileID: 761330201}
-  m_RootOrder: 2
+  m_Father: {fileID: 272864985}
+  m_RootOrder: 4
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -59.5999985, y: 7.9000001}
+  m_AnchoredPosition: {x: -54.6000061, y: 12.899992}
   m_SizeDelta: {x: 103.099998, y: 52.9000015}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &2017764423
