@@ -71,4 +71,9 @@ public class LoadGame : MonoBehaviour {
             Debug.Log(str);
         }
     }
+
+	public void tempLoadShowroom()
+	{
+		Application.LoadLevel ("showroom_v2");
+	}
 }

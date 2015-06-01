@@ -8,6 +8,8 @@ public class PlayerStats : JSONable {
 
     public string id;
 
+	public string playerName;
+
 	//Overall level.
 	public int playerLvl;
 	//How much to level.
@@ -67,7 +69,8 @@ public class PlayerStats : JSONable {
      * */
 	void Load () {
         //TODO load this from playerPrefs/database
-        playerLvl = 1;
+		playerName = "default name";
+		playerLvl = 1;
         expToNext = 100;
         currentExp = 0;
         playerStrength = 5;
@@ -87,6 +90,7 @@ public class PlayerStats : JSONable {
     {
         JSONObject json = new JSONObject(JSONObject.Type.OBJECT);
 
+		json.AddField ("playerName", playerName);
         json.AddField("playerLevel", playerLvl);
         json.AddField("playerStrength", playerStrength);
         json.AddField("playerStamina", playerStamina);
@@ -105,6 +109,10 @@ public class PlayerStats : JSONable {
 
     void JSONable.fromJSON(JSONObject json)
     {
+		json.GetField ("playerName", delegate(JSONObject str) 
+		{
+			playerName = str.ToString ();
+		});
         json.GetField("playerLevel", delegate(JSONObject numb)
         {
             playerLvl = Convert.ToInt32(numb.ToString());
