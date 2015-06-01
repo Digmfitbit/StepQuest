@@ -20,6 +20,7 @@ namespace Assets.Scripts.networking
         private static string BASE_URL = "http://www.cs.drexel.edu/~jgm55/fitbit/";
         private static string UPDATE_URL = BASE_URL + "updateUser.php";
         private static string GET_FRIENDS = BASE_URL + "fetchUsers.php";
+        private static string CLEAR_RECORD = BASE_URL + "clearRecord.php";
 
         private static List<PlayerStats> friendsList;
 
@@ -76,6 +77,51 @@ namespace Assets.Scripts.networking
             }));
             oThread.Start();
         }
+
+        public static void clearRecord(string id)
+        {
+            Debug.Log("Clearing record for user: " + id);
+            Thread oThread = new Thread(new ThreadStart(() =>
+            {
+                HttpWebResponse response;
+
+                try
+                {
+                    var queryParam = "?id=" + WWW.EscapeURL(id);
+                    
+                    var request = (HttpWebRequest)WebRequest.Create(CLEAR_RECORD + queryParam);
+                    setUpHeaders(request);
+
+                    ServicePointManager.ServerCertificateValidationCallback +=
+                        new RemoteCertificateValidationCallback(
+                            (sender, certificate, chain, policyErrors) => { return true; });
+                    response = (HttpWebResponse)request.GetResponse();
+
+                    using (response)
+                    {
+                        //TODO do better error catching
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Debug.Log("There's been a problem trying to access the database:" +
+                                        Environment.NewLine +
+                                        response.StatusDescription);
+                        }
+                        else
+                        {
+                            string line = Utilities.getStringFromResponse(response);
+                            Debug.Log(line);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Exception in clearRecord(): " + e);
+                    return;
+                }
+            }));
+            oThread.Start();
+        }
+
         /**
          * Updates the FriendsLst in the background. 
          * Takes a list of the Friend Ids from fitbit
@@ -87,7 +133,6 @@ namespace Assets.Scripts.networking
             friendsList = new List<PlayerStats>(0);
             Thread oThread = new Thread(new ThreadStart(() =>
             {
-                Debug.Log("getFriends()");
                 HttpWebResponse response;
 
                 try
@@ -159,6 +204,10 @@ namespace Assets.Scripts.networking
 
         private static string serializeDataToString(JSONable objectToSerialize){
             return objectToSerialize.getJSON().Print();
+        }
+
+        public static void clearCache(){
+
         }
 
         /**

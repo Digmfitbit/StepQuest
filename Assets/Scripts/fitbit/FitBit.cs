@@ -179,6 +179,9 @@ namespace Assets.Scripts.fitbit
             PlayerPrefs.DeleteKey(TOKEN_KEY);
             PlayerPrefs.DeleteKey(TOKEN_SECRET_KEY);
             PlayerPrefs.DeleteKey(TIME_UPDATED_KEY);
+            PlayerPrefs.DeleteKey(MULTIPLIER_KEY);
+            PlayerPrefs.DeleteKey(StepController.STEPS_KEY);
+            DatabaseController.clearRecord(userModel.encodedId);
         }
 
         public void enterPin()
