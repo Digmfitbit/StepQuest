@@ -60,6 +60,7 @@ public class PlayerStats : JSONable {
     {
         this.id = playerModel.encodedId;
         this.fitbitPictureUrl = playerModel.avatar;
+		playerName = playerModel.fullName;
         Load();
     }
 
