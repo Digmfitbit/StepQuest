@@ -19,11 +19,14 @@ public class ShowroomManager : MonoBehaviour {
 	// Use this for initialization
 	void Awake () 
 	{
-		//min number of showrooms is two (Main showroom and player showroom)
-		numberOfShowrooms = 2 + numberOfFriends;
 		//Get all showroom objects and user/friend data
 		manager = FindObjectOfType<PlayerManager>();
 
+		//min number of showrooms is two (Main showroom and player showroom)
+		if (manager != null)
+			numberOfShowrooms = 2 + manager.fitBitFriends.Count;
+		else
+			numberOfShowrooms = 5;
 
 		//Set up the start layout of the bar
 		showroomParent = new GameObject("ShowroomParent");
@@ -57,16 +60,15 @@ public class ShowroomManager : MonoBehaviour {
 				//get the right playerPrefab to instantiate
 				string playerPrefab = null;
 				if(manager == null)
-					Debug.LogError("Player manager was not yet initialized. Using default character!");
+					Debug.LogWarning("Player manager was not yet initialized. Using default character!");
 				else
 					playerPrefab = manager.mainPlayer.playerClassID;
-
 				if(playerPrefab == null)
 					playerPrefab = "character_01";
 
 				toInstantiate = Instantiate (playerShowroom, new Vector2 (spaceBetweenShowrooms, 0f), Quaternion.identity) as GameObject;
 				GameObject player = Instantiate(Resources.Load("Prefabs/CharacterPrefabs/" + playerPrefab,typeof(GameObject)),new Vector3 (spaceBetweenShowrooms, 0f, -1f) , Quaternion.identity) as GameObject;
-				player.transform.localScale = new Vector3(1f,1f);
+				player.GetComponent<ScaleMe>().ScaleGameObject(0.5f);
 				player.transform.SetParent(toInstantiate.transform);
 			}
 			else if(i > 1)

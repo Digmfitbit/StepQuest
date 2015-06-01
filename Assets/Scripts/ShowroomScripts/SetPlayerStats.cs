@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShowroomPlayer : MonoBehaviour {
+public class SetPlayerStats : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () 
-	{
+	void Start () {
 	
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		Debug.Log ("PlayerPos: "+ transform.position);
 	
 	}
 }
