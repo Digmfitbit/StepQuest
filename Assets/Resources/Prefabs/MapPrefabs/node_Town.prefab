@@ -8,10 +8,10 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400536}
-  - 65: {fileID: 6542432}
   - 114: {fileID: 11463828}
   - 114: {fileID: 11433838}
   - 212: {fileID: 21227412}
+  - 61: {fileID: 6142052}
   m_Layer: 0
   m_Name: node_Town
   m_TagString: Node
@@ -45,7 +45,7 @@ Transform:
   m_GameObject: {fileID: 140742}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 53.4248314, y: -161.037811, z: 0}
-  m_LocalScale: {x: .800000012, y: .800000012, z: .00999999978}
+  m_LocalScale: {x: .800000012, y: .800000012, z: 1}
   m_Children:
   - {fileID: 433614}
   m_Father: {fileID: 0}
@@ -86,18 +86,19 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
---- !u!65 &6542432
-BoxCollider:
+--- !u!61 &6142052
+BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 140742}
+  m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: .5, y: .5, z: .5}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1}
 --- !u!102 &10224878
 TextMesh:
   serializedVersion: 3
@@ -150,6 +151,8 @@ MonoBehaviour:
   isUnlocked: 0
   hasEvent: 0
   dunGen: 0
+  hasBeenUsed: 0
+  seed: 0
 --- !u!123 &12334470
 LensFlare:
   m_ObjectHideFlags: 1

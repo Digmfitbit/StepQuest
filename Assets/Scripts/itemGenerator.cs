@@ -19,10 +19,9 @@ public class itemGenerator : MonoBehaviour {
 
 	public int[] statBoost;
 
-	public int strBoost;
-	public int stamBoost;
-	public int endBoost;
-	public int recBoost;
+	public int strBoost, stamBoost, endBoost, recBoost;
+
+	public int itemLevel;
 
 	public int seed;
 	private System.Random rand;
@@ -35,27 +34,34 @@ public class itemGenerator : MonoBehaviour {
 		seed = (int)gameObject.GetComponent<branchMapGen>().stepCost + (int)gameObject.GetComponent<branchMapGen>().u_id + GameObject.Find ("mapGen").GetComponent<mapGen>().seed;
 		rand = new System.Random(seed);
 
+		itemLevel = rand.Next(0,10);
+
 		itemType = itemTypes[rand.Next (0,itemTypes.Length)];
 		adjective = adjectives[rand.Next (0,adjectives.Length)];
 
 		switch(itemType){
 		case "Weapon":
 			weaponType = weaponTypes[rand.Next (0,weaponTypes.Length)];
-			statBoost = new int[]{rand.Next (0,10), rand.Next (0,10), rand.Next (0,3), rand.Next(0,4)};
-			/*
-			strBoost = rand.Next (0,10);
-			stamBoost = rand.Next (0,10);
-			endBoost = rand.Next (0,3);
-			recBoost = rand.Next (0,4);
-			*/
+			//statBoost = new int[]{rand.Next (0,itemLevel * 2), rand.Next (0,itemLevel * 2), rand.Next (0,itemLevel), rand.Next(0,itemLevel)};
+
+			strBoost = rand.Next (0,itemLevel * 2);
+			stamBoost = rand.Next (0,itemLevel * 2);
+			endBoost = rand.Next (0,itemLevel);
+			recBoost = rand.Next (0,itemLevel);
+
 			itemName = adjective + " " + weaponType;
 			break;
 		case "Armor":
+			//statBoost = new int[]{rand.Next (0,itemLevel), rand.Next (0,itemLevel), rand.Next (0,itemLevel * 2), rand.Next(0,itemLevel * 2)};
+
 			armorType = armorTypes[rand.Next(0, armorTypes.Length)];
-			strBoost = rand.Next (0,3);
-			stamBoost = rand.Next (0,4);
-			endBoost = rand.Next (0,10);
-			recBoost = rand.Next (0,10);
+
+
+			strBoost = rand.Next (0,itemLevel);
+			stamBoost = rand.Next (0,itemLevel);
+			endBoost = rand.Next (0,itemLevel * 2);
+			recBoost = rand.Next (0,itemLevel * 2);
+
 			itemName = adjective + " " + armorType;
 			break;
 		default:
@@ -66,15 +72,26 @@ public class itemGenerator : MonoBehaviour {
 	public void GrantItem () {
 		switch(itemType){
 		case "Weapon":
-			if(player.GetComponent<playerInv>().weaponName != "nothing"){
-				Debug.Log ("There is already a weapon");
+			if(player.GetComponent<playerInv>().weaponName == ""){
+				player.GetComponent<playerInv>().weaponName = itemName;
+				player.GetComponent<playerInv>().weaponLevel = itemLevel;
+				player.GetComponent<playerInv>().weaponStats = new int[]{strBoost, stamBoost, endBoost, recBoost};
+				Debug.Log ("You got an item, nice.");
 			}
 			else{
-				player.GetComponent<playerInv>().weaponName = itemName;
-				//player.
+				Debug.Log ("There is already a weapon");
 			}
 			break;
 		case "Armor":
+			if(player.GetComponent<playerInv>().armorName == ""){
+				player.GetComponent<playerInv>().armorName = itemName;
+				player.GetComponent<playerInv>().armorLevel = itemLevel;
+				player.GetComponent<playerInv>().armorStats = statBoost;
+				Debug.Log ("You got an item, nice.");
+			}
+			else{
+				Debug.Log ("There is already armor");
+			}
 			break;
 		}
 	}
