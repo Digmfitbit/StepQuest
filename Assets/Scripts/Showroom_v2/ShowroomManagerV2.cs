@@ -11,8 +11,8 @@ public class ShowroomManagerV2 : MonoBehaviour {
 	PlayerManager manager;
 	int activShowroom = 0;
 	PlayerStats activeShowroomStats;
-	List<PlayerStats> friends = new List<PlayerStats>();
-	List<PlayerStats> showrooms = new List<PlayerStats>();
+	List<PlayerStats> friends;
+	List<PlayerStats> showrooms = new List<PlayerStats>(0);
 	GameObject avatar;
 
 	string urlToAvatarPic;
@@ -30,6 +30,7 @@ public class ShowroomManagerV2 : MonoBehaviour {
 
 		friends = manager.fitBitFriends;
 		showrooms.AddRange (friends);
+        Debug.Log(friends[0]);
 	}
 	
 	void setUpShowroom()
@@ -75,8 +76,15 @@ public class ShowroomManagerV2 : MonoBehaviour {
 	//Loads the FitBit pic from the fitBit server.
 	IEnumerator LoadImage() 
 	{
-		urlToAvatarPic = activeShowroomStats.fitbitPictureUrl.Substring (1, activeShowroomStats.fitbitPictureUrl.Length - 2);
-		Debug.Log ("URLtoPic:" + urlToAvatarPic);
+        try
+        {
+            urlToAvatarPic = activeShowroomStats.fitbitPictureUrl.Substring(1, activeShowroomStats.fitbitPictureUrl.Length - 2);
+            Debug.Log("URLtoPic:" + urlToAvatarPic);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
 		WWW www = new WWW(urlToAvatarPic);
 		yield return www;
 		Rect rec = new Rect(0, 0, www.texture.width, www.texture.height);

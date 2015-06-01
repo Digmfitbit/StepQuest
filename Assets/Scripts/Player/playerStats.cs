@@ -90,7 +90,7 @@ public class PlayerStats : JSONable {
     JSONObject JSONable.getJSON()
     {
         JSONObject json = new JSONObject(JSONObject.Type.OBJECT);
-
+        json.AddField("id", id);
 		json.AddField ("playerName", playerName);
         json.AddField("playerLevel", playerLvl);
         json.AddField("playerStrength", playerStrength);
@@ -110,10 +110,14 @@ public class PlayerStats : JSONable {
 
     void JSONable.fromJSON(JSONObject json)
     {
-		json.GetField ("playerName", delegate(JSONObject str) 
-		{
-			playerName = str.ToString ();
-		});
+        json.GetField("id", delegate(JSONObject str)
+        {
+            playerName = id.ToString();
+        });
+        json.GetField("playerName", delegate(JSONObject str)
+        {
+            playerName = str.ToString();
+        });
         json.GetField("playerLevel", delegate(JSONObject numb)
         {
             playerLvl = Convert.ToInt32(numb.ToString());
@@ -150,4 +154,10 @@ public class PlayerStats : JSONable {
             fitbitPictureUrl = str.ToString();
         });
     }
+
+    public override string ToString()
+    {
+        return ((JSONable)this).getJSON().ToString();
+    }
+
 }

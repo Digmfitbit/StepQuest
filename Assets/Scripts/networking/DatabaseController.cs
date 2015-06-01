@@ -21,7 +21,7 @@ namespace Assets.Scripts.networking
         private static string UPDATE_URL = BASE_URL + "updateUser.php";
         private static string GET_FRIENDS = BASE_URL + "fetchUsers.php";
 
-        private static List<PlayerStats> friendsList = null;
+        private static List<PlayerStats> friendsList;
 
         /**
          * Sends player stats to the server for storing
@@ -39,7 +39,6 @@ namespace Assets.Scripts.networking
                 Debug.Log("Starting thread");
                 //Serialize data to string
                 string serializedStats = serializeDataToString(stats);
-                Debug.Log("stats: " + serializedStats);
                 
                 //Add info to postData
                 var queryParam = "?id=" + stats.id.Substring(1, 6);
@@ -85,7 +84,7 @@ namespace Assets.Scripts.networking
         public static void updateFriendsList(List<string> friendIds)
         {
             Debug.Log("Getting Friend Stats");
-            friendsList = new List<PlayerStats>();
+            friendsList = new List<PlayerStats>(0);
             Thread oThread = new Thread(new ThreadStart(() =>
             {
                 Debug.Log("getFriends()");
@@ -134,6 +133,7 @@ namespace Assets.Scripts.networking
                                         stats = new JSONObject(str);
                                         PlayerStats playerStats = new PlayerStats(stats);
                                         friendsList.Add(playerStats);
+                                        Debug.Log("ADDING FRIEND: " + playerStats);
                                     });
                                 }
                             });
