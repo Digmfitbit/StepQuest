@@ -16,51 +16,51 @@ namespace ResponseObjects
             //TODO extract more info here if we want
             jsonObject.GetField("aboutMe", delegate(JSONObject aboutMe)
             {
-                this.aboutMe = aboutMe.ToString();
+                this.aboutMe = aboutMe.ToString().Substring(1, aboutMe.ToString().Length - 2);
             });
             jsonObject.GetField("avatar", delegate(JSONObject avatar)
             {
-                this.avatar = avatar.ToString();
+                this.avatar = avatar.ToString().Substring(1,avatar.ToString().Length-2);
             });
             jsonObject.GetField("city", delegate(JSONObject city)
             {
-                this.city = city.ToString();
+                this.city = city.ToString().Substring(1, city.ToString().Length - 2);
             });
             jsonObject.GetField("country", delegate(JSONObject country)
             {
-                this.country = country.ToString();
+                this.country = country.ToString().Substring(1, country.ToString().Length - 2);
             });
             jsonObject.GetField("dateOfBirth", delegate(JSONObject dateOfBirth)
             {
-                this.dateOfBirth = dateOfBirth.ToString();
+                this.dateOfBirth = dateOfBirth.ToString().Substring(1, dateOfBirth.ToString().Length - 2);
             });
             jsonObject.GetField("displayName", delegate(JSONObject displayName)
             {
-                this.displayName = displayName.ToString();
+                this.displayName = displayName.ToString().Substring(1, displayName.ToString().Length - 2);
             });
             jsonObject.GetField("encodedId", delegate(JSONObject encodedId)
             {
-                this.encodedId = encodedId.ToString();
+                this.encodedId = encodedId.ToString().Substring(1, encodedId.ToString().Length - 2);
             });
             jsonObject.GetField("fullName", delegate(JSONObject fullName)
             {
-                this.fullName = fullName.ToString();
+                this.fullName = fullName.ToString().Substring(1, fullName.ToString().Length - 2);
             });
             jsonObject.GetField("gender", delegate(JSONObject gender)
             {
-                this.gender = gender.ToString();
+                this.gender = gender.ToString().Substring(1, gender.ToString().Length - 2);
             });
             jsonObject.GetField("nickname", delegate(JSONObject nickname)
             {
-                this.nickname = nickname.ToString();
+                this.nickname = nickname.ToString().Substring(1, nickname.ToString().Length - 2);
             });
             jsonObject.GetField("timezone", delegate(JSONObject timezone)
             {
-                this.timezone = timezone.ToString();
+                this.timezone = timezone.ToString().Substring(1, timezone.ToString().Length - 2);
             });
             jsonObject.GetField("gender", delegate(JSONObject gender)
             {
-                this.gender = gender.ToString();
+                this.gender = gender.ToString().Substring(1, gender.ToString().Length - 2);
             });
             jsonObject.GetField("height", delegate(JSONObject height)
             {
@@ -84,7 +84,7 @@ namespace ResponseObjects
             });
         }
 
-        public string ToString()
+        public override string ToString()
         {
             string str = "aboutMe: " + aboutMe+ "\navatar: "+avatar+ "\ncity: "+ city+"\ncountry: "+ country+"\ndateOfBirth: "+dateOfBirth+
                 "\ndisplayName: "+displayName+"\nencodedId: "+ encodedId+"\nfullName: "+fullName+"\ngneder: "+ gender+

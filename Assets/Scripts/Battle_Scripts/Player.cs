@@ -12,9 +12,8 @@ public class Player : Fighter
 
 	private void Start()
 	{
-        PlayerManager manager = FindObjectOfType<PlayerManager>();
-		health = 20 * manager.mainPlayer.playerEndurance;
-        damage = 4 * manager.mainPlayer.playerStrength;
+        health = 20 * PlayerManager.mainPlayer.playerEndurance;
+        damage = 4 * PlayerManager.mainPlayer.playerStrength;
 
 		probabilityOfMissing = Random.Range (5f, 30f);
 	}

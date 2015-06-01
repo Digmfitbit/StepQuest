@@ -8,8 +8,8 @@ using ResponseObjects;
 
 public class PlayerManager : MonoBehaviour {
 
-    public PlayerStats mainPlayer = null;
-	public List<PlayerStats> fitBitFriends;
+    public static PlayerStats mainPlayer;
+	public static List<PlayerStats> fitBitFriends;
     //private const string PLAYER_MODEL_KEY = "PLAYER_MODEL";
 
     void Awake()
@@ -23,8 +23,11 @@ public class PlayerManager : MonoBehaviour {
                 Thread.Sleep(4000);
                 FriendModel model = FitBit.getInstance().getUserModel();
                 DatabaseController.updateFriendsList(FitBit.getInstance().getFriendIDs());
+                //TODO take this out from here and move it to Jonas's new scene
                 mainPlayer = new PlayerStats(model);
                 DatabaseController.updatePlayer(mainPlayer);
+                //sets the main player object here directly
+                DatabaseController.getMainPlayer(model.encodedId);
                 /*string s = PlayerPrefs.GetString(PLAYER_MODEL_KEY, "");
                 if (s == "")
                 {
@@ -34,14 +37,6 @@ public class PlayerManager : MonoBehaviour {
                 {
                     mainPlayer = new PlayerStats(new JSONObject(s));
                 }*/
-                Thread oThread2 = new Thread(new ThreadStart(() =>
-                {
-                    Thread.Sleep(3000);
-                    fitBitFriends = DatabaseController.getFriends();
-                    
-                }));
-                oThread2.Start();
-
             }));
         oThread.Start();
     }

@@ -48,8 +48,7 @@ public class BattleManager : MonoBehaviour {
 	{
 		//Places the players and enemys on the field
         //load playerstats from PlayerManager
-        PlayerManager manager = FindObjectOfType<PlayerManager>();
-		setUpFight (manager.mainPlayer.playerLvl);
+        setUpFight(PlayerManager.mainPlayer.playerLvl);
 
 		textObject = GameObject.Find("tempReadyForFightText").GetComponent<TextMesh>();
 	}

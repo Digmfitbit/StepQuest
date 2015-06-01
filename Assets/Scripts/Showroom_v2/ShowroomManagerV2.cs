@@ -22,13 +22,12 @@ public class ShowroomManagerV2 : MonoBehaviour {
 	void Awake () 
 	{
 		//Get all showroom objects and user/friend data
-		manager = FindObjectOfType<PlayerManager>();
-		
-		activeShowroomStats = manager.mainPlayer;
-		showrooms.Add (manager.mainPlayer);
+
+        activeShowroomStats = PlayerManager.mainPlayer;
+        showrooms.Add(PlayerManager.mainPlayer);
 		setUpShowroom ();
 
-		friends = manager.fitBitFriends;
+        friends = PlayerManager.fitBitFriends;
 		showrooms.AddRange (friends);
         Debug.Log(friends[0]);
 	}
@@ -78,7 +77,7 @@ public class ShowroomManagerV2 : MonoBehaviour {
 	{
         try
         {
-            urlToAvatarPic = activeShowroomStats.fitbitPictureUrl.Substring(1, activeShowroomStats.fitbitPictureUrl.Length - 2);
+            urlToAvatarPic = activeShowroomStats.fitbitPictureUrl;//.Substring(1, activeShowroomStats.fitbitPictureUrl.Length - 2);
             Debug.Log("URLtoPic:" + urlToAvatarPic);
         }
         catch (Exception e)

@@ -14,8 +14,7 @@ public class StatsManager : MonoBehaviour {
 		GameObject.Find ("Panel_BattleOver").SetActive (false);
 		CalculateExperiences ();
 
-        PlayerManager manager = FindObjectOfType<PlayerManager>();
-        playerStats = manager.mainPlayer;
+        playerStats = PlayerManager.mainPlayer;
 	}
 
 	public void CalculateExperiences()
