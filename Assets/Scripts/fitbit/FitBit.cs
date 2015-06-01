@@ -174,6 +174,10 @@ namespace Assets.Scripts.fitbit
             return authenticated;
         }
 
+        /**
+         * Clears the cache
+         * TODO fix this. Keys are not in
+         * */
         public void clearCache()
         {
             PlayerPrefs.DeleteKey(TOKEN_KEY);
