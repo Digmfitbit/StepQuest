@@ -70,9 +70,6 @@
      <Compile Include="Assets\Scripts\Player\playerPosition.cs" />
      <Compile Include="Assets\Scripts\Player\playerStats.cs" />
      <Compile Include="Assets\Scripts\ScaleMe.cs" />
-     <Compile Include="Assets\Scripts\ShowroomScripts\ButtonFunctions.cs" />
-     <Compile Include="Assets\Scripts\ShowroomScripts\LeftRightSwipe.cs" />
-     <Compile Include="Assets\Scripts\ShowroomScripts\SetPlayerStats.cs" />
      <Compile Include="Assets\Scripts\Showroom_v2\ButtonScript.cs" />
      <Compile Include="Assets\Scripts\Showroom_v2\ShowroomManagerV2.cs" />
      <Compile Include="Assets\Scripts\buttonFunctions.cs" />

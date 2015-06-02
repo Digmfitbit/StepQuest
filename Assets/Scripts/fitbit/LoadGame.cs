@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 using System;
 using System.Collections;
 using System.Net;
@@ -77,4 +77,10 @@ public class LoadGame : MonoBehaviour {
 	{
 		Application.LoadLevel ("showroom_v2");
 	}
+
+	public void tempLoadInitScene()
+	{
+		Application.LoadLevel ("InitializationScene");
+	}
+
 }

@@ -88,5 +88,6 @@ public class ShowroomManagerV2 : MonoBehaviour {
 		yield return www;
 		Rect rec = new Rect(0, 0, www.texture.width, www.texture.height);
 		GameObject.Find ("Image_Avatar").GetComponent<Image> ().sprite = Sprite.Create(www.texture, rec, new Vector2(0,0), 1);
+		
 	}
 }

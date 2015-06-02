@@ -13,3 +13,5 @@ EditorBuildSettings:
     path: Assets/Scenes/battleTest.unity
   - enabled: 1
     path: Assets/Scenes/showroom_v2.unity
+  - enabled: 1
+    path: Assets/Scenes/InitializationScene.unity
