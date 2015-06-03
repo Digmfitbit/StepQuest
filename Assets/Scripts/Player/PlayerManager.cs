@@ -37,6 +37,7 @@ public class PlayerManager : MonoBehaviour {
                 {
                     mainPlayer = new PlayerStats(new JSONObject(s));
                 }*/
+                //Thread startGameThread = new 
             }));
         oThread.Start();
     }

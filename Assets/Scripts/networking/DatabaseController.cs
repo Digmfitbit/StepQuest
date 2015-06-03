@@ -156,19 +156,11 @@ namespace Assets.Scripts.networking
                         else
                         {
                             string line = Utilities.getStringFromResponse(response);
-                            Debug.Log(line);
                             JSONObject obj = new JSONObject(line);
-                            obj.GetField("stats", delegate(JSONObject stats)
-                            {
-                                string str = WWW.UnEscapeURL(stats.ToString());
-                                //str = str.Substring(1, str.Length - 2);
-                                stats = new JSONObject(str);
-                                PlayerStats playerStats = new PlayerStats(stats);
-                                Debug.Log("ADDING PLAYER: " + playerStats);
-                                
-                                //Add directly to the scene
-                                PlayerManager.mainPlayer = playerStats;
-                            });
+                            PlayerStats playerStats = new PlayerStats(obj);
+                            Debug.Log("ADDING PLAYER: " + playerStats);
+                            //Add directly to the scene
+                            PlayerManager.mainPlayer = playerStats;
                         }
                     }
                 }
@@ -233,7 +225,7 @@ namespace Assets.Scripts.networking
                                     obj.GetField("stats", delegate(JSONObject stats)
                                     {
                                         string str = WWW.UnEscapeURL(stats.ToString());
-                                        //str = str.Substring(1, str.Length - 2);
+                                        str = str.Substring(1, str.Length - 2);
                                         stats = new JSONObject(str);
                                         PlayerStats playerStats = new PlayerStats(stats);
                                         friendsList.Add(playerStats);

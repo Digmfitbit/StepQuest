@@ -6,9 +6,9 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    interface JSONable
+    public abstract class JSONable
     {
-        JSONObject getJSON();
-        void fromJSON(JSONObject json);
+        public abstract JSONObject getJSON();
+        public abstract void fromJSON(JSONObject json);
     }
 }

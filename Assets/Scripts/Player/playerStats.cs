@@ -1,6 +1,6 @@
 ﻿using System;
 using Assets.Scripts;
-
+using UnityEngine;
 using ResponseObjects;
 
 //[Serializable]
@@ -49,7 +49,8 @@ public class PlayerStats : JSONable {
      * */
     public PlayerStats(JSONObject jsonObject)
     {
-        ((JSONable)this).fromJSON(jsonObject);
+        
+        this.fromJSON(jsonObject);
     }
 
     /**
@@ -61,17 +62,9 @@ public class PlayerStats : JSONable {
         this.id = playerModel.encodedId;
         this.fitbitPictureUrl = playerModel.avatar;
 		playerName = playerModel.fullName;
-        Load();
-    }
 
-    /**
-     * TODO make this load the proper stat values
-     * from local cache and/or network on Awake()
-     * */
-	void Load () {
-        //TODO load this from playerPrefs/database
-		playerName = "default name";
-		playerLvl = 1;
+        //initialize game only features
+        playerLvl = 1;
         expToNext = 100;
         currentExp = 0;
         playerStrength = 5;
@@ -79,19 +72,19 @@ public class PlayerStats : JSONable {
         playerEndurance = 5;
         playerRecovery = 5;
 
-		//player looks
-		playerClassID = "character_01";
-		playerColor = "red";
+        //player looks
+        playerClassID = "character_01";
+        playerColor = "red";
 
-		//showroom
-		showroomBG = 1;
-	}
+        //showroom
+        showroomBG = 1;
+    }
 
-    JSONObject JSONable.getJSON()
+    public override JSONObject getJSON()
     {
         JSONObject json = new JSONObject(JSONObject.Type.OBJECT);
         json.AddField("id", id);
-		json.AddField ("playerName", playerName);
+		json.AddField("playerName", playerName);
         json.AddField("playerLevel", playerLvl);
         json.AddField("playerStrength", playerStrength);
         json.AddField("playerStamina", playerStamina);
@@ -103,55 +96,61 @@ public class PlayerStats : JSONable {
 		json.AddField ("playerColor", playerColor);
 
 		//showroom
-		json.AddField ("showroomBG", showroomBG);
+		json.AddField("showroomBG", showroomBG);
         json.AddField("fitbitPictureUrl", fitbitPictureUrl);
         return json;
     }
 
-    void JSONable.fromJSON(JSONObject json)
+    public override void fromJSON(JSONObject json)
     {
+        
         json.GetField("id", delegate(JSONObject str)
         {
-            playerName = id.ToString();
+            id = str.ToString().Substring(1,str.ToString().Length-2);
         });
-        json.GetField("playerName", delegate(JSONObject str)
+        json.GetField("stats", delegate(JSONObject stats)
         {
-            playerName = str.ToString();
-        });
-        json.GetField("playerLevel", delegate(JSONObject numb)
-        {
-            playerLvl = Convert.ToInt32(numb.ToString());
-        });
-        json.GetField("playerStrength", delegate(JSONObject numb)
-        {
-            playerStrength = Convert.ToInt32(numb.ToString());
-        });
-        json.GetField("playerStamina", delegate(JSONObject numb)
-        {
-            playerStamina = Convert.ToInt32(numb.ToString());
-        });
-        json.GetField("playerEndurance", delegate(JSONObject numb)
-        {
-            playerEndurance = Convert.ToInt32(numb.ToString());
-        });
-		//player looks
-        json.GetField("playerClassID", delegate(JSONObject str)
-        {
-            playerClassID = str.ToString();
-        });
-        json.GetField("playerColor", delegate(JSONObject str)
-        {
-            playerColor = str.ToString();
-        });
+            string strTemp = WWW.UnEscapeURL(stats.ToString());
+            stats = new JSONObject(strTemp.Substring(1,strTemp.Length-2));
+            stats.GetField("playerName", delegate(JSONObject str)
+            {
+                playerName = str.ToString().Substring(1, str.ToString().Length - 2);
+            });
+            stats.GetField("playerLevel", delegate(JSONObject numb)
+            {
+                playerLvl = Convert.ToInt32(numb.ToString());
+            });
+            stats.GetField("playerStrength", delegate(JSONObject numb)
+            {
+                playerStrength = Convert.ToInt32(numb.ToString());
+            });
+            stats.GetField("playerStamina", delegate(JSONObject numb)
+            {
+                playerStamina = Convert.ToInt32(numb.ToString());
+            });
+            stats.GetField("playerEndurance", delegate(JSONObject numb)
+            {
+                playerEndurance = Convert.ToInt32(numb.ToString());
+            });
+            //player looks
+            stats.GetField("playerClassID", delegate(JSONObject str)
+            {
+                playerClassID = str.ToString().Substring(1, str.ToString().Length - 2);
+            });
+            stats.GetField("playerColor", delegate(JSONObject str)
+            {
+                playerColor = str.ToString().Substring(1, str.ToString().Length - 2); ;
+            });
 
-		//showroom
-        json.GetField("showroomBG", delegate(JSONObject numb)
-        {
-            showroomBG = Convert.ToInt32(numb.ToString());
-        });
-        json.GetField("fitbitPictureUrl", delegate(JSONObject str)
-        {
-            fitbitPictureUrl = str.ToString();
+            //showroom
+            stats.GetField("showroomBG", delegate(JSONObject numb)
+            {
+                showroomBG = Convert.ToInt32(numb.ToString());
+            });
+            stats.GetField("fitbitPictureUrl", delegate(JSONObject str)
+            {
+                fitbitPictureUrl = str.ToString().Substring(1, str.ToString().Length - 2);
+            });
         });
     }
 

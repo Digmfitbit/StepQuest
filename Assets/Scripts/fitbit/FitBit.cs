@@ -235,6 +235,7 @@ namespace Assets.Scripts.fitbit
 
         void getProfileInfo()
         {
+            Debug.Log("Getting Profile Info");
             Thread oThread = new Thread(new ThreadStart(() =>
             {
                 var authzHeader = manager.GenerateAuthzHeader(PROFILE_URL, "GET");
@@ -257,6 +258,7 @@ namespace Assets.Scripts.fitbit
                             Debug.Log("Fetched userModel: " + line);
                             user.GetField("user", delegate(JSONObject info)
                             {
+                                Debug.Log("USER FRIEND MODEL " + info);
                                 userModel = new FriendModel(info);
                             });
                         }
