@@ -180,6 +180,11 @@ namespace Assets.Scripts.networking
          * */
         public static void updateFriendsList(List<string> friendIds)
         {
+            if (friendIds.Capacity == 0)
+            {
+                Debug.Log("You have no friends :(");
+                return;
+            }
             Debug.Log("Getting Friend Stats");
             List<PlayerStats> friendsList = new List<PlayerStats>(0);
             Thread oThread = new Thread(new ThreadStart(() =>
@@ -197,12 +202,12 @@ namespace Assets.Scripts.networking
                     }
                     var request = (HttpWebRequest)WebRequest.Create(GET_FRIENDS + queryParam);
                     setUpHeaders(request);
-
+                    Debug.Log("URL: " + GET_FRIENDS + queryParam);
                     ServicePointManager.ServerCertificateValidationCallback +=
                         new RemoteCertificateValidationCallback(
                             (sender, certificate, chain, policyErrors) => { return true; });
                     response = (HttpWebResponse)request.GetResponse();
-
+                    
                     using (response)
                     {
                         //TODO do better error catching
@@ -218,19 +223,11 @@ namespace Assets.Scripts.networking
                             JSONObject lineObj = new JSONObject(line);
                             lineObj.GetField("friends", delegate(JSONObject idList)
                             {
-                                Debug.Log("idlist: " + idList);
                                 foreach (JSONObject obj in idList.list)
                                 {
-                                    Debug.Log("obj: " + obj);
-                                    obj.GetField("stats", delegate(JSONObject stats)
-                                    {
-                                        string str = WWW.UnEscapeURL(stats.ToString());
-                                        str = str.Substring(1, str.Length - 2);
-                                        stats = new JSONObject(str);
-                                        PlayerStats playerStats = new PlayerStats(stats);
-                                        friendsList.Add(playerStats);
-                                        Debug.Log("ADDING FRIEND: " + playerStats);
-                                    });
+                                    PlayerStats playerStats = new PlayerStats(obj);
+                                    friendsList.Add(playerStats);
+                                    Debug.Log("ADDING FRIEND: " + playerStats);
                                 }
                             });
                         }
