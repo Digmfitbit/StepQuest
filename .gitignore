@@ -30,3 +30,9 @@ sysinfo.txt
 Icon?
 ehthumbs.db
 [Tt]humbs.db
+
+# ==================== #
+# Sublime Text Project #
+# ==================== #
+*.sublime-project
+*.sublime-workspace
