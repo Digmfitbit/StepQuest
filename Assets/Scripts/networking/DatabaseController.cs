@@ -20,16 +20,16 @@ namespace Assets.Scripts.networking
         private static string BASE_URL = "http://www.cs.drexel.edu/~jgm55/fitbit/";
         private static string UPDATE_URL = BASE_URL + "updateUser.php";
         private static string GET_FRIENDS = BASE_URL + "fetchUsers.php";
-
-        private static List<PlayerStats> friendsList = null;
+        private static string CLEAR_RECORD = BASE_URL + "clearRecord.php";
+        private static string GET_RECORD = BASE_URL + "getRecord.php";
 
         /**
          * Sends player stats to the server for storing
          * GET to update TODO should be POST
          * */
-        public static void updatePlayer(FriendModel player, PlayerStats stats){
+        public static void updatePlayer(PlayerStats stats){
             Debug.Log("Updating player");
-            if (player == null)
+            if (stats == null)
             {
                 Debug.Log("Player is null returning");
                 return;
@@ -39,12 +39,10 @@ namespace Assets.Scripts.networking
                 Debug.Log("Starting thread");
                 //Serialize data to string
                 string serializedStats = serializeDataToString(stats);
-                Debug.Log("stats: " + serializedStats);
                 
                 //Add info to postData
-                var queryParam = "?id=" + player.encodedId.Substring(1,6);
+                var queryParam = "?id=" + stats.id;//.Substring(1, 6);
                 queryParam += "&stats=" + WWW.EscapeURL(serializedStats);
-
                 var request = (HttpWebRequest)WebRequest.Create(UPDATE_URL + queryParam);
                 setUpHeaders(request);
 
@@ -78,18 +76,119 @@ namespace Assets.Scripts.networking
             }));
             oThread.Start();
         }
+
+        public static void clearRecord(string id)
+        {
+            Debug.Log("Clearing record for user: " + id);
+            Thread oThread = new Thread(new ThreadStart(() =>
+            {
+                HttpWebResponse response;
+
+                try
+                {
+                    var queryParam = "?id=" + WWW.EscapeURL(id);
+                    
+                    var request = (HttpWebRequest)WebRequest.Create(CLEAR_RECORD + queryParam);
+                    setUpHeaders(request);
+
+                    ServicePointManager.ServerCertificateValidationCallback +=
+                        new RemoteCertificateValidationCallback(
+                            (sender, certificate, chain, policyErrors) => { return true; });
+                    response = (HttpWebResponse)request.GetResponse();
+
+                    using (response)
+                    {
+                        //TODO do better error catching
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Debug.Log("There's been a problem trying to access the database:" +
+                                        Environment.NewLine +
+                                        response.StatusDescription);
+                        }
+                        else
+                        {
+                            string line = Utilities.getStringFromResponse(response);
+                            Debug.Log(line);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Exception in clearRecord(): " + e);
+                    return;
+                }
+            }));
+            oThread.Start();
+        }
+
+        /**
+         * Gets the main player model from the database
+         * Sets it in the PlayerManager
+         * */
+        public static void getMainPlayer(string id)
+        {
+            Debug.Log("Getting record for user: " + id);
+            Thread oThread = new Thread(new ThreadStart(() =>
+            {
+                HttpWebResponse response;
+
+                try
+                {
+                    var queryParam = "?id=" + WWW.EscapeURL(id);
+
+                    var request = (HttpWebRequest)WebRequest.Create(GET_RECORD + queryParam);
+                    setUpHeaders(request);
+                    Debug.Log("URL: " + GET_RECORD + queryParam);
+                    ServicePointManager.ServerCertificateValidationCallback +=
+                        new RemoteCertificateValidationCallback(
+                            (sender, certificate, chain, policyErrors) => { return true; });
+                    response = (HttpWebResponse)request.GetResponse();
+
+                    using (response)
+                    {
+                        //TODO do better error catching
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Debug.Log("There's been a problem trying to access the database:" +
+                                        Environment.NewLine +
+                                        response.StatusDescription);
+                        }
+                        else
+                        {
+                            string line = Utilities.getStringFromResponse(response);
+                            JSONObject obj = new JSONObject(line);
+                            PlayerStats playerStats = new PlayerStats(obj);
+                            Debug.Log("ADDING PLAYER: " + playerStats);
+                            //Add directly to the scene
+                            PlayerManager.mainPlayer = playerStats;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.Log("Exception in getRecord(): " + e);
+                    return;
+                }
+            }));
+            oThread.Start();
+        }
+
         /**
          * Updates the FriendsLst in the background. 
          * Takes a list of the Friend Ids from fitbit
+         * Sets the friends in PLayerManager
          * */
-        //TODO make this private
         public static void updateFriendsList(List<string> friendIds)
         {
+            if (friendIds.Capacity == 0)
+            {
+                Debug.Log("You have no friends :(");
+                return;
+            }
             Debug.Log("Getting Friend Stats");
-            List<PlayerStats> friendStats = new List<PlayerStats>();
+            List<PlayerStats> friendsList = new List<PlayerStats>(0);
             Thread oThread = new Thread(new ThreadStart(() =>
             {
-                Debug.Log("getFriends()");
                 HttpWebResponse response;
 
                 try
@@ -103,46 +202,53 @@ namespace Assets.Scripts.networking
                     }
                     var request = (HttpWebRequest)WebRequest.Create(GET_FRIENDS + queryParam);
                     setUpHeaders(request);
-
+                    Debug.Log("URL: " + GET_FRIENDS + queryParam);
                     ServicePointManager.ServerCertificateValidationCallback +=
                         new RemoteCertificateValidationCallback(
-                            (sender, certificate, chain, policyErrors) => { return true; });                
+                            (sender, certificate, chain, policyErrors) => { return true; });
                     response = (HttpWebResponse)request.GetResponse();
+                    
+                    using (response)
+                    {
+                        //TODO do better error catching
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Debug.Log("There's been a problem trying to access the database:" +
+                                        Environment.NewLine +
+                                        response.StatusDescription);
+                        }
+                        else
+                        {
+                            string line = Utilities.getStringFromResponse(response);
+                            JSONObject lineObj = new JSONObject(line);
+                            lineObj.GetField("friends", delegate(JSONObject idList)
+                            {
+                                foreach (JSONObject obj in idList.list)
+                                {
+                                    PlayerStats playerStats = new PlayerStats(obj);
+                                    friendsList.Add(playerStats);
+                                    Debug.Log("ADDING FRIEND: " + playerStats);
+                                }
+                            });
+                        }
+                        PlayerManager.fitBitFriends = friendsList;
+                    }
                 }
                 catch (Exception e)
                 {
-                    Debug.Log("Exception in updateFriendsList(): "+e);
+                    Debug.Log("Exception in updateFriendsList(): " + e);
                     return;
-                }
-                using (response)
-                {
-                    //TODO do better error catching
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        Debug.Log("There's been a problem trying to access the database:" +
-                                    Environment.NewLine +
-                                    response.StatusDescription);
-                    }
-                    else
-                    {
-                        string line = Utilities.getStringFromResponse(response);
-                        Debug.Log(line);
-                    }
                 }
             }));
             oThread.Start();
         }
 
-        /**
-         * Gets the game data for the given friend ids
-         * */
-        public static List<PlayerStats> getFriends()
-        {
-            return friendsList;
-        }
-
         private static string serializeDataToString(JSONable objectToSerialize){
             return objectToSerialize.getJSON().Print();
+        }
+
+        public static void clearCache(){
+
         }
 
         /**

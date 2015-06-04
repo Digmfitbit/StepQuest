@@ -58,7 +58,12 @@ public class branchMapGen : MonoBehaviour {
 		else{
 			prevNodes = GameObject.FindGameObjectsWithTag("DungeonNode");
 		}
-		u_id = prevNodes.Length - 1;
+		if(id == 3){
+			u_id = 0;
+		}
+		else{
+			u_id = prevNodes.Length - 1;
+		}
 
 		seed = u_id + GameObject.FindWithTag("Player").GetComponent<playerPosition>().worldID;
 		rand = new System.Random(seed);
@@ -90,6 +95,7 @@ public class branchMapGen : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
+		Debug.Log("Node " + u_id.ToString());
 		switch(GameObject.FindWithTag ("Player").GetComponent<playerPosition>().inDungeon){
 		case true:
 			if(GameObject.FindWithTag ("Player").GetComponent<playerPosition>().totalSteps > stepCost && (GameObject.FindWithTag ("Player").GetComponent<playerPosition>().dungeonID - 1 == u_id || GameObject.FindWithTag ("Player").GetComponent<playerPosition>().dungeonID + 1 == u_id)){

@@ -12,7 +12,7 @@ public class mapGen : MonoBehaviour {
 	public GameObject nodeDungeon;
 
 	private int randomNodeType;
-	private Vector3 randomDirect;
+	private Vector2 randomDirect;
 	private Vector3 newPos;
 
 	public int numOfNodes;
@@ -91,12 +91,12 @@ public class mapGen : MonoBehaviour {
 
 					//randomDirect = new Vector3(Random.Range (-1, 2), Random.Range(-1, 2), 0);
 
-					randomDirect = new Vector3(rand.Next(-1, 2), rand.Next(-1, 2), 0);
+					randomDirect = new Vector2(rand.Next(-1, 2), rand.Next(-1, 2));
 					//Set the next nodes position to the random direction.
-					newPos = randomDirect + prevNodes[prevNodes.Length-1].transform.position;
+					newPos = new Vector3(randomDirect.x, randomDirect.y, 0) + prevNodes[prevNodes.Length-1].transform.position;
 
 					//Check to make sure that it will not collide with another node, if it does, reset the loop.
-					if(Physics.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 60) == false && randomDirect != new Vector3(0,0,0)){
+					if(Physics2D.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 60) == false && randomDirect != new Vector2(0,0)){
 						(Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity) as GameObject).transform.parent = this.transform;
 						lineRenderer.SetPosition(i,  newPos);
 						e = 1;

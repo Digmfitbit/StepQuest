@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts.map;
 using System.Collections;
 
 public class buttonFunctions : MonoBehaviour {
@@ -34,6 +35,11 @@ public class buttonFunctions : MonoBehaviour {
 	}
 	public void CloseTown(){
 		anim.Play("TownMenuSlideOut");
+	}
+
+	public void EnterShowroom(){
+		Switcheroo.disable();
+		Application.LoadLevelAdditive(3);
 	}
 
 }

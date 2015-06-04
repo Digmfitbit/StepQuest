@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - pinUI
   - Friend
+  - Selectable
   layers:
   - Default
   - TransparentFX
