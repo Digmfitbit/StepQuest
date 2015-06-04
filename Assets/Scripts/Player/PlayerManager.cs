@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour {
 
     public static PlayerStats mainPlayer;
 	public static List<PlayerStats> fitBitFriends;
+    public static bool isReady = false;
     //private const string PLAYER_MODEL_KEY = "PLAYER_MODEL";
 
     void Awake()
@@ -25,19 +26,18 @@ public class PlayerManager : MonoBehaviour {
                 DatabaseController.updateFriendsList(FitBit.getInstance().getFriendIDs());
                 //TODO take this out from here and move it to Jonas's new scene
                 mainPlayer = new PlayerStats(model);
+                //TODO CHANGE THIS
                 DatabaseController.updatePlayer(mainPlayer);
                 //sets the main player object here directly
                 DatabaseController.getMainPlayer(model.encodedId);
-                /*string s = PlayerPrefs.GetString(PLAYER_MODEL_KEY, "");
-                if (s == "")
+                
+                Thread startGameThread = new Thread(new ThreadStart(() =>
                 {
-                    mainPlayer = new PlayerStats(model.encodedId);
-                }
-                else
-                {
-                    mainPlayer = new PlayerStats(new JSONObject(s));
-                }*/
-                //Thread startGameThread = new 
+                    Thread.Sleep(2500);
+                    //start game
+                    isReady = true;
+                }));
+                startGameThread.Start();
             }));
         oThread.Start();
     }

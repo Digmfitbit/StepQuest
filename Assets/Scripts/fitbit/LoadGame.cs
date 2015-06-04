@@ -36,10 +36,11 @@ public class LoadGame : MonoBehaviour {
     public void OnMouseDown()
     {
         Debug.Log("Clicked start");
-        if (FitBit.getInstance().isAuthenticated())
+        if (FitBit.getInstance().isAuthenticated() && PlayerManager.isReady)
         {
             FindObjectOfType<DragonScript>().ShootTarget();
             //Application.LoadLevel(gameScreen);
+
         }
     }
 
@@ -61,6 +62,7 @@ public class LoadGame : MonoBehaviour {
 
     public void clearCache()
     {
+        //TODO clear program memory for things here.
         FitBit.getInstance().clearCache();
         FitBit.getInstance().updateAll();
     }
