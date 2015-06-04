@@ -8,12 +8,19 @@ public class Player : Fighter
     protected bool comboFill = true;
     protected bool mouseReset = false;
 
+    protected int maxCombo = 3;
+    protected int comboCount = 0;
+
     public AttackBar attackBar;
 
 	private void Start()
 	{
-        health = 20 * PlayerManager.mainPlayer.playerEndurance;
-        damage = 4 * PlayerManager.mainPlayer.playerStrength;
+        PlayerManager manager = FindObjectOfType<PlayerManager>();
+		health = 20 * manager.mainPlayer.playerEndurance;
+        healthMax = health;
+        damage = 4 * manager.mainPlayer.playerStrength;
+
+        maxCombo = manager.mainPlayer.playerStamina;
 
 		probabilityOfMissing = Random.Range (5f, 30f);
 	}
@@ -25,7 +32,7 @@ public class Player : Fighter
         //Fight Code
         if (!startAttack)
         {
-            if (!enemy.alive)
+            if (!enemy.alive || comboCount >= maxCombo)
             {
                 EndCombo();
             }
@@ -49,7 +56,8 @@ public class Player : Fighter
                 if (attackBar.GetBarHeight() > attackBar.GetThreshold())
                 {
                     attack();
-                    attackBar.RaiseThreshold();
+                    attackBar.RaiseThreshold(maxCombo);
+                    comboCount++;
                 }
                 // end combo if player fails
                 else
@@ -94,6 +102,7 @@ public class Player : Fighter
         battleManager.SendMessage("SetComboOver", true);
         attackBar.Reset();
         startAttack = true;
+        comboCount = 0;
     }
 
     public override void StartAttack(GameObject _enemy)
@@ -117,6 +126,9 @@ public class Player : Fighter
 
     protected override IEnumerator FighterAttack()
     {
+        if (attackSFX != null)
+            attackSFX.Play();
+
 		//Attacking Animation - Move the fighter to the opponent. If the fighter is close enough he hits him by calling the hit function on the opponent. 
 		while (Vector3.Distance(transform.position,enemy.transform.position) > 0.2){
 			newPos = Vector3.Slerp (transform.position, enemy.transform.position, Time.deltaTime * attackSpeed);

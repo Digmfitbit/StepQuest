@@ -2,24 +2,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using Assets.Scripts.networking;
 
 public class InizializationManager : MonoBehaviour {
 
-	PlayerStats mainPlayerStats;
 	string selectedCharacter = null;
 	string playerName = null;
 	public InputField inputPlayerName = null;
 	bool allowWriteToPlayerStats = false;
 
-	void Awake () 
-	{
-		mainPlayerStats = PlayerManager.mainPlayer;
-	}
-
 	void Update()
 	{
 		if (playerName != null && selectedCharacter != null)
+		{
 			allowWriteToPlayerStats = true;
+		}
+		else 
+		{
+			allowWriteToPlayerStats = false;
+		}
 	}
 
 	public void SetSelected(string _name)
@@ -38,8 +39,9 @@ public class InizializationManager : MonoBehaviour {
 	{
 		if (allowWriteToPlayerStats) 
 		{
-			mainPlayerStats.playerClassID = selectedCharacter;
-			mainPlayerStats.playerName = playerName;
+			PlayerManager.mainPlayer.playerClassID = selectedCharacter;
+			PlayerManager.mainPlayer.playerName = playerName;
+			DatabaseController.updatePlayer(PlayerManager.mainPlayer);
 		} 
 		else 
 		{

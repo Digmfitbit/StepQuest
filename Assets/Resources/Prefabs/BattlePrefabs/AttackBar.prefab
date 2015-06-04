@@ -123,8 +123,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 168162}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -.0290000215, z: 0}
-  m_LocalScale: {x: 2.46249914, y: .0112500312, z: 1}
+  m_LocalPosition: {x: 0, y: -.0289999992, z: 0}
+  m_LocalScale: {x: 1.23124945, y: .0112500312, z: 1}
   m_Children: []
   m_Father: {fileID: 496784}
   m_RootOrder: 2
@@ -135,8 +135,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 132278}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.73999977, y: -1.75, z: 0}
-  m_LocalScale: {x: 2.40162992, y: 2.40162969, z: 2.40162969}
+  m_LocalPosition: {x: -7.92000008, y: -.0900000036, z: 0}
+  m_LocalScale: {x: 2.40162992, y: 3.01141787, z: 2.40162969}
   m_Children:
   - {fileID: 456578}
   - {fileID: 474288}
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1addfb296e8e2334abc559b747854d64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  barSpeed: 100
+  barSpeed: 2
   startingThreshold: .800000012
   innerBar: {fileID: 456578}
   thresholdObj: {fileID: 483406}

@@ -47,10 +47,11 @@ public class AttackBar : MonoBehaviour
         return _threshold;
     }
 
-    public void RaiseThreshold()
+    public void RaiseThreshold(int maxCombo)
     {
-        // increments threshold by half the distance left (maybe +incrementAmount as well?)
-        _threshold += ((1f - _threshold) * 0.5f)/* + incrementAmount*/;
+        // increments threshold by...
+        //_threshold += ((1f - _threshold) * 0.5f); // half the remaining distance
+        _threshold += (1f - startingThreshold) / maxCombo; // equal amounts based on maxCombo allowed
     }
 
     public float GetBarHeight()

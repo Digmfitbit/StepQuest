@@ -6,10 +6,10 @@ public class Friend : Fighter
 
 	private void Start()
 	{
-        health = 20 * PlayerManager.mainPlayer.playerEndurance;
-        damage = 4 * PlayerManager.mainPlayer.playerStrength;
+		health = 20 * playerStats.playerEndurance;
+        healthMax = health;
+		damage = 4 * playerStats.playerStrength;
 		
 		probabilityOfMissing = Random.Range (5f, 30f);
 	}
-
 }
