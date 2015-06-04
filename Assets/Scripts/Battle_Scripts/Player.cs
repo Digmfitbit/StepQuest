@@ -15,12 +15,11 @@ public class Player : Fighter
 
 	private void Start()
 	{
-        PlayerManager manager = FindObjectOfType<PlayerManager>();
-		health = 20 * manager.mainPlayer.playerEndurance;
+        health = 20 * PlayerManager.mainPlayer.playerEndurance;
         healthMax = health;
-        damage = 4 * manager.mainPlayer.playerStrength;
+        damage = 4 * PlayerManager.mainPlayer.playerStrength;
 
-        maxCombo = manager.mainPlayer.playerStamina;
+        maxCombo = PlayerManager.mainPlayer.playerStamina;
 
 		probabilityOfMissing = Random.Range (5f, 30f);
 	}

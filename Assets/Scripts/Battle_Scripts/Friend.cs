@@ -4,12 +4,10 @@ using System.Collections;
 public class Friend : Fighter 
 {
 
-	private void Start()
-	{
-		health = 20 * playerStats.playerEndurance;
+    public void initPlayer(PlayerStats player){
+        health = 20 * player.playerEndurance;
         healthMax = health;
-		damage = 4 * playerStats.playerStrength;
-		
-		probabilityOfMissing = Random.Range (5f, 30f);
-	}
+        damage = 4 * player.playerStrength;
+        probabilityOfMissing = Random.Range(5f, 30f);
+    }
 }
