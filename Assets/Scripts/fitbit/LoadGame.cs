@@ -10,9 +10,6 @@ using Assets.Scripts.fitbit;
  * Controls loading of persistent objects and setting up the FitBit singleton
  * */
 public class LoadGame : MonoBehaviour {
-
-    private static string access_token = "";
-    private static string access_secret = "";
     
     private OAuth.Manager manager;
 

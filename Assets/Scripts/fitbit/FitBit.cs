@@ -52,7 +52,6 @@ namespace Assets.Scripts.fitbit
         static FriendModel userModel;
 
         //Random other constants
-        private static string LAST_UPDATED_KEY = "LastUpdated";
         bool gotURL = false;
         bool openedURL = false;
         private string pin;
@@ -186,6 +185,7 @@ namespace Assets.Scripts.fitbit
             PlayerPrefs.DeleteKey(MULTIPLIER_KEY);
             PlayerPrefs.DeleteKey(StepController.STEPS_KEY);
             DatabaseController.clearRecord(userModel.encodedId);
+
         }
 
         public void enterPin()
@@ -281,8 +281,6 @@ namespace Assets.Scripts.fitbit
                 var authzHeader = manager.GenerateAuthzHeader(FRIENDS_URL, "GET");
                 var request = (HttpWebRequest)WebRequest.Create(FRIENDS_URL);
                 setUpHeaders(request, authzHeader);
-
-                List<string> toReturn = new List<string>();
 
                 HttpWebResponse response;
                 try
