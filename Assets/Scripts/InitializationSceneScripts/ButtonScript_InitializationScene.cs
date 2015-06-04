@@ -14,12 +14,12 @@ public class ButtonScript_InitializationScene : MonoBehaviour {
 	public void OnSet_Button () 
 	{
 		InitM.WriteToPlayerStats ();
+		Application.LoadLevel("TitleScreen");
 	}
 
 	public void OnCharacter01_Button()
 	{
 		InitM.SetSelected ("character_01");
-		GameObject.Find ("character_01").GetComponent<Button> ().Select ();
 	}
 	public void OnCharacter02_Button()
 	{
