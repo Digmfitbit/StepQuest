@@ -15,7 +15,7 @@ GameObject:
   - 95: {fileID: 9504144}
   - 120: {fileID: 12037692}
   m_Layer: 0
-  m_Name: Friends_1
+  m_Name: Friend
   m_TagString: Friend
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,6 +154,8 @@ MonoBehaviour:
   alive: 1
   HealthBar: {fileID: 139568, guid: a0af7a9fb4dd847f086b877b197c977a, type: 2}
   StaminaBar: {fileID: 130072, guid: d473663ab89ce428a94f48251b0e2122, type: 2}
+  attackSFX: {fileID: 0}
+  hurtSFX: {fileID: 0}
 --- !u!114 &11492006
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -42,6 +42,9 @@ public class Fighter : MonoBehaviour {
 	protected Vector3 newPos;
 	protected float attackSpeed = 20f;
 
+    public AudioSource attackSFX;
+    public AudioSource hurtSFX;
+
 	protected virtual void Awake () 
 	{
 		//Get components
@@ -58,11 +61,11 @@ public class Fighter : MonoBehaviour {
 		homePos = transform.position;
 
 		//make health and stamina bar
-		healthBar = Instantiate(HealthBar ,transform.position + new Vector3(0f,-0.7f,0f) , Quaternion.identity) as GameObject;
+		healthBar = Instantiate(HealthBar ,transform.position + new Vector3(0f, -0.1f, 0f) , Quaternion.identity) as GameObject;
 		healthBar.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
 		healthBar.transform.SetParent (transform);
 
-		staminaBar = Instantiate(StaminaBar ,transform.position + new Vector3(0f,-0.8f,0f) , Quaternion.identity) as GameObject;
+        staminaBar = Instantiate(StaminaBar, transform.position + new Vector3(0f, -0.2f, 0f), Quaternion.identity) as GameObject;
 		staminaBar.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
 		staminaBar.transform.SetParent (transform);
 	}
@@ -103,6 +106,9 @@ public class Fighter : MonoBehaviour {
 
     protected virtual IEnumerator FighterAttack()
     {
+        if (attackSFX != null)
+            attackSFX.Play();
+
         //Attacking Animation - Move the fighter to the opponent. If the fighter is close enough he hits him by calling the hit function on the opponent. 
         while (Vector3.Distance(transform.position, enemy.transform.position) > 0.2)
         {
@@ -127,6 +133,9 @@ public class Fighter : MonoBehaviour {
 
 	protected virtual void Hit(float _damageIn)
 	{
+        if (hurtSFX != null)
+            hurtSFX.Play();
+
 		health -= _damageIn;
 
 		//if health is to low call dead function
@@ -135,7 +144,7 @@ public class Fighter : MonoBehaviour {
 			Dead ();
 		}
 		//display health under fighter
-		healthBar.SendMessage ("UpdateStatusBar", health);
+		healthBar.SendMessage ("UpdateStatusBar", new Vector2(health, healthMax));
 	}
 
 	
@@ -177,7 +186,7 @@ public class Fighter : MonoBehaviour {
 		if (selected) {	
 			spriteRenderer.material.color = new Color (1f, 1f, 1f, 1f);
 		}else {
-			spriteRenderer.material.color = new Color (1f,1f,1f,0.5f);
+            spriteRenderer.material.color = new Color(0.6f, 0.6f, 0.6f, 0.7f);
 		}
 	}
 }

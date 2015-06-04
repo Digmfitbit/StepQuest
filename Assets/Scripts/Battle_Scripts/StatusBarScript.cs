@@ -29,16 +29,19 @@ public class StatusBarScript : MonoBehaviour {
 //		displaySegments ();
 	}
 
-	public void UpdateStatusBar(float _health)
+	public void UpdateStatusBar(Vector2 healthValues)
 	{
-		if (_health <= 0) {
+        float curHealth = healthValues.x;
+        float maxHealth = healthValues.y;
+
+		if (curHealth <= 0) {
 			segmentsToDisplay = 0;
 		} 
 		else 
 		{
-			segmentsToDisplay = Mathf.RoundToInt(map(0f,100f,0f,6f,_health));
+			segmentsToDisplay = Mathf.RoundToInt(map(0f,maxHealth,0f,6f,curHealth));
 
-			if(segmentsToDisplay == 0 && !(_health <= 0))
+			if(segmentsToDisplay == 0 && !(curHealth <= 0))
 				segmentsToDisplay = 1;
 		}
 

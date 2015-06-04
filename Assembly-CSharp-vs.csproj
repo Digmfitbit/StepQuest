@@ -51,6 +51,7 @@
      <Compile Include="Assets\JSON\VectorTemplates.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\AttackBar.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\BattleManager.cs" />
+     <Compile Include="Assets\Scripts\Battle_Scripts\Boss.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\DestroyScene.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\DragonScript.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\Enemy.cs" />

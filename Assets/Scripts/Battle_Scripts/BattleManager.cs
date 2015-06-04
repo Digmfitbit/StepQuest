@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class BattleManager : MonoBehaviour {
-	
+
+    public bool bossScene = false;
+    public GameObject boss;
+
 	public GameObject[] players;
 	public GameObject[] friends;
 	public GameObject[] enemys;
@@ -279,7 +282,7 @@ public class BattleManager : MonoBehaviour {
 	private void setUpFight(float _playerLevel)
 	{
 		//Scle of the fighters
-		Vector3 scaleUp = new Vector3 (2, 2, 1);
+		//Vector3 scaleUp = new Vector3 (2, 2, 1);
 		Transform fightSceneHolder = GameObject.Find("FightSceneHolder").transform;
         attackBar.SendMessage("Reset");
 
@@ -293,10 +296,11 @@ public class BattleManager : MonoBehaviour {
 		//Make all the Fighters
 		for (int i = 0; i < 1; i++) 
 		{
-			GameObject toInstantiatePlayer = players [0];
+            GameObject toInstantiatePlayer = players[Random.Range(0, players.Length)];
 			toInstantiatePlayer.tag = "Player";
-			toInstantiatePlayer.transform.localScale = scaleUp;
-			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (- i-1, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
+			//toInstantiatePlayer.transform.localScale = scaleUp;
+			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (-1, Random.Range(-2.50f,-4f)), Quaternion.identity) as GameObject;
+            instancePlayer.name = "Player";
 			instancePlayer.transform.parent = fightSceneHolder;
             instancePlayer.SendMessage("SetAttackBar", attackBar);
 			selectedPlayer = instancePlayer;
@@ -308,26 +312,37 @@ public class BattleManager : MonoBehaviour {
 
 		for (int i = 0; i < numberOfFriends; i++) 
 		{
-			GameObject toInstantiateFriend = friends [0];
-			toInstantiateFriend.name = "Friends_"+i;
+            GameObject toInstantiateFriend = friends[Random.Range(0, friends.Length)];
 			toInstantiateFriend.tag = "Friend";
-			toInstantiateFriend.transform.localScale = scaleUp;
-			GameObject instanceFriend = Instantiate (toInstantiateFriend, new Vector2 (- i-2, Random.Range(-2f,2f)), Quaternion.identity) as GameObject;
+			//toInstantiateFriend.transform.localScale = scaleUp;
+            GameObject instanceFriend = Instantiate(toInstantiateFriend, new Vector2(-i * 2 - 3, Random.Range(-2.15f, -4.3f)), Quaternion.identity) as GameObject;
+            instanceFriend.name = "Friends_" + i;
 			allFriends.Add(instanceFriend);   
             tempFriends.Add(instanceFriend);
 			instanceFriend.transform.parent = fightSceneHolder;
 		}
 
-		for(int i = 0; i < numberOfEnemy; i++)
-		{
-			GameObject toInstantiateEnemy = enemys [0];
-			toInstantiateEnemy.name = "Enemy_"+i;
-			toInstantiateEnemy.transform.localScale = scaleUp;
-			GameObject instanceEnemy = Instantiate (toInstantiateEnemy, new Vector2 (i+1, Random.Range(-3f,3f)), Quaternion.identity) as GameObject;
-			allEnemys.Add(instanceEnemy);
+        if (!bossScene)
+        {
+            for (int i = 0; i < numberOfEnemy; i++)
+            {
+                GameObject toInstantiateEnemy = enemys[Random.Range(0, enemys.Length)];
+                //toInstantiateEnemy.transform.localScale = scaleUp;
+                GameObject instanceEnemy = Instantiate(toInstantiateEnemy, new Vector2(i * 2 + 2, Random.Range(-2.15f, -4.3f)), Quaternion.identity) as GameObject;
+                instanceEnemy.name = "Enemy_" + i;
+                allEnemys.Add(instanceEnemy);
+                tempEnemys.Add(instanceEnemy);
+                instanceEnemy.transform.parent = fightSceneHolder;
+            }
+        }
+        else
+        {
+            GameObject instanceEnemy = Instantiate(boss, new Vector2(4f, Random.Range(-2.60f, -3.9f)), Quaternion.identity) as GameObject;
+            allEnemys.Add(instanceEnemy);
             tempEnemys.Add(instanceEnemy);
-			instanceEnemy.transform.parent = fightSceneHolder;
-		}
+            instanceEnemy.transform.parent = fightSceneHolder;
+        }
+
 	
 	}
 
