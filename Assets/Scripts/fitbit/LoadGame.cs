@@ -61,7 +61,7 @@ public class LoadGame : MonoBehaviour {
     {
         //TODO clear program memory for things here.
         FitBit.getInstance().clearCache();
-        FitBit.getInstance().updateAll();
+        //FitBit.getInstance().updateAll();
     }
 
     public void getFriends()

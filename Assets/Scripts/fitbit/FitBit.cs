@@ -41,8 +41,6 @@ namespace Assets.Scripts.fitbit
         private static OAuth.Manager manager;
 
         private static bool authenticated;
-        private static string access_token;
-        private static string access_secret;
 
         bool isAuthenticating;
 
@@ -110,7 +108,9 @@ namespace Assets.Scripts.fitbit
             manager["consumer_secret"] = CONSUMER_SECRET;
             authenticated = false;
             isAuthenticating = false;
-            
+            string access_token;
+            string access_secret;
+
             //if stored.
             if ((access_token = PlayerPrefs.GetString(TOKEN_KEY)) != "")
             {
@@ -186,6 +186,8 @@ namespace Assets.Scripts.fitbit
             PlayerPrefs.DeleteKey(StepController.STEPS_KEY);
             DatabaseController.clearRecord(userModel.encodedId);
 
+            manager[TOKEN_KEY] = "";
+            manager[TOKEN_SECRET_KEY] = "";
         }
 
         public void enterPin()
