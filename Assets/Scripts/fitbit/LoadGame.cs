@@ -15,10 +15,12 @@ public class LoadGame : MonoBehaviour {
 
     string gameScreen = "MapTest";
     FitBit fitBitManager;
+    public static string PLAYED_BEFORE = "played_before";
 
     // Use this for initialization
     void Start()
     {
+        Debug.Log("Start in Load Game");
         // set up fitBit singleton
         fitBitManager = FitBit.getInstance();
         if (fitBitManager.isAuthenticated())
@@ -28,6 +30,15 @@ public class LoadGame : MonoBehaviour {
                 Destroy(gameObject);
             }
         }
+        else
+        {
+            PlayerPrefs.SetInt(PLAYED_BEFORE, 0);
+        }
+        if(PlayerPrefs.GetInt(PLAYED_BEFORE,0) == 0)
+        {
+            gameScreen = "InitializationScene";
+            PlayerManager.isReady = true;
+        }
     }
 
     public void OnMouseDown()
@@ -35,9 +46,8 @@ public class LoadGame : MonoBehaviour {
         Debug.Log("Clicked start");
         if (FitBit.getInstance().isAuthenticated() && PlayerManager.isReady)
         {
-            FindObjectOfType<DragonScript>().ShootTarget();
-            //Application.LoadLevel(gameScreen);
-
+            //FindObjectOfType<DragonScript>().ShootTarget();
+            Application.LoadLevel(gameScreen);
         }
     }
 

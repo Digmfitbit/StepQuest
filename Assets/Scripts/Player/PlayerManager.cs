@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Assets.Scripts.fitbit;
 using Assets.Scripts.networking;
 using System.Threading;
+using System;
 using ResponseObjects;
 
 public class PlayerManager : MonoBehaviour {
@@ -17,33 +18,34 @@ public class PlayerManager : MonoBehaviour {
     {
         DontDestroyOnLoad(this.transform.gameObject);
         //Do load??
-
-        //TODO: Load from local and store local
-        Thread oThread = new Thread(new ThreadStart(() =>
-            {
-                Thread.Sleep(4000);
-                FriendModel model = FitBit.getInstance().getUserModel();
-                DatabaseController.updateFriendsList(FitBit.getInstance().getFriendIDs());
-                //TODO take this out from here and move it to Jonas's new scene
-                mainPlayer = new PlayerStats(model);
-                //TODO CHANGE THIS
-                DatabaseController.updatePlayer(mainPlayer);
-                //sets the main player object here directly
-                DatabaseController.getMainPlayer(model.encodedId);
-                
-                Thread startGameThread = new Thread(new ThreadStart(() =>
-                {
-                    Thread.Sleep(2500);
-                    //start game
-                    isReady = true;
-                }));
-                startGameThread.Start();
-            }));
-        oThread.Start();
+        try
+        {
+            updatePlayers();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
     }
-	// Use this for initialization
-	void Start () {
 
+    public static void updatePlayers()
+    {
+        Thread oThread = new Thread(new ThreadStart(() =>
+        {
+            Thread.Sleep(4000);
+            FriendModel model = FitBit.getInstance().getUserModel();
+            DatabaseController.updateFriendsList(FitBit.getInstance().getFriendIDs());
+            DatabaseController.getMainPlayer(model.encodedId);
+
+            Thread startGameThread = new Thread(new ThreadStart(() =>
+            {
+                Thread.Sleep(2500);
+                //start game
+                isReady = true;
+            }));
+            startGameThread.Start();
+        }));
+        oThread.Start();
     }
 
     void OnDestroy()
