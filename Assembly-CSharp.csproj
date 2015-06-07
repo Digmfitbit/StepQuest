@@ -49,6 +49,7 @@
      <Compile Include="Assets\JSON\JSONObject.cs" />
      <Compile Include="Assets\JSON\JSONTemplates.cs" />
      <Compile Include="Assets\JSON\VectorTemplates.cs" />
+     <Compile Include="Assets\PlayerAppearance.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\AttackBar.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\BattleManager.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\Boss.cs" />

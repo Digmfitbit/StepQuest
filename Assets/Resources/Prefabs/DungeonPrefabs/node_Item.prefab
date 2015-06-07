@@ -11,7 +11,7 @@ GameObject:
   - 212: {fileID: 21227412}
   - 114: {fileID: 11487050}
   - 114: {fileID: 11454210}
-  - 61: {fileID: 6154714}
+  - 60: {fileID: 6073796}
   m_Layer: 0
   m_Name: node_Item
   m_TagString: DungeonNode
@@ -27,12 +27,12 @@ Transform:
   m_GameObject: {fileID: 140742}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .800000012, y: .800000012, z: .00999999978}
+  m_LocalScale: {x: .400000006, y: .400000006, z: .400000006}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!61 &6154714
-BoxCollider2D:
+--- !u!60 &6073796
+PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -42,8 +42,41 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Points:
+    m_Paths:
+    - - {x: .875, y: -.477499992}
+      - {x: 1.01499999, y: -.347499996}
+      - {x: 1.08500004, y: -.217500001}
+      - {x: 1.08500004, y: .0625}
+      - {x: 1.02499998, y: .202500001}
+      - {x: .86500001, y: .3125}
+      - {x: .785000026, y: .382499993}
+      - {x: .665000021, y: .442499995}
+      - {x: .764999986, y: .662500024}
+      - {x: .764999986, y: .682500005}
+      - {x: .685000002, y: .842499971}
+      - {x: .595000029, y: .972500026}
+      - {x: .474999994, y: 1.09249997}
+      - {x: .395000011, y: 1.11249995}
+      - {x: -.354999989, y: 1.11249995}
+      - {x: -.495000005, y: 1.08249998}
+      - {x: -.574999988, y: 1.01250005}
+      - {x: -.754999995, y: .742500007}
+      - {x: -.774999976, y: .662500024}
+      - {x: -.654999971, y: .432500005}
+      - {x: -.86500001, y: .32249999}
+      - {x: -1.02499998, y: .182500005}
+      - {x: -1.08500004, y: .0724999979}
+      - {x: -1.08500004, y: -.237499997}
+      - {x: -1.02499998, y: -.337500006}
+      - {x: -.86500001, y: -.487500012}
+      - {x: -.61500001, y: -.617500007}
+      - {x: -.514999986, y: -.637499988}
+      - {x: -.324999988, y: -.6875}
+      - {x: .305000007, y: -.6875}
+      - {x: .344999999, y: -.67750001}
+      - {x: .514999986, y: -.637499988}
+      - {x: .63499999, y: -.607500017}
 --- !u!114 &11454210
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -111,7 +144,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 59c26bc0f64713e488c4ad200200ce92, type: 3}
+  m_Sprite: {fileID: 21300002, guid: d27c972bef69ef248ade3659a2471ed2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:

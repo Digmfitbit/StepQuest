@@ -10,6 +10,8 @@ public class playerPosition : MonoBehaviour {
 	public int dungeonID;
 	public bool inDungeon = false;
 
+	PlayerStats playerIcon;
+
 	public GameObject[] nodes;
 	public GameObject nextNode;
 
@@ -63,7 +65,7 @@ public class playerPosition : MonoBehaviour {
 				}
 					
 				//Set the player position to the current node.
-				transform.position = Vector3.MoveTowards(transform.position, nodes[worldID].transform.position, .5f);
+				transform.position = Vector3.MoveTowards(transform.position, nodes[worldID].transform.position, .1f);
 				Vector3 temp = transform.position;
 				temp.z = -0.1f;
 				transform.position = temp;
@@ -95,9 +97,11 @@ public class playerPosition : MonoBehaviour {
 			break;
 		//The character is in a dungeon.
 		case true:
+
 			dungeonNodes = GameObject.FindGameObjectsWithTag ("DungeonNode");
-
-
+			if(dungeonNodes.Length < 0){
+				break;
+			}
 			foreach(GameObject node in dungeonNodes){
 				if(node.GetComponent<branchMapGen>().u_id == dungeonID){
 					switch(node.GetComponent<branchMapGen>().id){
@@ -139,7 +143,7 @@ public class playerPosition : MonoBehaviour {
 				//Set the player position to the current node.
 				foreach(GameObject node in dungeonNodes){
 					if(node.GetComponent<branchMapGen>().u_id == dungeonID){
-						transform.position = Vector3.MoveTowards(transform.position, node.transform.position, .5f);
+						transform.position = Vector3.MoveTowards(transform.position, node.transform.position, .1f);
 
 					}
 				}
