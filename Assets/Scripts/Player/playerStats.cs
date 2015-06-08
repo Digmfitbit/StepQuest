@@ -163,6 +163,10 @@ public class PlayerStats : JSONable {
             {
                 playerEndurance = Convert.ToInt32(numb.ToString());
             });
+            stats.GetField("playerRecovery", delegate(JSONObject numb)
+            {
+                playerRecovery = Convert.ToInt32(numb.ToString());
+            });
             stats.GetField("currentExp", delegate(JSONObject numb)
             {
                 currentExp = Convert.ToInt32(numb.ToString());
