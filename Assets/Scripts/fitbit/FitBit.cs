@@ -184,7 +184,10 @@ namespace Assets.Scripts.fitbit
             PlayerPrefs.DeleteKey(TIME_UPDATED_KEY);
             PlayerPrefs.DeleteKey(MULTIPLIER_KEY);
             PlayerPrefs.DeleteKey(StepController.STEPS_KEY);
-            DatabaseController.clearRecord(userModel.encodedId);
+            if (userModel != null)
+            {
+                DatabaseController.clearRecord(userModel.encodedId);
+            }
 
             manager[TOKEN_KEY] = "";
             manager[TOKEN_SECRET_KEY] = "";
