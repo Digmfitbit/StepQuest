@@ -9,11 +9,12 @@ public class PlayerStats : JSONable {
     public string id;
 
 	public string playerName;
+    public const int EXP_TO_INCREASE = 20;
 
 	//Overall level.
 	public int playerLvl;
 	//How much to level.
-    public const int EXP_TO_NEXT = 100;
+    public int expToNext = 100;
 	//How much do they currently have.
     private int currentExp;
 
@@ -85,7 +86,7 @@ public class PlayerStats : JSONable {
     public bool addExp(int amount)
     {
         currentExp += amount;
-        if (currentExp >= EXP_TO_NEXT)//Level up!!
+        if (currentExp >= expToNext)//Level up!!
         {
             levelUp();
             return true;
@@ -105,7 +106,8 @@ public class PlayerStats : JSONable {
         playerStamina++;
         playerEndurance++;
         playerRecovery++;
-        currentExp -= EXP_TO_NEXT;
+        currentExp -= expToNext;
+        expToNext += EXP_TO_INCREASE;
     }
 
     public override JSONObject getJSON()
@@ -119,6 +121,7 @@ public class PlayerStats : JSONable {
         json.AddField("playerEndurance", playerEndurance);
         json.AddField("playerRecovery", playerRecovery);
         json.AddField("currentExp", currentExp);
+        json.AddField("expToNext", expToNext);
 
 		//player looks
 		json.AddField ("playerClassID", playerClassID);
@@ -163,6 +166,10 @@ public class PlayerStats : JSONable {
             stats.GetField("currentExp", delegate(JSONObject numb)
             {
                 currentExp = Convert.ToInt32(numb.ToString());
+            });
+            stats.GetField("expToNext", delegate(JSONObject numb)
+            {
+                expToNext = Convert.ToInt32(numb.ToString());
             });
             //player looks
             stats.GetField("playerClassID", delegate(JSONObject str)
