@@ -96,21 +96,24 @@ public class branchMapGen : MonoBehaviour {
 
 	void OnMouseDown(){
 		Debug.Log("Node " + u_id.ToString());
-		switch(GameObject.FindWithTag ("Player").GetComponent<playerPosition>().inDungeon){
-		case true:
-			if(GameObject.FindWithTag ("Player").GetComponent<playerPosition>().totalSteps > stepCost && (GameObject.FindWithTag ("Player").GetComponent<playerPosition>().dungeonID - 1 == u_id || GameObject.FindWithTag ("Player").GetComponent<playerPosition>().dungeonID + 1 == u_id)){
-				GameObject.FindWithTag ("Player").GetComponent<playerPosition>().totalSteps -= stepCost;
-				GameObject.FindWithTag ("Player").GetComponent<playerPosition>().dungeonID = u_id;
-				stepCost = 0;
-			}
-			break;
-		case false:
-			if(GameObject.FindWithTag ("Player").GetComponent<playerPosition>().totalSteps > stepCost && (GameObject.FindWithTag ("Player").GetComponent<playerPosition>().worldID - 1 == u_id || GameObject.FindWithTag ("Player").GetComponent<playerPosition>().worldID + 1 == u_id)){
-				GameObject.FindWithTag ("Player").GetComponent<playerPosition>().totalSteps -= stepCost;
-				GameObject.FindWithTag ("Player").GetComponent<playerPosition>().worldID = u_id;
-				stepCost = 0;
-			}
-			break;
-		}
+        playerPosition playerPos = GameObject.FindWithTag("Player").GetComponent<playerPosition>();
+        if (playerPos.inDungeon)
+        {
+            if (playerPos.totalSteps > stepCost && (playerPos.dungeonID - 1 == u_id || playerPos.dungeonID + 1 == u_id))
+            {
+                playerPos.totalSteps -= stepCost;
+                playerPos.dungeonID = u_id;
+                stepCost = 0;
+            }
+        }
+        else
+        {
+            if (playerPos.totalSteps > stepCost && (playerPos.worldID - 1 == u_id || playerPos.worldID + 1 == u_id))
+            {
+                playerPos.totalSteps -= stepCost;
+                playerPos.worldID = u_id;
+                stepCost = 0;
+            }
+        }
 	}
 }
