@@ -10,6 +10,7 @@ TagManager:
   - pinUI
   - Friend
   - Selectable
+  - MapGen
   layers:
   - Default
   - TransparentFX
