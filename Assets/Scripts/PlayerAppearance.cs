@@ -5,10 +5,13 @@ public class PlayerAppearance : MonoBehaviour {
 	
 	public Sprite[] sprites;
 
-	public string playerIcon = PlayerManager.mainPlayer.playerClassID;
+	public string playerIcon;
 
 	void Awake () {
 		Debug.Log (PlayerManager.mainPlayer.playerClassID);
+
+		playerIcon = PlayerManager.mainPlayer.playerClassID;
+
 		switch(playerIcon){
 		case "character_01":
 			GetComponent<SpriteRenderer>().sprite = sprites[0];

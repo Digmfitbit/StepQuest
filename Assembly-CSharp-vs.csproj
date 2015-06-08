@@ -49,7 +49,6 @@
      <Compile Include="Assets\JSON\JSONObject.cs" />
      <Compile Include="Assets\JSON\JSONTemplates.cs" />
      <Compile Include="Assets\JSON\VectorTemplates.cs" />
-     <Compile Include="Assets\PlayerAppearance.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\AttackBar.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\BattleManager.cs" />
      <Compile Include="Assets\Scripts\Battle_Scripts\Boss.cs" />
@@ -71,6 +70,7 @@
      <Compile Include="Assets\Scripts\Player\StepController.cs" />
      <Compile Include="Assets\Scripts\Player\playerPosition.cs" />
      <Compile Include="Assets\Scripts\Player\playerStats.cs" />
+     <Compile Include="Assets\Scripts\PlayerAppearance.cs" />
      <Compile Include="Assets\Scripts\ScaleMe.cs" />
      <Compile Include="Assets\Scripts\Showroom_v2\ButtonScript.cs" />
      <Compile Include="Assets\Scripts\Showroom_v2\ShowroomManagerV2.cs" />
