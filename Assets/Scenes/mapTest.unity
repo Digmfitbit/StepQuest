@@ -1643,6 +1643,21 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 74cacf674eb20184287616bc2b6c8942, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1522330818 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 193298, guid: 74cacf674eb20184287616bc2b6c8942, type: 2}
+  m_PrefabInternal: {fileID: 1522330817}
+--- !u!114 &1522330819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1522330818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d8a63f4eb00ad648a20e947266122d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1534844479
 GameObject:
   m_ObjectHideFlags: 0
@@ -1781,7 +1796,6 @@ MonoBehaviour:
   nextNode: {fileID: 0}
   dungeonNodes: []
   nextDungeonNode: {fileID: 0}
-  totalSteps: 0
   nextStepCost: {fileID: 1434786863}
   townName: {fileID: 1492775734}
   interactText: {fileID: 700636106}
