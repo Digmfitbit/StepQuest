@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Assets.Scripts.networking;
 
 public class StatsManager : MonoBehaviour {
 
@@ -30,10 +31,20 @@ public class StatsManager : MonoBehaviour {
     public void AddPlayerExperiences()
     {
         //Add exp to player stats
-        PlayerManager.mainPlayer.currentExp += expToWin;
+
+        if (PlayerManager.mainPlayer.addExp(expToWin))
+        {
+            endGamePanel.transform.Find("Text_PlayerExp/Text_PlayerExpNr").GetComponent<Text>().text = "Level Up!";
+            GameObject.FindObjectOfType<ScreenShake>().startShakingCamera();
+        }
+        else
+        {
+            endGamePanel.transform.Find("Text_PlayerExp/Text_PlayerExpNr").GetComponent<Text>().text = PlayerManager.mainPlayer.getExp().ToString();
+        }
         // show end game panel
         endGamePanel.SetActive(true);
         endGamePanel.transform.Find("Text_WonExp/Text_WonExpNr").GetComponent<Text>().text = expToWin.ToString();
-        endGamePanel.transform.Find("Text_PlayerExp/Text_PlayerExpNr").GetComponent<Text>().text = PlayerManager.mainPlayer.currentExp.ToString();
+
+        DatabaseController.updatePlayer(PlayerManager.mainPlayer);
     }
 }

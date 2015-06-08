@@ -52,11 +52,11 @@ public class ShowroomManagerV2 : MonoBehaviour {
 		GameObject.Find ("Text_PlayerName_Val").GetComponent<Text> ().text = activeShowroomStats.playerName;
 		GameObject.Find ("Text_Level_Val").GetComponent<Text> ().text = activeShowroomStats.playerLvl.ToString();
 		GameObject.Find ("Text_Strength_Val").GetComponent<Text> ().text = activeShowroomStats.playerStrength.ToString();
-		GameObject.Find ("Text_CurrentExp_Val").GetComponent<Text> ().text = activeShowroomStats.currentExp.ToString();
+		GameObject.Find ("Text_CurrentExp_Val").GetComponent<Text> ().text = activeShowroomStats.getExp().ToString();
 		GameObject.Find ("Text_Stamina_Val").GetComponent<Text> ().text = activeShowroomStats.playerStamina.ToString();
 		GameObject.Find ("Text_Recovery_Val").GetComponent<Text> ().text = activeShowroomStats.playerRecovery.ToString();
 		GameObject.Find ("Text_Endurance_Val").GetComponent<Text> ().text = activeShowroomStats.playerEndurance.ToString();
-		GameObject.Find ("Text_ExpToNext_Val").GetComponent<Text> ().text = activeShowroomStats.expToNext.ToString();
+		GameObject.Find ("Text_ExpToNext_Val").GetComponent<Text> ().text = PlayerStats.EXP_TO_NEXT.ToString();
 	}
 
 	//this is called whenever the right or left button is pressed.
