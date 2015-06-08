@@ -14,9 +14,17 @@ public class PlayerManager : MonoBehaviour {
     public static bool isReady = false;
     //private const string PLAYER_MODEL_KEY = "PLAYER_MODEL";
 
+	public static PlayerManager Instance;
+
     void Awake()
     {
-        DontDestroyOnLoad(this.transform.gameObject);
+		if(Instance){
+			DestroyImmediate (gameObject);
+		}
+		else{
+			DontDestroyOnLoad(gameObject);
+			Instance = this;
+		}
         //Do load??
         try
         {
