@@ -11,6 +11,7 @@ using System.Threading;
 using System.IO;
 using Assets.Scripts.networking;
 using System.Net.Security;
+using System.Net.Cache;
 using System.Collections.Specialized;
 
 namespace Assets.Scripts.networking
@@ -200,9 +201,10 @@ namespace Assets.Scripts.networking
                         //dataStream.Write("friendId[]="+ friendId);
                         queryParam += "&friendId[]=" + WWW.EscapeURL(friendId);
                     }
-                    var request = (HttpWebRequest)WebRequest.Create(GET_FRIENDS + queryParam);
+                    string url = GET_FRIENDS + WWW.EscapeURL(queryParam);
+                    var request = (HttpWebRequest)WebRequest.Create(url);
                     setUpHeaders(request);
-                    Debug.Log("URL: " + GET_FRIENDS + queryParam);
+                    Debug.Log("URL: " + url);
                     ServicePointManager.ServerCertificateValidationCallback +=
                         new RemoteCertificateValidationCallback(
                             (sender, certificate, chain, policyErrors) => { return true; });
@@ -221,13 +223,19 @@ namespace Assets.Scripts.networking
                         {
                             string line = Utilities.getStringFromResponse(response);
                             JSONObject lineObj = new JSONObject(line);
+                            Debug.Log("line: "+line);
+                            Debug.Log("LineObj: "+lineObj);
+
                             lineObj.GetField("friends", delegate(JSONObject idList)
                             {
                                 foreach (JSONObject obj in idList.list)
                                 {
                                     PlayerStats playerStats = new PlayerStats(obj);
-                                    friendsList.Add(playerStats);
-                                    Debug.Log("ADDING FRIEND: " + playerStats);
+                                    if (playerStats.id != "")
+                                    {
+                                        friendsList.Add(playerStats);
+                                        Debug.Log("ADDING FRIEND: " + playerStats);
+                                    }
                                 }
                             });
                         }
@@ -257,10 +265,11 @@ namespace Assets.Scripts.networking
         private static void setUpHeaders(HttpWebRequest request)
         {
             request.Method = "GET";
-            request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-            request.ContentType = "application/x-www-form-urlencoded";
+            request.Accept = "*/*";
+            //request.ContentType = "application/x-www-form-urlencoded";
             request.AllowAutoRedirect = true;
             request.MaximumAutomaticRedirections = 2;
+            request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
         }
     }
 }

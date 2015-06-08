@@ -14,10 +14,7 @@ namespace Assets.Scripts.networking
             string line = "";
             using (StreamReader reader = new StreamReader(response.GetResponseStream()))
             {
-                while (!reader.EndOfStream)
-                {
-                    line = reader.ReadLine();
-                }
+                line = reader.ReadToEnd();
             }
             return line;
         }
