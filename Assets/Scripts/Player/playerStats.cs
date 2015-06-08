@@ -13,9 +13,9 @@ public class PlayerStats : JSONable {
 	//Overall level.
 	public int playerLvl;
 	//How much to level.
-    public int expToNext;
+    public const int EXP_TO_NEXT = 100;
 	//How much do they currently have.
-    public int currentExp;
+    private int currentExp;
 
 	//How much damage.
     public int playerStrength = 5;
@@ -49,7 +49,6 @@ public class PlayerStats : JSONable {
      * */
     public PlayerStats(JSONObject jsonObject)
     {
-        
         this.fromJSON(jsonObject);
     }
 
@@ -65,7 +64,6 @@ public class PlayerStats : JSONable {
 
         //initialize game only features
         playerLvl = 1;
-        expToNext = 100;
         currentExp = 0;
         playerStrength = 5;
         playerStamina = 5;
@@ -80,6 +78,36 @@ public class PlayerStats : JSONable {
         showroomBG = 1;
     }
 
+    /**
+     * Add the amount of exp to the player.
+     * Returns true if a level was gained
+     * */
+    public bool addExp(int amount)
+    {
+        currentExp += amount;
+        if (currentExp >= EXP_TO_NEXT)//Level up!!
+        {
+            levelUp();
+            return true;
+        }
+        return false;
+    }
+
+    public int getExp()
+    {
+        return currentExp;
+    }
+
+    private void levelUp()
+    {
+        playerLvl++;
+        playerStrength++;
+        playerStamina++;
+        playerEndurance++;
+        playerRecovery++;
+        currentExp -= EXP_TO_NEXT;
+    }
+
     public override JSONObject getJSON()
     {
         JSONObject json = new JSONObject(JSONObject.Type.OBJECT);
@@ -90,6 +118,7 @@ public class PlayerStats : JSONable {
         json.AddField("playerStamina", playerStamina);
         json.AddField("playerEndurance", playerEndurance);
         json.AddField("playerRecovery", playerRecovery);
+        json.AddField("currentExp", currentExp);
 
 		//player looks
 		json.AddField ("playerClassID", playerClassID);
@@ -103,7 +132,6 @@ public class PlayerStats : JSONable {
 
     public override void fromJSON(JSONObject json)
     {
-        
         json.GetField("id", delegate(JSONObject str)
         {
             id = str.ToString().Substring(1,str.ToString().Length-2);
@@ -131,6 +159,10 @@ public class PlayerStats : JSONable {
             stats.GetField("playerEndurance", delegate(JSONObject numb)
             {
                 playerEndurance = Convert.ToInt32(numb.ToString());
+            });
+            stats.GetField("currentExp", delegate(JSONObject numb)
+            {
+                currentExp = Convert.ToInt32(numb.ToString());
             });
             //player looks
             stats.GetField("playerClassID", delegate(JSONObject str)
