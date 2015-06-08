@@ -16,7 +16,7 @@ public class StepController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        totalSteps = PlayerPrefs.GetFloat(STEPS_KEY, 0f);
+        totalSteps = PlayerPrefs.GetFloat(STEPS_KEY, 10000f);
         //comment out the above line and uncomment the below line for testing
         //totalSteps = 100000;
     }
