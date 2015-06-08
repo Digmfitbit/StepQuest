@@ -105,18 +105,18 @@ public class branchMapGen : MonoBehaviour {
         playerPosition playerPos = GameObject.FindWithTag("Player").GetComponent<playerPosition>();
         if (playerPos.inDungeon)
         {
-            if (playerPos.totalSteps > stepCost && (playerPos.dungeonID - 1 == u_id || playerPos.dungeonID + 1 == u_id))
+            if (StepController.totalSteps > stepCost && (playerPos.dungeonID - 1 == u_id || playerPos.dungeonID + 1 == u_id))
             {
-                playerPos.totalSteps -= stepCost;
+                StepController.totalSteps -= stepCost;
                 playerPos.dungeonID = u_id;
                 stepCost = 0;
             }
         }
         else
         {
-            if (playerPos.totalSteps > stepCost && (playerPos.worldID - 1 == u_id || playerPos.worldID + 1 == u_id))
+            if (StepController.totalSteps > stepCost && (playerPos.worldID - 1 == u_id || playerPos.worldID + 1 == u_id))
             {
-                playerPos.totalSteps -= stepCost;
+                StepController.totalSteps -= stepCost;
                 playerPos.worldID = u_id;
                 stepCost = 0;
             }

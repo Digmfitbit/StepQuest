@@ -18,7 +18,6 @@ public class playerPosition : MonoBehaviour {
 	public GameObject[] dungeonNodes;
 	public GameObject nextDungeonNode;
 
-	public float totalSteps;
 	public Text nextStepCost;
 
 	public Text townName;
@@ -33,9 +32,6 @@ public class playerPosition : MonoBehaviour {
 	}
 
 	void Update () {
-		//Set total steps to component from players stats, will be pulled from FitBit.
-		totalSteps = StepController.totalSteps;
-
 		if(!inDungeon){
 		//The character is on the world map.
 			nodes = GameObject.FindGameObjectsWithTag("Node");
