@@ -18,7 +18,6 @@ public class BattleManager : MonoBehaviour {
 	private GameObject selectedEnemy = null;
 	private Player playerScript;
 	private Enemy enemyScript;
-	public int numberOfFriends = 1;
 	private int numberOfEnemy;
 
     // these lists hold the current friends and enemys in the battle
@@ -293,12 +292,14 @@ public class BattleManager : MonoBehaviour {
 		}
 
 		//Make all the Fighters
+        // player
 		for (int i = 0; i < 1; i++) 
 		{
-            GameObject toInstantiatePlayer = players[Random.Range(0, players.Length)];
-			toInstantiatePlayer.tag = "Player";
+            string playerClass = PlayerManager.mainPlayer.playerClassID;
+            int playerIndex = int.Parse(playerClass[playerClass.Length - 1].ToString()) - 1;
 			//toInstantiatePlayer.transform.localScale = scaleUp;
-			GameObject instancePlayer = Instantiate (toInstantiatePlayer, new Vector2 (-1, Random.Range(-2.50f,-4f)), Quaternion.identity) as GameObject;
+			GameObject instancePlayer = Instantiate (players[playerIndex], new Vector2 (-1, Random.Range(-2.50f,-4f)), Quaternion.identity) as GameObject;
+			instancePlayer.tag = "Player";
             instancePlayer.name = "Player";
 			instancePlayer.transform.parent = fightSceneHolder;
             instancePlayer.SendMessage("SetAttackBar", attackBar);
@@ -309,13 +310,17 @@ public class BattleManager : MonoBehaviour {
             tempFriends.Add(instancePlayer);
 		}
 
-		for (int i = 0; i < numberOfFriends; i++) 
+        // friends
+        PlayerStats[] friendStats = PlayerManager.fitBitFriends.ToArray();
+        for (int i = 0; i < friendStats.Length; i++) 
 		{
-            GameObject toInstantiateFriend = friends[Random.Range(0, friends.Length)];
-			toInstantiateFriend.tag = "Friend";
+            int friendIndex = int.Parse(friendStats[i].playerClassID[friendStats[i].playerClassID.Length - 1].ToString()) - 1;
+            GameObject toInstantiateFriend = friends[friendIndex];
 			//toInstantiateFriend.transform.localScale = scaleUp;
             GameObject instanceFriend = Instantiate(toInstantiateFriend, new Vector2(-i * 2 - 3, Random.Range(-2.15f, -4.3f)), Quaternion.identity) as GameObject;
+			instanceFriend.tag = "Friend";
             instanceFriend.name = "Friends_" + i;
+            instanceFriend.SendMessage("initPlayer", friendStats[i]);
 			allFriends.Add(instanceFriend);   
             tempFriends.Add(instanceFriend);
 			instanceFriend.transform.parent = fightSceneHolder;

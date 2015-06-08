@@ -92,4 +92,13 @@ public class LoadGame : MonoBehaviour {
 		Application.LoadLevel ("InitializationScene");
 	}
 
+    public void tempLoadBattleScene()
+    {
+        Application.LoadLevel("battleTest");
+    }
+
+    public void tempLoadBossBattleScene()
+    {
+        Application.LoadLevel("bossBattleTest");
+    }
 }
