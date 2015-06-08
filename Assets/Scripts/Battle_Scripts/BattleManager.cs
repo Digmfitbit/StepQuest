@@ -311,20 +311,23 @@ public class BattleManager : MonoBehaviour {
 		}
 
         // friends
-        PlayerStats[] friendStats = PlayerManager.fitBitFriends.ToArray();
-        for (int i = 0; i < friendStats.Length; i++) 
-		{
-            int friendIndex = int.Parse(friendStats[i].playerClassID[friendStats[i].playerClassID.Length - 1].ToString()) - 1;
-            GameObject toInstantiateFriend = friends[friendIndex];
-			//toInstantiateFriend.transform.localScale = scaleUp;
-            GameObject instanceFriend = Instantiate(toInstantiateFriend, new Vector2(-i * 2 - 3, Random.Range(-2.15f, -4.3f)), Quaternion.identity) as GameObject;
-			instanceFriend.tag = "Friend";
-            instanceFriend.name = "Friends_" + i;
-            instanceFriend.SendMessage("initPlayer", friendStats[i]);
-			allFriends.Add(instanceFriend);   
-            tempFriends.Add(instanceFriend);
-			instanceFriend.transform.parent = fightSceneHolder;
-		}
+        if (PlayerManager.fitBitFriends != null)
+        {
+            PlayerStats[] friendStats = PlayerManager.fitBitFriends.ToArray();
+            for (int i = 0; i < friendStats.Length; i++)
+            {
+                int friendIndex = int.Parse(friendStats[i].playerClassID[friendStats[i].playerClassID.Length - 1].ToString()) - 1;
+                GameObject toInstantiateFriend = friends[friendIndex];
+                //toInstantiateFriend.transform.localScale = scaleUp;
+                GameObject instanceFriend = Instantiate(toInstantiateFriend, new Vector2(-i * 2 - 3, Random.Range(-2.15f, -4.3f)), Quaternion.identity) as GameObject;
+                instanceFriend.tag = "Friend";
+                instanceFriend.name = "Friends_" + i;
+                instanceFriend.SendMessage("initPlayer", friendStats[i]);
+                allFriends.Add(instanceFriend);
+                tempFriends.Add(instanceFriend);
+                instanceFriend.transform.parent = fightSceneHolder;
+            }
+        }
 
         if (!bossScene)
         {
