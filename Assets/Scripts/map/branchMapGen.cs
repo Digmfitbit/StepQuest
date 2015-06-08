@@ -3,6 +3,9 @@ using System.Collections;
 
 public class branchMapGen : MonoBehaviour {
 
+    const int LOWER_STEP_BOUND = 50;
+    const int UPPER_STEP_BOUND = 150;
+
 	public int id;
 	public int u_id;
 	public float stepCost;
@@ -74,7 +77,7 @@ public class branchMapGen : MonoBehaviour {
 		}
 
 		//Assign a random value for the node cost.
-		stepCost = rand.Next (50,150);
+        stepCost = rand.Next(LOWER_STEP_BOUND, UPPER_STEP_BOUND);
 	}
 
 	void Update(){
