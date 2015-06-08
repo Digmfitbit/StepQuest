@@ -133,6 +133,7 @@ namespace Assets.Scripts.fitbit
             try
             {
                 Debug.Log("Fetching token");
+                Thread.Sleep(1000);
                 Debug.Log(manager.AcquireRequestToken(RequestTokenURL, "POST").AllText);
                 Debug.Log("token: " + manager[TOKEN_KEY]);
                 gotURL = true;
