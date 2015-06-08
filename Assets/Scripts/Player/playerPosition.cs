@@ -30,15 +30,15 @@ public class playerPosition : MonoBehaviour {
 		if(nodes.Length > 0){
 			transform.position = nodes[0].transform.position;
 		}
+
 	}
 
 	void Update () {
 		//Set total steps to component from players stats, will be pulled from FitBit.
 		totalSteps = StepController.totalSteps;
 
-		switch(inDungeon){
+		if(!inDungeon){
 		//The character is on the world map.
-		case false:
 			nodes = GameObject.FindGameObjectsWithTag("Node");
 
 			switch(nodes[worldID].GetComponent<branchMapGen>().id){
@@ -50,7 +50,7 @@ public class playerPosition : MonoBehaviour {
 				break;
 			default:
 				interactText.text = "Nothing Here";
-				break;
+                break;
 			}
 
 			if(nodes.Length > 0){
@@ -75,33 +75,13 @@ public class playerPosition : MonoBehaviour {
 					Debug.Log ("This node has an event!");
 				}
 	
-				//Left click and make sure the player has enough steps.
-				/*if(Input.GetMouseButtonDown(0) && worldID < nodes.Length - 1 && totalSteps > nextNode.GetComponent<branchMapGen>().stepCost){
-                    StepController.totalSteps -= nextNode.GetComponent<branchMapGen>().stepCost;
-					Debug.Log ("Subtract " + nextNode.GetComponent<branchMapGen>().stepCost.ToString() + " steps");
-					nextNode.GetComponent<branchMapGen>().stepCost = 0;
-					worldID ++;
-				}
-
-				//Right click.
-				else if(Input.GetMouseButtonDown (1) && worldID > 0){
-					//Move to the previous node, free of charge.
-					worldID --;
-				}*/
-
-
-	
 				//Draw the next cost on screen.
 				nextStepCost.text = "Next Step Cost: " + nextNode.GetComponent<branchMapGen>().stepCost.ToString ();
 			}
-			break;
-		//The character is in a dungeon.
-		case true:
-
+        } else {
+		    //The character is in a dungeon.
 			dungeonNodes = GameObject.FindGameObjectsWithTag ("DungeonNode");
-			if(dungeonNodes.Length < 0){
-				break;
-			}
+
 			foreach(GameObject node in dungeonNodes){
 				if(node.GetComponent<branchMapGen>().u_id == dungeonID){
 					switch(node.GetComponent<branchMapGen>().id){
@@ -159,63 +139,35 @@ public class playerPosition : MonoBehaviour {
 				}
 				*/
 
-				/*
-				//Left click and make sure the player has enough steps.
-				if(Input.GetMouseButtonDown(0) && dungeonID < dungeonNodes.Length - 1 && totalSteps > nextDungeonNode.GetComponent<branchMapGen>().stepCost){
-                    StepController.totalSteps -= nextDungeonNode.GetComponent<branchMapGen>().stepCost;
-					Debug.Log ("Subtract " + nextDungeonNode.GetComponent<branchMapGen>().stepCost.ToString() + " steps");
-					nextDungeonNode.GetComponent<branchMapGen>().stepCost = 0;
-					dungeonID ++;
-				}
-				
-				//Right click.
-				else if(Input.GetMouseButtonDown (1) && dungeonID > 0){
-					//Move to the previous node, free of charge.
-					dungeonID --;
-				}
-				*/
-
-				
 				//Draw the next cost on screen.
 				nextStepCost.text = "Next Step Cost: " + nextDungeonNode.GetComponent<branchMapGen>().stepCost.ToString ();
-
 			}
-
-			break;
-		
-		default: 
-			break;
 		}
 	}
 
 	public void Interact(){
-			switch(inDungeon){
-
+		if(!inDungeon){
 			// Not in Dungeon
-			case false:
-					switch(nodes[worldID].GetComponent<branchMapGen>().id){
-					case 0:
-						Debug.Log ("This is the town of " + nodes[worldID].GetComponent<townGen>().townName.ToString ());
-						nodes[worldID].GetComponent<branchMapGen>().Town();
-						townName.text = nodes[worldID].GetComponent<townGen>().townName.ToString();
-						GameObject.Find ("EventSystem").GetComponent<buttonFunctions>().OpenTownMenu();
-						break;
-					case 1:
-						Debug.Log ("This is nothing here!");
-						break;
-					case 2:
-						Debug.Log ("This is a Dungeon");
-						nodes[worldID].GetComponent<branchMapGen>().dunGen = true;
-						inDungeon = true;
-						break;
-					default:
-						break;
-					}
+			switch(nodes[worldID].GetComponent<branchMapGen>().id){
+			case 0:
+				Debug.Log ("This is the town of " + nodes[worldID].GetComponent<townGen>().townName.ToString ());
+				nodes[worldID].GetComponent<branchMapGen>().Town();
+				townName.text = nodes[worldID].GetComponent<townGen>().townName.ToString();
+				GameObject.Find ("EventSystem").GetComponent<buttonFunctions>().OpenTownMenu();
 				break;
-
+			case 1:
+				Debug.Log ("This is nothing here!");
+				break;
+			case 2:
+				Debug.Log ("This is a Dungeon");
+				nodes[worldID].GetComponent<branchMapGen>().dunGen = true;
+				inDungeon = true;
+				break;
+			default:
+				break;
+			}
+		} else {
 			// In Dungeon
-			case true:
-
 			foreach(GameObject node in dungeonNodes){
 				if(node.GetComponent<branchMapGen>().u_id == dungeonID){
 					switch(node.GetComponent<branchMapGen>().id){
@@ -243,10 +195,7 @@ public class playerPosition : MonoBehaviour {
 							break;
 					}
 				}
-			}
-				break;
-			default:
-				break;
+            }
 		}
 	}
 }
