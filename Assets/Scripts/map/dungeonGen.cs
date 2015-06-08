@@ -99,8 +99,9 @@ public class dungeonGen : MonoBehaviour {
 					if(Physics2D.Raycast(prevNodes[prevNodes.Length-1].transform.position, randomDirect, 1.2f) == false && randomDirect != new Vector2(0,0)){
 						(Instantiate(nodeTypeSelect[i], newPos, Quaternion.identity) as GameObject).transform.parent = this.transform;
 						lineRenderer.SetPosition(i,  newPos);
+
+						e=1;
 						break;
-						e = 1;
 					}
 				}
 			}
