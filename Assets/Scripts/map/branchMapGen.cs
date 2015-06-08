@@ -3,10 +3,12 @@ using System.Collections;
 
 public class branchMapGen : MonoBehaviour {
 
+    public enum NodeType {TOWN=0, EMPTY=1, DUNGEON=2, EMPTY_D=3, ENEMY=4, ITEM=5, DUNGEON_EMPTY=6};
+
     const int LOWER_STEP_BOUND = 50;
     const int UPPER_STEP_BOUND = 150;
 
-	public int id;
+    public NodeType nodeType;
 	public int u_id;
 	public float stepCost;
 	public bool isUnlocked;
@@ -29,39 +31,40 @@ public class branchMapGen : MonoBehaviour {
 		//Sets an ID based on the type of node
 		switch(gameObject.name){
 		case "node_Town(Clone)":
-			id = 0;
+			nodeType = NodeType.TOWN;
 			break;
 		case "node_Empty(Clone)":
-			id = 1;
+            nodeType = NodeType.EMPTY;
 			break;
 		case "node_Dungeon(Clone)":
-			id = 2;
+            nodeType = NodeType.DUNGEON;
 			break;
 		case "node_d_Empty(Clone)":
-			id = 3;
+            nodeType = NodeType.EMPTY_D;
 			break;
 		case "node_Enemy(Clone)":
-			id = 4;
+            nodeType = NodeType.ENEMY;
 			break;
 		case "node_Item(Clone)":
-			id = 5;
+            nodeType = NodeType.ITEM;
 			break;
 		case "node_Dungeon_Empty(Clone)":
-			id = 6;
+            nodeType = NodeType.DUNGEON_EMPTY;
 			break;
 		default:
-			id = 1;
-			break;
+            nodeType = NodeType.EMPTY;
+            break;
 		}
 
 		//Sets a unique ID for each individual node.
-		if(id < 3){
+		if(nodeType < NodeType.EMPTY_D){
 			prevNodes = GameObject.FindGameObjectsWithTag("Node");
 		}
 		else{
 			prevNodes = GameObject.FindGameObjectsWithTag("DungeonNode");
 		}
-		if(id == 3){
+        if (nodeType == NodeType.EMPTY_D)
+        {
 			u_id = 0;
 		}
 		else{

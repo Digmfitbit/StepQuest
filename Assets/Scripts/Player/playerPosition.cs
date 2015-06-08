@@ -30,7 +30,6 @@ public class playerPosition : MonoBehaviour {
 		if(nodes.Length > 0){
 			transform.position = nodes[0].transform.position;
 		}
-
 	}
 
 	void Update () {
@@ -41,11 +40,11 @@ public class playerPosition : MonoBehaviour {
 		//The character is on the world map.
 			nodes = GameObject.FindGameObjectsWithTag("Node");
 
-			switch(nodes[worldID].GetComponent<branchMapGen>().id){
-			case 0:
+			switch(nodes[worldID].GetComponent<branchMapGen>().nodeType){
+			case branchMapGen.NodeType.TOWN:
 				interactText.text = "Enter Town";
 				break;
-			case 2:
+            case branchMapGen.NodeType.DUNGEON:
 				interactText.text = "Enter Dungeon";
 				break;
 			default:
@@ -84,8 +83,8 @@ public class playerPosition : MonoBehaviour {
 
 			foreach(GameObject node in dungeonNodes){
 				if(node.GetComponent<branchMapGen>().u_id == dungeonID){
-					switch(node.GetComponent<branchMapGen>().id){
-					case 5:
+					switch(node.GetComponent<branchMapGen>().nodeType){
+					case branchMapGen.NodeType.ITEM:
 						if(node.GetComponent<branchMapGen>().hasBeenUsed == false){
 							Debug.Log ("This is an item");
 							node.GetComponent<itemGenerator>().GrantItem();
@@ -95,17 +94,13 @@ public class playerPosition : MonoBehaviour {
 							Debug.Log ("Nothing Here");
 						}
 						break;
-					case 4:
+                    case branchMapGen.NodeType.ENEMY:
 						if(node.GetComponent<branchMapGen>().hasBeenUsed == false){
 							Debug.Log ("This is a battle");
 							Switcheroo.disable();
 							Application.LoadLevelAdditive("battleTest");
 							node.GetComponent<branchMapGen>().hasBeenUsed = true;
-						}
-						else{
-						
-						}
-						
+						}						
 						break;
 					default:
 						break;
@@ -148,17 +143,17 @@ public class playerPosition : MonoBehaviour {
 	public void Interact(){
 		if(!inDungeon){
 			// Not in Dungeon
-			switch(nodes[worldID].GetComponent<branchMapGen>().id){
-			case 0:
+			switch(nodes[worldID].GetComponent<branchMapGen>().nodeType){
+			case branchMapGen.NodeType.TOWN:
 				Debug.Log ("This is the town of " + nodes[worldID].GetComponent<townGen>().townName.ToString ());
 				nodes[worldID].GetComponent<branchMapGen>().Town();
 				townName.text = nodes[worldID].GetComponent<townGen>().townName.ToString();
 				GameObject.Find ("EventSystem").GetComponent<buttonFunctions>().OpenTownMenu();
 				break;
-			case 1:
+            case branchMapGen.NodeType.EMPTY:
 				Debug.Log ("This is nothing here!");
 				break;
-			case 2:
+            case branchMapGen.NodeType.DUNGEON:
 				Debug.Log ("This is a Dungeon");
 				nodes[worldID].GetComponent<branchMapGen>().dunGen = true;
 				inDungeon = true;
@@ -170,19 +165,19 @@ public class playerPosition : MonoBehaviour {
 			// In Dungeon
 			foreach(GameObject node in dungeonNodes){
 				if(node.GetComponent<branchMapGen>().u_id == dungeonID){
-					switch(node.GetComponent<branchMapGen>().id){
-						case 5:
+					switch(node.GetComponent<branchMapGen>().nodeType){
+                        case branchMapGen.NodeType.ITEM:
 							Debug.Log ("This is an item");
 							Debug.Log ("You received a " + node.GetComponent<itemGenerator>().itemName);
 							node.GetComponent<itemGenerator>().GrantItem();	
 						break;
-						case 4:
+                        case branchMapGen.NodeType.ENEMY:
 							Debug.Log ("This is a battle");
 							Switcheroo.disable();
 							Application.LoadLevelAdditive("battleTest");
 							
 							break;
-						case 3:
+                        case branchMapGen.NodeType.EMPTY_D:
 							Debug.Log ("This is the Exit");
 							//dungeonNodes[dungeonID].GetComponent<branchMapGen>().dunGen = false;
 							foreach(GameObject dungeonNode in dungeonNodes){
