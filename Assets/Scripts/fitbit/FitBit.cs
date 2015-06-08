@@ -130,10 +130,17 @@ namespace Assets.Scripts.fitbit
         }
 
         void getToken(){
-            Debug.Log("Fetching token");
-            Debug.Log(manager.AcquireRequestToken(RequestTokenURL, "POST").AllText);
-            Debug.Log("token: " + manager[TOKEN_KEY]);
-            gotURL = true;
+            try
+            {
+                Debug.Log("Fetching token");
+                Debug.Log(manager.AcquireRequestToken(RequestTokenURL, "POST").AllText);
+                Debug.Log("token: " + manager[TOKEN_KEY]);
+                gotURL = true;
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
         }
 
         public static FitBit getInstance()
@@ -179,11 +186,13 @@ namespace Assets.Scripts.fitbit
          * */
         public void clearCache()
         {
-            PlayerPrefs.DeleteKey(TOKEN_KEY);
-            PlayerPrefs.DeleteKey(TOKEN_SECRET_KEY);
-            PlayerPrefs.DeleteKey(TIME_UPDATED_KEY);
-            PlayerPrefs.DeleteKey(MULTIPLIER_KEY);
-            PlayerPrefs.DeleteKey(StepController.STEPS_KEY);
+            //PlayerPrefs.DeleteKey(TOKEN_KEY);
+            //PlayerPrefs.DeleteKey(TOKEN_SECRET_KEY);
+            //PlayerPrefs.DeleteKey(TIME_UPDATED_KEY);
+            //PlayerPrefs.DeleteKey(MULTIPLIER_KEY);
+            //PlayerPrefs.DeleteKey(StepController.STEPS_KEY);
+            PlayerPrefs.DeleteAll();
+
             if (userModel != null)
             {
                 DatabaseController.clearRecord(userModel.encodedId);
