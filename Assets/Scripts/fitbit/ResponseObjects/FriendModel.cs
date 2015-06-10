@@ -10,9 +10,11 @@ namespace ResponseObjects
         public string aboutMe, avatar, city, country, dateOfBirth, displayName, encodedId,
             fullName, gender, nickname, state, timezone;
         public double height, offsetFromUTCMillis, strideLengthRunning, strideLengthWalking, weight;
+        JSONObject jsonObject;
 
         public FriendModel(JSONObject jsonObject)
         {
+            this.jsonObject = jsonObject;
             //TODO extract more info here if we want
             jsonObject.GetField("aboutMe", delegate(JSONObject aboutMe)
             {
@@ -86,12 +88,7 @@ namespace ResponseObjects
 
         public override string ToString()
         {
-            string str = "aboutMe: " + aboutMe+ "\navatar: "+avatar+ "\ncity: "+ city+"\ncountry: "+ country+"\ndateOfBirth: "+dateOfBirth+
-                "\ndisplayName: "+displayName+"\nencodedId: "+ encodedId+"\nfullName: "+fullName+"\ngneder: "+ gender+
-                 "\nnickname: "+nickname+ "\nstate: "+state+"\ntimezone: "+timezone+"\nheight: "+height+
-                 "\noffsetFromUTCMillis: "+offsetFromUTCMillis+"\nstrideLengthRunning: "+strideLengthRunning+"\nstrideLengthWalking: "+ 
-                 strideLengthWalking+ "\nweight: "+weight;
-            return str;
+            return jsonObject.ToString();
         }
 
     }

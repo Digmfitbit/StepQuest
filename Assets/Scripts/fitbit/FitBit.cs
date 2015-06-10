@@ -23,8 +23,10 @@ namespace Assets.Scripts.fitbit
         //STUFF FOR KEYS For PlayerPrefs
         public static string TOKEN_KEY = "token";
         public static string TOKEN_SECRET_KEY = "token_secret";
-        public static string TIME_UPDATED_KEY = "timeUpdated";
-
+        public static string TIME_UPDATED_STEPS_KEY = "timeUpdated";
+        public static string TIME_UPDATED_PROFILE_KEY = "timeUpdatedProfile";
+        public static string USER_MODEL_KEY = "USER_MODEL";
+        public static string USER_FRIENDS_KEY = "USER_FRIENDS";
 
         //Key Stuff
         private static string CONSUMER_KEY = "09c24eab9e15ab8ba06114c374c3f9a0";
@@ -54,19 +56,33 @@ namespace Assets.Scripts.fitbit
         bool openedURL = false;
         private string pin;
 
-        private const float UPDATE_INTERVAL = 600;//update every ten minutes
-        private static float updateCounter = 601f;
-        private static DateTime lastUpdatedTime;
+        private static bool shouldUpdate = false;
+        private static bool updateUserModel = false;
+        private static bool updateUserFriends = false;
+
+        private static DateTime lastUpdatedStepTime;
+        private static DateTime lastUpdatedProfileTime;
         private bool updateTime = false;
 
         private static float multiplier = 1f;
         private static string MULTIPLIER_KEY = "MULTIPLIER";
         private static float MULTIPLY_DAILY_ADDITION = 0.1f;
         private static float MAX_MULTIPLIER = 2f;
+        private static int MINUTES_OF_STALE_DATA = 30;
 
+        private static char DELIMITER = '\t';
+
+        /**
+         * Call from update loop in every scene.
+         * At least in first scene
+         * */
         public void Update()
         {
-            updateCounter += Time.deltaTime;
+            if (DateTime.MinValue == lastUpdatedProfileTime || DateTime.Now - lastUpdatedProfileTime > TimeSpan.FromMinutes(MINUTES_OF_STALE_DATA))
+            {
+                shouldUpdate = true;
+            }
+
             if (gotURL && !openedURL)
             {
                 Debug.Log("Opening URL");
@@ -78,7 +94,7 @@ namespace Assets.Scripts.fitbit
             {
                 PlayerPrefs.SetString(TOKEN_KEY, manager[TOKEN_KEY]);
                 PlayerPrefs.SetString(TOKEN_SECRET_KEY, manager[TOKEN_SECRET_KEY]);
-                if (updateCounter > UPDATE_INTERVAL)
+                if (shouldUpdate)
                 {
                     updateAll();
                 }
@@ -86,7 +102,22 @@ namespace Assets.Scripts.fitbit
             if (updateTime)
             {
                 updateTime = false;
-                PlayerPrefs.SetString(TIME_UPDATED_KEY, lastUpdatedTime.ToString());
+                PlayerPrefs.SetString(TIME_UPDATED_PROFILE_KEY, lastUpdatedProfileTime.ToString());
+            }
+            if (updateUserModel)
+            {
+                PlayerPrefs.SetString(USER_MODEL_KEY, userModel.ToString());
+                updateUserModel = false;
+            }
+            if (updateUserFriends)
+            {
+                string friendsString = "";
+                foreach (FriendModel model in friends)
+                {
+                    friendsString += model.ToString() + DELIMITER;
+                }
+                PlayerPrefs.SetString(USER_FRIENDS_KEY, friendsString);
+                updateUserFriends = false;
             }
         }
 
@@ -97,7 +128,9 @@ namespace Assets.Scripts.fitbit
             getUpdatedSteps();
             getFriends();
 
-            updateCounter = 0;
+            shouldUpdate = false ;
+            lastUpdatedProfileTime = DateTime.Now;
+            updateTime = true;
         }
 
         private FitBit()
@@ -151,21 +184,45 @@ namespace Assets.Scripts.fitbit
                 multiplier = PlayerPrefs.GetFloat(MULTIPLIER_KEY, 1f);
 
                 DateTime minTime = DateTime.MinValue;
-                lastUpdatedTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_KEY, minTime.ToString()));
-                if (minTime == lastUpdatedTime)
+                lastUpdatedStepTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_STEPS_KEY, minTime.ToString()));
+                lastUpdatedProfileTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_PROFILE_KEY, minTime.ToString()));
+                if (minTime == lastUpdatedStepTime)
                 {// Set to the min value if we do not have the time
                     multiplier = 1f;// reset multiplier
                 }//TODO make this work for leap years
-                else if (lastUpdatedTime.DayOfYear == DateTime.Now.DayOfYear - 1)
+                else if (lastUpdatedStepTime.DayOfYear == DateTime.Now.DayOfYear - 1)
                 {
                     multiplier += MULTIPLY_DAILY_ADDITION;
                     multiplier = Mathf.Min(multiplier, MAX_MULTIPLIER);
                     PlayerPrefs.SetFloat(MULTIPLIER_KEY, multiplier);
                     Debug.Log("multiplier updated: " + multiplier);
                 }
-                else if (lastUpdatedTime.DayOfYear != DateTime.Now.DayOfYear)
+                else if (lastUpdatedStepTime.DayOfYear != DateTime.Now.DayOfYear)
                 {
                     multiplier = 1f;
+                }
+
+                //Load from PlayerPrefs the userMOdel
+                string userModelString = PlayerPrefs.GetString(USER_MODEL_KEY, "");
+                if (userModelString != "")
+                {
+                    userModel = new FriendModel(new JSONObject(userModelString));
+                    updateUserModel = false;
+                }
+                else
+                {
+                    updateUserModel = true;
+                }
+                string friendsString = PlayerPrefs.GetString(USER_FRIENDS_KEY, "");
+                if (friendsString!="")
+                {
+                    friends = new List<FriendModel>();
+                    string[] friendsSplit = friendsString.Split(DELIMITER);
+                    foreach (string s in friendsSplit)
+                    {
+                        FriendModel model = new FriendModel(new JSONObject(s));
+                        friends.Add(model);
+                    }
                 }
             }
 
@@ -187,11 +244,6 @@ namespace Assets.Scripts.fitbit
          * */
         public void clearCache()
         {
-            //PlayerPrefs.DeleteKey(TOKEN_KEY);
-            //PlayerPrefs.DeleteKey(TOKEN_SECRET_KEY);
-            //PlayerPrefs.DeleteKey(TIME_UPDATED_KEY);
-            //PlayerPrefs.DeleteKey(MULTIPLIER_KEY);
-            //PlayerPrefs.DeleteKey(StepController.STEPS_KEY);
             PlayerPrefs.DeleteAll();
 
             if (userModel != null)
@@ -275,6 +327,7 @@ namespace Assets.Scripts.fitbit
                             {
                                 Debug.Log("USER FRIEND MODEL " + info);
                                 userModel = new FriendModel(info);
+                                updateUserModel = true;
                             });
                         }
                     }
@@ -332,6 +385,7 @@ namespace Assets.Scripts.fitbit
                                     FriendModel model = new FriendModel(info);
                                     friends.Add(model);
                                     Debug.Log("Adding friend: " + model);
+                                    updateUserFriends = true;
                                 });
                             }
                         });
@@ -353,6 +407,7 @@ namespace Assets.Scripts.fitbit
         {
             int temp = steps;
             steps = 0;
+            PlayerPrefs.SetString(TIME_UPDATED_STEPS_KEY, lastUpdatedStepTime.ToString());
             return temp;
         }
 
@@ -392,7 +447,7 @@ namespace Assets.Scripts.fitbit
                     else
                     {
                         string line = Utilities.getStringFromResponse(response);
-                        DateTime dateTime = lastUpdatedTime;
+                        DateTime dateTime = lastUpdatedStepTime;
                         Debug.Log(line);
                         JSONObject list = new JSONObject(line);
                         DateTime day = new DateTime();
@@ -426,7 +481,7 @@ namespace Assets.Scripts.fitbit
                                     });
                                     timeObj.GetField("value", delegate(JSONObject val)
                                     {
-                                        if (dateTime > lastUpdatedTime)
+                                        if (dateTime > lastUpdatedStepTime)
                                         {
                                             steps += (int)(multiplier * Convert.ToInt32(val));
                                         }
@@ -436,7 +491,7 @@ namespace Assets.Scripts.fitbit
                         });
                         Debug.Log("steps: " + steps);
                         updateTime = true;
-                        lastUpdatedTime = dateTime;
+                        lastUpdatedStepTime = dateTime;
                     }
                 }
             }));
