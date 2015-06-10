@@ -62,7 +62,6 @@ namespace Assets.Scripts.fitbit
 
         private static DateTime lastUpdatedStepTime;
         private static DateTime lastUpdatedProfileTime;
-        private bool updateTime = false;
 
         private static float multiplier = 1f;
         private static string MULTIPLIER_KEY = "MULTIPLIER";
@@ -99,11 +98,7 @@ namespace Assets.Scripts.fitbit
                     updateAll();
                 }
             }
-            if (updateTime)
-            {
-                updateTime = false;
-                PlayerPrefs.SetString(TIME_UPDATED_PROFILE_KEY, lastUpdatedProfileTime.ToString());
-            }
+
             if (updateUserModel)
             {
                 PlayerPrefs.SetString(USER_MODEL_KEY, userModel.ToString());
@@ -130,7 +125,7 @@ namespace Assets.Scripts.fitbit
 
             shouldUpdate = false ;
             lastUpdatedProfileTime = DateTime.Now;
-            updateTime = true;
+            PlayerPrefs.SetString(TIME_UPDATED_PROFILE_KEY, lastUpdatedProfileTime.ToString());
         }
 
         private FitBit()
@@ -209,10 +204,7 @@ namespace Assets.Scripts.fitbit
                     userModel = new FriendModel(new JSONObject(userModelString));
                     updateUserModel = false;
                 }
-                else
-                {
-                    updateUserModel = true;
-                }
+
                 string friendsString = PlayerPrefs.GetString(USER_FRIENDS_KEY, "");
                 if (friendsString!="")
                 {
@@ -490,7 +482,6 @@ namespace Assets.Scripts.fitbit
                             });
                         });
                         Debug.Log("steps: " + steps);
-                        updateTime = true;
                         lastUpdatedStepTime = dateTime;
                     }
                 }
