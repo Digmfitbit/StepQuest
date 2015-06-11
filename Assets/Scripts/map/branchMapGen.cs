@@ -70,6 +70,11 @@ public class branchMapGen : MonoBehaviour {
 		else{
 			u_id = prevNodes.Length - 1;
 		}
+		
+		if(u_id > GameObject.Find ("mapGen").GetComponent<mapGen>().numOfNodes){
+			GameObject.Find ("mapGen").GetComponent<mapGen>().seed += 1;
+			Application.LoadLevel (Application.loadedLevel);
+		}
 
 		seed = u_id + GameObject.FindWithTag("Player").GetComponent<playerPosition>().worldID;
 		rand = new System.Random(seed);
@@ -84,10 +89,6 @@ public class branchMapGen : MonoBehaviour {
 	}
 
 	void Update(){
-
-		if(u_id > GameObject.Find ("mapGen").GetComponent<mapGen>().numOfNodes){
-			Application.LoadLevel (Application.loadedLevel);
-		}
 
 		if(dunGen == true){
 			(Instantiate(Resources.Load("Prefabs/DungeonPrefabs/node_d_Empty") as GameObject, transform.position, Quaternion.identity) as GameObject).transform.parent = this.transform;
