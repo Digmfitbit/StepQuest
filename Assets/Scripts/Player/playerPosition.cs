@@ -155,6 +155,7 @@ public class playerPosition : MonoBehaviour {
             case branchMapGen.NodeType.DUNGEON:
 				Debug.Log ("This is a Dungeon");
 				nodes[worldID].GetComponent<branchMapGen>().dunGen = true;
+				dungeonID = 1;
 				inDungeon = true;
 				break;
 			default:
