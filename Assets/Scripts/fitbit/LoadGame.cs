@@ -20,6 +20,7 @@ public class LoadGame : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         Debug.Log("Start in Load Game");
         // set up fitBit singleton
         fitBitManager = FitBit.getInstance();
