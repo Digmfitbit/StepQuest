@@ -29,6 +29,12 @@ public class mapGen : MonoBehaviour {
         OnLevelWasLoaded();
 	}
 
+	void Update(){
+		if(GameObject.FindGameObjectsWithTag("Node").Length < 1){
+			GenerateMap ();
+		}
+	}
+
 	//Creates a map on a straight path with varied node types.
 	void GenerateMap () {
 		rand = new System.Random(seed);

@@ -72,8 +72,12 @@ public class branchMapGen : MonoBehaviour {
 		}
 		
 		if(u_id > GameObject.Find ("mapGen").GetComponent<mapGen>().numOfNodes){
-			GameObject.Find ("mapGen").GetComponent<mapGen>().seed += 1;
-			Application.LoadLevel (Application.loadedLevel);
+			foreach(GameObject node in GameObject.FindGameObjectsWithTag("Node")){
+				Destroy(node);
+			}
+			Debug.Log ("Node Glitch");
+			//GameObject.Find ("mapGen").GetComponent<mapGen>().seed += 1;
+			//Application.LoadLevel (Application.loadedLevel);
 		}
 
 		seed = u_id + GameObject.FindWithTag("Player").GetComponent<playerPosition>().worldID;
