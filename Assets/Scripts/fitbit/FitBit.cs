@@ -48,7 +48,7 @@ namespace Assets.Scripts.fitbit
 
         //Objects that are updated from the threads
         static int steps = 0;
-        static List<FriendModel> friends = new List<FriendModel>();
+        static List<string> friends = new List<string>();
         static FriendModel userModel;
 
         //Random other constants
@@ -107,9 +107,9 @@ namespace Assets.Scripts.fitbit
             if (updateUserFriends)
             {
                 string friendsString = "";
-                foreach (FriendModel model in friends)
+                foreach (string model in friends)
                 {
-                    friendsString += model.ToString() + DELIMITER;
+                    friendsString += model + DELIMITER;
                 }
                 PlayerPrefs.SetString(USER_FRIENDS_KEY, friendsString);
                 updateUserFriends = false;
@@ -119,9 +119,9 @@ namespace Assets.Scripts.fitbit
         public void updateAll()
         {
             Debug.Log("updating Fitbit");
-            getProfileInfo();
             getUpdatedSteps();
             getFriends();
+            getProfileInfo();
 
             shouldUpdate = false ;
             lastUpdatedProfileTime = DateTime.Now;
@@ -202,18 +202,16 @@ namespace Assets.Scripts.fitbit
                 if (userModelString != "")
                 {
                     userModel = new FriendModel(new JSONObject(userModelString));
-                    updateUserModel = false;
                 }
 
                 string friendsString = PlayerPrefs.GetString(USER_FRIENDS_KEY, "");
                 if (friendsString!="")
                 {
-                    friends = new List<FriendModel>();
+                    friends = new List<string>();
                     string[] friendsSplit = friendsString.Split(DELIMITER);
                     foreach (string s in friendsSplit)
                     {
-                        FriendModel model = new FriendModel(new JSONObject(s));
-                        friends.Add(model);
+                        friends.Add(s);
                     }
                 }
             }
@@ -275,13 +273,13 @@ namespace Assets.Scripts.fitbit
          * */
         public List<string> getFriendIDs()
         {
-            List<string> toReturn = new List<string>();
+            /*List<string> toReturn = new List<string>();
             foreach (FriendModel model in friends)
             {
                 toReturn.Add(model.encodedId);
                 Debug.Log("friendModel"+model);
-            }
-            return toReturn;
+            }*/
+            return friends;
         }
         /**
          * Returns hte latest FriendModel representing the current user
@@ -373,7 +371,7 @@ namespace Assets.Scripts.fitbit
                                 {
                                     //TODO extract more info here if we want
                                     FriendModel model = new FriendModel(info);
-                                    friends.Add(model);
+                                    friends.Add(model.encodedId);
                                     Debug.Log("Adding friend: " + model);
                                     updateUserFriends = true;
                                 });
