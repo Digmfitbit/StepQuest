@@ -294,6 +294,7 @@ namespace Assets.Scripts.fitbit
             Debug.Log("Getting Profile Info");
             Thread oThread = new Thread(new ThreadStart(() =>
             {
+                Thread.Sleep(2);
                 var authzHeader = manager.GenerateAuthzHeader(PROFILE_URL, "GET");
                 var request = (HttpWebRequest)WebRequest.Create(PROFILE_URL);
                 setUpHeaders(request, authzHeader);
@@ -334,6 +335,7 @@ namespace Assets.Scripts.fitbit
         {
             Thread oThread = new Thread(new ThreadStart(() =>
             {
+                Thread.Sleep(2);
                 var authzHeader = manager.GenerateAuthzHeader(FRIENDS_URL, "GET");
                 var request = (HttpWebRequest)WebRequest.Create(FRIENDS_URL);
                 setUpHeaders(request, authzHeader);
@@ -409,6 +411,7 @@ namespace Assets.Scripts.fitbit
             
             Thread oThread = new Thread(new ThreadStart(() =>
             {
+                Thread.Sleep(2);
                 var authzHeader = manager.GenerateAuthzHeader(LAST_CALL_SINCE_URL, "GET");
                 var request = (HttpWebRequest)WebRequest.Create(LAST_CALL_SINCE_URL);
                 setUpHeaders(request, authzHeader);

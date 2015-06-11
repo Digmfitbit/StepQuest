@@ -19,7 +19,7 @@ public class StepController : MonoBehaviour {
         totalSteps = PlayerPrefs.GetFloat(STEPS_KEY, 10000f);
         //comment out the above line and uncomment the below line for testing
         //totalSteps = 100000;
-        FitBit.getInstance().getUpdatedSteps();
+        //FitBit.getInstance().getUpdatedSteps();
     }
 
     void Update()

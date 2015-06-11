@@ -38,6 +38,7 @@ namespace Assets.Scripts.networking
             Thread oThread = new Thread(new ThreadStart(() =>
             {
                 Debug.Log("Starting thread");
+                Thread.Sleep(2);
                 //Serialize data to string
                 string serializedStats = serializeDataToString(stats);
                 
@@ -83,6 +84,7 @@ namespace Assets.Scripts.networking
             Debug.Log("Clearing record for user: " + id);
             Thread oThread = new Thread(new ThreadStart(() =>
             {
+                Thread.Sleep(2);
                 HttpWebResponse response;
 
                 try
@@ -131,6 +133,7 @@ namespace Assets.Scripts.networking
             Debug.Log("Getting record for user: " + id);
             Thread oThread = new Thread(new ThreadStart(() =>
             {
+                Thread.Sleep(2);
                 HttpWebResponse response;
 
                 try
@@ -190,6 +193,7 @@ namespace Assets.Scripts.networking
             List<PlayerStats> friendsList = new List<PlayerStats>(0);
             Thread oThread = new Thread(new ThreadStart(() =>
             {
+                Thread.Sleep(2);
                 HttpWebResponse response;
 
                 try
@@ -266,7 +270,7 @@ namespace Assets.Scripts.networking
             request.Accept = "*/*";
             //request.ContentType = "application/x-www-form-urlencoded";
             request.AllowAutoRedirect = true;
-            request.MaximumAutomaticRedirections = 2;
+            request.MaximumAutomaticRedirections = 3;
             request.CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.NoCacheNoStore);
         }
     }
