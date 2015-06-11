@@ -391,7 +391,8 @@ namespace Assets.Scripts.fitbit
 
         /**
         * Gets the number of steps since the last time this was called
-        * 
+        * Refreshes the information if it is stale.
+        * Call from game loop for best results.
         * */
         public int getStepsSinceLastCall()
         {
@@ -405,7 +406,7 @@ namespace Assets.Scripts.fitbit
         * Gets the number of steps uploaded to fitbit since the last time this was called
         * 
         * */
-        private void getUpdatedSteps()
+        public void getUpdatedSteps()
         {
             
             Thread oThread = new Thread(new ThreadStart(() =>
