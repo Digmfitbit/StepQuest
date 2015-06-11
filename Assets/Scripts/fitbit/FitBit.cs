@@ -181,18 +181,18 @@ namespace Assets.Scripts.fitbit
                 DateTime minTime = DateTime.MinValue;
                 lastUpdatedStepTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_STEPS_KEY, minTime.ToString()));
                 lastUpdatedProfileTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_PROFILE_KEY, minTime.ToString()));
-                if (minTime == lastUpdatedStepTime)
+                if (minTime == lastUpdatedProfileTime)
                 {// Set to the min value if we do not have the time
                     multiplier = 1f;// reset multiplier
                 }//TODO make this work for leap years
-                else if (lastUpdatedStepTime.DayOfYear == DateTime.Now.DayOfYear - 1)
+                else if (lastUpdatedProfileTime.DayOfYear == DateTime.Now.DayOfYear - 1)
                 {
                     multiplier += MULTIPLY_DAILY_ADDITION;
                     multiplier = Mathf.Min(multiplier, MAX_MULTIPLIER);
                     PlayerPrefs.SetFloat(MULTIPLIER_KEY, multiplier);
                     Debug.Log("multiplier updated: " + multiplier);
                 }
-                else if (lastUpdatedStepTime.DayOfYear != DateTime.Now.DayOfYear)
+                else if (lastUpdatedProfileTime.DayOfYear != DateTime.Now.DayOfYear)
                 {
                     multiplier = 1f;
                 }
