@@ -223,8 +223,6 @@ namespace Assets.Scripts.networking
                         {
                             string line = Utilities.getStringFromResponse(response);
                             JSONObject lineObj = new JSONObject(line);
-                            Debug.Log("line: "+line);
-                            Debug.Log("LineObj: "+lineObj);
 
                             lineObj.GetField("friends", delegate(JSONObject idList)
                             {
