@@ -181,18 +181,18 @@ namespace Assets.Scripts.fitbit
                 DateTime minTime = DateTime.MinValue;
                 lastUpdatedStepTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_STEPS_KEY, minTime.ToString()));
                 lastUpdatedProfileTime = Convert.ToDateTime(PlayerPrefs.GetString(TIME_UPDATED_PROFILE_KEY, minTime.ToString()));
-                if (minTime == lastUpdatedStepTime)
+                if (minTime == lastUpdatedProfileTime)
                 {// Set to the min value if we do not have the time
                     multiplier = 1f;// reset multiplier
                 }//TODO make this work for leap years
-                else if (lastUpdatedStepTime.DayOfYear == DateTime.Now.DayOfYear - 1)
+                else if (lastUpdatedProfileTime.DayOfYear == DateTime.Now.DayOfYear - 1)
                 {
                     multiplier += MULTIPLY_DAILY_ADDITION;
                     multiplier = Mathf.Min(multiplier, MAX_MULTIPLIER);
                     PlayerPrefs.SetFloat(MULTIPLIER_KEY, multiplier);
                     Debug.Log("multiplier updated: " + multiplier);
                 }
-                else if (lastUpdatedStepTime.DayOfYear != DateTime.Now.DayOfYear)
+                else if (lastUpdatedProfileTime.DayOfYear != DateTime.Now.DayOfYear)
                 {
                     multiplier = 1f;
                 }
@@ -232,7 +232,6 @@ namespace Assets.Scripts.fitbit
 
         /**
          * Clears the cache
-         * TODO fix this. Keys are not in
          * */
         public void clearCache()
         {
@@ -314,7 +313,6 @@ namespace Assets.Scripts.fitbit
                         {
                             string line = Utilities.getStringFromResponse(response);
                             JSONObject user = new JSONObject(line);
-                            Debug.Log("Fetched userModel: " + line);
                             user.GetField("user", delegate(JSONObject info)
                             {
                                 Debug.Log("USER FRIEND MODEL " + info);
@@ -393,7 +391,8 @@ namespace Assets.Scripts.fitbit
 
         /**
         * Gets the number of steps since the last time this was called
-        * 
+        * Refreshes the information if it is stale.
+        * Call from game loop for best results.
         * */
         public int getStepsSinceLastCall()
         {
@@ -407,7 +406,7 @@ namespace Assets.Scripts.fitbit
         * Gets the number of steps uploaded to fitbit since the last time this was called
         * 
         * */
-        private void getUpdatedSteps()
+        public void getUpdatedSteps()
         {
             
             Thread oThread = new Thread(new ThreadStart(() =>
@@ -440,7 +439,6 @@ namespace Assets.Scripts.fitbit
                     {
                         string line = Utilities.getStringFromResponse(response);
                         DateTime dateTime = lastUpdatedStepTime;
-                        Debug.Log(line);
                         JSONObject list = new JSONObject(line);
                         DateTime day = new DateTime();
                         list.GetField("activities-steps", delegate(JSONObject hits)
@@ -449,16 +447,13 @@ namespace Assets.Scripts.fitbit
                             {
                                 hit.GetField("dateTime", delegate(JSONObject date)
                                 {
-                                    Debug.Log(date);
                                     day = Utilities.ConvertToDateTime(date.ToString());
-                                    Debug.Log(day);
                                 });
                             }
                             
                         });
                         list.GetField("activities-steps-intraday", delegate(JSONObject hits1)
                         {
-                            Debug.Log(hits1);
                             hits1.GetField("dataset", delegate(JSONObject hits2)
                             {
                                 foreach (JSONObject timeObj in hits2.list)
