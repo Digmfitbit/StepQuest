@@ -141,6 +141,7 @@ public class Player : Fighter
 		if (probabilityOfMissing < Random.Range (0, 100)) 
 		{								
 			enemy.SendMessage ("Hit", damage);
+            GameObject.FindObjectOfType<ScreenShake>().startShakingCamera(.15f, .03f);
 		} 
 		else 
 		{
@@ -152,4 +153,11 @@ public class Player : Fighter
     {
         attackBar = ab.GetComponent<AttackBar>();
     }
+
+    protected override void Hit(float _damageIn)
+    {
+        base.Hit(_damageIn);
+        GameObject.FindObjectOfType<ScreenShake>().startShakingCamera(.25f,.08f);
+    }
+
 }
