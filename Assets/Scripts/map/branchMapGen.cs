@@ -72,6 +72,7 @@ public class branchMapGen : MonoBehaviour {
 		}
 		
 		if(u_id > GameObject.Find ("mapGen").GetComponent<mapGen>().numOfNodes){
+			GameObject.Find ("mapGen").GetComponent<mapGen>().seed += 1;
 			Application.LoadLevel (Application.loadedLevel);
 		}
 
