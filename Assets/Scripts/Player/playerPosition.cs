@@ -75,6 +75,9 @@ public class playerPosition : MonoBehaviour {
 			}
         } else {
 		    //The character is in a dungeon.
+
+			interactText.text = "Exit Dungeon";
+
 			dungeonNodes = GameObject.FindGameObjectsWithTag ("DungeonNode");
 
 			foreach(GameObject node in dungeonNodes){
@@ -159,6 +162,15 @@ public class playerPosition : MonoBehaviour {
 			}
 		} else {
 			// In Dungeon
+
+			foreach(GameObject dungeonNode in dungeonNodes){
+				Destroy(dungeonNode);
+			}
+
+			dungeonID = 0;
+			inDungeon = false;
+
+			/*
 			foreach(GameObject node in dungeonNodes){
 				if(node.GetComponent<branchMapGen>().u_id == dungeonID){
 					switch(node.GetComponent<branchMapGen>().nodeType){
@@ -187,6 +199,7 @@ public class playerPosition : MonoBehaviour {
 					}
 				}
             }
+            */
 		}
 	}
 }
