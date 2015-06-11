@@ -232,7 +232,6 @@ namespace Assets.Scripts.fitbit
 
         /**
          * Clears the cache
-         * TODO fix this. Keys are not in
          * */
         public void clearCache()
         {
@@ -314,7 +313,6 @@ namespace Assets.Scripts.fitbit
                         {
                             string line = Utilities.getStringFromResponse(response);
                             JSONObject user = new JSONObject(line);
-                            Debug.Log("Fetched userModel: " + line);
                             user.GetField("user", delegate(JSONObject info)
                             {
                                 Debug.Log("USER FRIEND MODEL " + info);
@@ -440,7 +438,6 @@ namespace Assets.Scripts.fitbit
                     {
                         string line = Utilities.getStringFromResponse(response);
                         DateTime dateTime = lastUpdatedStepTime;
-                        Debug.Log(line);
                         JSONObject list = new JSONObject(line);
                         DateTime day = new DateTime();
                         list.GetField("activities-steps", delegate(JSONObject hits)
@@ -449,16 +446,13 @@ namespace Assets.Scripts.fitbit
                             {
                                 hit.GetField("dateTime", delegate(JSONObject date)
                                 {
-                                    Debug.Log(date);
                                     day = Utilities.ConvertToDateTime(date.ToString());
-                                    Debug.Log(day);
                                 });
                             }
                             
                         });
                         list.GetField("activities-steps-intraday", delegate(JSONObject hits1)
                         {
-                            Debug.Log(hits1);
                             hits1.GetField("dataset", delegate(JSONObject hits2)
                             {
                                 foreach (JSONObject timeObj in hits2.list)
