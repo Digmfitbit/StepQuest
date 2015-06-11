@@ -84,6 +84,11 @@ public class branchMapGen : MonoBehaviour {
 	}
 
 	void Update(){
+
+		if(u_id > GameObject.Find ("mapGen").GetComponent<mapGen>().numOfNodes){
+			Application.LoadLevel (Application.loadedLevel);
+		}
+
 		if(dunGen == true){
 			(Instantiate(Resources.Load("Prefabs/DungeonPrefabs/node_d_Empty") as GameObject, transform.position, Quaternion.identity) as GameObject).transform.parent = this.transform;
 			//GameObject.Find ("node_d_Empty(Clone)").GetComponent<dungeonGen>().seed = u_id;
