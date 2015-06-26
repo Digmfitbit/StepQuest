@@ -27,6 +27,7 @@ namespace Assets.Scripts.fitbit
         public static string TIME_UPDATED_PROFILE_KEY = "timeUpdatedProfile";
         public static string USER_MODEL_KEY = "USER_MODEL";
         public static string USER_FRIENDS_KEY = "USER_FRIENDS";
+        public static string AUTHENTICATING = "auth";
 
         //Key Stuff
         private static string CONSUMER_KEY = "09c24eab9e15ab8ba06114c374c3f9a0";
@@ -97,22 +98,21 @@ namespace Assets.Scripts.fitbit
                 {
                     updateAll();
                 }
-            }
-
-            if (updateUserModel)
-            {
-                PlayerPrefs.SetString(USER_MODEL_KEY, userModel.ToString());
-                updateUserModel = false;
-            }
-            if (updateUserFriends)
-            {
-                string friendsString = "";
-                foreach (string model in friends)
+                if (updateUserModel)
                 {
-                    friendsString += model + DELIMITER;
+                    PlayerPrefs.SetString(USER_MODEL_KEY, userModel.ToString());
+                    updateUserModel = false;
                 }
-                PlayerPrefs.SetString(USER_FRIENDS_KEY, friendsString);
-                updateUserFriends = false;
+                if (updateUserFriends)
+                {
+                    string friendsString = "";
+                    foreach (string model in friends)
+                    {
+                        friendsString += model + DELIMITER;
+                    }
+                    PlayerPrefs.SetString(USER_FRIENDS_KEY, friendsString);
+                    updateUserFriends = false;
+                }
             }
         }
 
@@ -147,10 +147,12 @@ namespace Assets.Scripts.fitbit
 
                 manager[TOKEN_KEY] = access_token;
                 manager[TOKEN_SECRET_KEY] = access_secret;
-            }
-            else
+            } // if it has not made the call yet
+            else if (PlayerPrefs.GetInt(AUTHENTICATING,0) == 0)
             { // Need to verify. Launch browser.
                 isAuthenticating = true;
+                PlayerPrefs.SetInt(AUTHENTICATING, 1);
+                PlayerPrefs.Save();
                 Thread oThread = new Thread(new ThreadStart(getToken));
                 // Start the thread
                 oThread.Start();

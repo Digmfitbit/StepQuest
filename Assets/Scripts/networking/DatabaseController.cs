@@ -47,7 +47,7 @@ namespace Assets.Scripts.networking
                 queryParam += "&stats=" + WWW.EscapeURL(serializedStats);
                 var request = (HttpWebRequest)WebRequest.Create(UPDATE_URL + queryParam);
                 setUpHeaders(request);
-
+                Debug.Log("Calling " + UPDATE_URL + queryParam);
                 ServicePointManager.ServerCertificateValidationCallback +=
                     new RemoteCertificateValidationCallback(
                         (sender, certificate, chain, policyErrors) => { return true; });
