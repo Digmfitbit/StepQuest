@@ -55,7 +55,6 @@ namespace Assets.Scripts.fitbit
         //Random other constants
         bool gotURL = false;
         bool openedURL = false;
-        private string pin;
 
         private static bool shouldUpdate = false;
         private static bool updateUserModel = false;
@@ -153,25 +152,28 @@ namespace Assets.Scripts.fitbit
                 isAuthenticating = true;
                 PlayerPrefs.SetInt(AUTHENTICATING, 1);
                 PlayerPrefs.Save();
-                Thread oThread = new Thread(new ThreadStart(getToken));
-                // Start the thread
-                oThread.Start();
+                getToken();
             }
         }
 
         void getToken(){
-            try
+            Thread oThread = new Thread(new ThreadStart(() =>
             {
-                Debug.Log("Fetching token");
-                Thread.Sleep(1000);
-                Debug.Log(manager.AcquireRequestToken(RequestTokenURL, "POST").AllText);
-                Debug.Log("token: " + manager[TOKEN_KEY]);
-                gotURL = true;
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-            }
+                Thread.Sleep(1);
+                try
+                {
+                    Debug.Log("Fetching token");
+                    Thread.Sleep(1000);
+                    Debug.Log(manager.AcquireRequestToken(RequestTokenURL, "POST").AllText);
+                    Debug.Log("token: " + manager[TOKEN_KEY]);
+                    gotURL = true;
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                }
+            }));
+            oThread.Start();
         }
 
         public static FitBit getInstance()
@@ -248,26 +250,35 @@ namespace Assets.Scripts.fitbit
 
         public void enterPin()
         {
-            pin = GameObject.Find("PinInputField").GetComponent<InputField>().text;
-            Thread oThread = new Thread(new ThreadStart(sendPin));
-            // Start the thread
-            oThread.Start();
+            string pin = GameObject.Find("PinInputField").GetComponent<InputField>().text;
+            sendPin(pin);
         }
 
         /**
          * Relies on having an InputField in scene called PinInputField
          * */
-        void sendPin()
+        void sendPin(string pin)
         {
-            
-            Debug.Log("pin: " + pin);
-            OAuth.OAuthResponse response = manager.AcquireAccessToken(AccessTokenURL,
-                             "POST",
-                             pin);
-            Debug.Log(response.AllText) ;
-            
-            isAuthenticating = false;
-            authenticated = true;
+            Thread oThread = new Thread(new ThreadStart(() =>
+            {
+                Thread.Sleep(1);
+                try
+                {
+                    Debug.Log("pin: " + pin);
+                    OAuth.OAuthResponse response = manager.AcquireAccessToken(AccessTokenURL,
+                                     "POST",
+                                     pin);
+                    Debug.Log(response.AllText);
+
+                    isAuthenticating = false;
+                    authenticated = true;
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                }
+            }));
+            oThread.Start();
         }
 
         /**
@@ -346,6 +357,39 @@ namespace Assets.Scripts.fitbit
                 try
                 {
                     response = (HttpWebResponse)request.GetResponse();
+                    using (response)
+                    {
+                        //TODO do better error catching
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Debug.Log("There's been a problem trying to access fitbit:" +
+                                            Environment.NewLine +
+                                            response.StatusDescription);
+                        }
+                        else
+                        {
+                            string line = Utilities.getStringFromResponse(response);
+                            JSONObject list = new JSONObject(line);
+                            list.GetField("friends", delegate(JSONObject hits)
+                            {
+                                foreach (JSONObject user in hits.list)
+                                {
+                                    user.GetField("user", delegate(JSONObject info)
+                                    {
+                                        //TODO extract more info here if we want
+                                        FriendModel model = new FriendModel(info);
+                                        friends.Add(model.encodedId);
+                                        Debug.Log("Adding friend: " + model);
+                                        updateUserFriends = true;
+                                    });
+                                }
+                            });
+                        }
+                        // Example for someone with no friends:
+                        //{
+                        //"friends":  []
+                        //}
+                    }
                 }
                 catch (Exception e)
                 {
@@ -353,39 +397,6 @@ namespace Assets.Scripts.fitbit
                     Thread.Sleep(1000);
                     getFriends();
                     return;
-                }
-                using (response)
-                {
-                    //TODO do better error catching
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        Debug.Log("There's been a problem trying to access fitbit:" +
-                                        Environment.NewLine +
-                                        response.StatusDescription);
-                    }
-                    else
-                    {
-                        string line = Utilities.getStringFromResponse(response);
-                        JSONObject list = new JSONObject(line);
-                        list.GetField("friends", delegate(JSONObject hits)
-                        {
-                            foreach (JSONObject user in hits.list)
-                            {
-                                user.GetField("user", delegate(JSONObject info)
-                                {
-                                    //TODO extract more info here if we want
-                                    FriendModel model = new FriendModel(info);
-                                    friends.Add(model.encodedId);
-                                    Debug.Log("Adding friend: " + model);
-                                    updateUserFriends = true;
-                                });
-                            }
-                        });
-                    }
-                    // Example for someone with no friends:
-                    //{
-                    //"friends":  []
-                    //}
                 }
             }));
             oThread.Start();
@@ -410,7 +421,6 @@ namespace Assets.Scripts.fitbit
         * */
         public void getUpdatedSteps()
         {
-            
             Thread oThread = new Thread(new ThreadStart(() =>
             {
                 Thread.Sleep(2);
@@ -422,6 +432,60 @@ namespace Assets.Scripts.fitbit
                 try
                 {
                     response = (HttpWebResponse)request.GetResponse();
+
+                    using (response)
+                    {
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Debug.Log("There's been a problem trying to access fitbit:" +
+                                            Environment.NewLine +
+                                            response.StatusDescription);
+                        }
+                        else
+                        {
+                            string line = Utilities.getStringFromResponse(response);
+                            DateTime dateTime = lastUpdatedStepTime;
+                            JSONObject list = new JSONObject(line);
+                            DateTime day = new DateTime();
+                            list.GetField("activities-steps", delegate(JSONObject hits)
+                            {
+                                foreach (JSONObject hit in hits.list)
+                                {
+                                    hit.GetField("dateTime", delegate(JSONObject date)
+                                    {
+                                        day = Utilities.ConvertToDateTime(date.ToString());
+                                    });
+                                }
+                            
+                            });
+                            list.GetField("activities-steps-intraday", delegate(JSONObject hits1)
+                            {
+                                hits1.GetField("dataset", delegate(JSONObject hits2)
+                                {
+                                    foreach (JSONObject timeObj in hits2.list)
+                                    {
+                                        timeObj.GetField("time", delegate(JSONObject time)
+                                        {
+                                            DateTime hoursMinutes = Utilities.ConvertToDateTime(time.ToString());
+                                            //TODO CHECK THE TIME;
+                                            dateTime = new DateTime(day.Year, day.Month, day.Day,hoursMinutes.Hour,
+                                                hoursMinutes.Minute,hoursMinutes.Second);
+
+                                        });
+                                        timeObj.GetField("value", delegate(JSONObject val)
+                                        {
+                                            if (dateTime > lastUpdatedStepTime)
+                                            {
+                                                steps += (int)(multiplier * Convert.ToInt32(val));
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                            Debug.Log("steps: " + steps);
+                            lastUpdatedStepTime = dateTime;
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -429,59 +493,6 @@ namespace Assets.Scripts.fitbit
                     Thread.Sleep(1000);
                     getUpdatedSteps();
                     return;
-                }
-                using (response)
-                {
-                    if (response.StatusCode != HttpStatusCode.OK)
-                    {
-                        Debug.Log("There's been a problem trying to access fitbit:" +
-                                        Environment.NewLine +
-                                        response.StatusDescription);
-                    }
-                    else
-                    {
-                        string line = Utilities.getStringFromResponse(response);
-                        DateTime dateTime = lastUpdatedStepTime;
-                        JSONObject list = new JSONObject(line);
-                        DateTime day = new DateTime();
-                        list.GetField("activities-steps", delegate(JSONObject hits)
-                        {
-                            foreach (JSONObject hit in hits.list)
-                            {
-                                hit.GetField("dateTime", delegate(JSONObject date)
-                                {
-                                    day = Utilities.ConvertToDateTime(date.ToString());
-                                });
-                            }
-                            
-                        });
-                        list.GetField("activities-steps-intraday", delegate(JSONObject hits1)
-                        {
-                            hits1.GetField("dataset", delegate(JSONObject hits2)
-                            {
-                                foreach (JSONObject timeObj in hits2.list)
-                                {
-                                    timeObj.GetField("time", delegate(JSONObject time)
-                                    {
-                                        DateTime hoursMinutes = Utilities.ConvertToDateTime(time.ToString());
-                                        //TODO CHECK THE TIME;
-                                        dateTime = new DateTime(day.Year, day.Month, day.Day,hoursMinutes.Hour,
-                                            hoursMinutes.Minute,hoursMinutes.Second);
-
-                                    });
-                                    timeObj.GetField("value", delegate(JSONObject val)
-                                    {
-                                        if (dateTime > lastUpdatedStepTime)
-                                        {
-                                            steps += (int)(multiplier * Convert.ToInt32(val));
-                                        }
-                                    });
-                                }
-                            });
-                        });
-                        Debug.Log("steps: " + steps);
-                        lastUpdatedStepTime = dateTime;
-                    }
                 }
             }));
             oThread.Start();
